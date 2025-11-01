@@ -3,6 +3,7 @@ import LazyMount from "../../components/atoms/lazy-mount";
 import { HorizontalCarousel } from "../../components/widgets/horizontal-carousel";
 import { useTranslation } from 'react-i18next';
 import { formatThresholdNumber } from "../../shared/util";
+import { getBestImageUrl } from "../../shared/util/image-utils";
 
 function HomePage() {
     const { t } = useTranslation();
@@ -18,7 +19,7 @@ function HomePage() {
                 adapter={(data) => data.data.map((anime) => ({
                     key: anime.mal_id.toString(),
                     title: anime.titles.find((title) => title.type === 'Default')?.title ?? anime.title,
-                    imageUrl: anime.images.webp?.image_url ?? anime.images.jpg.image_url,
+                    imageUrl: getBestImageUrl(anime.images),
                     navigateTo: `/anime/${anime.mal_id}?`,
                     alt: anime.title,
                     ratings: anime.score?.toString(),
@@ -35,7 +36,7 @@ function HomePage() {
                 adapter={(data) => data.data.map((manga) => ({
                     key: manga.mal_id.toString(),
                     title: manga.titles.find((title) => title.type === 'Default')?.title ?? manga.title,
-                    imageUrl: manga.images.webp?.image_url ?? manga.images.jpg.image_url,
+                    imageUrl: getBestImageUrl(manga.images),
                     navigateTo: `/manga/${manga.mal_id}?`,
                     alt: manga.title,
                     ratings: manga.score?.toString(),
@@ -50,7 +51,7 @@ function HomePage() {
                     adapter={(data) => data.data.map((character) => ({
                         key: character.mal_id.toString(),
                         title: character.name,
-                        imageUrl: character.images.webp?.image_url ?? character.images.jpg.image_url,
+                        imageUrl: getBestImageUrl(character.images),
                         navigateTo: `/character/${character.mal_id}?`,
                         alt: character.name,
                         favorites: formatThresholdNumber(character.favorites)
@@ -65,7 +66,7 @@ function HomePage() {
                     adapter={(data) => data.data.map((person) => ({
                         key: person.mal_id.toString(),
                         title: person.name,
-                        imageUrl: person.images.webp?.image_url ?? person.images.jpg.image_url,
+                        imageUrl: getBestImageUrl(person.images),
                         navigateTo: `/people/${person.mal_id}?`,
                         alt: person.name,
                         favorites: formatThresholdNumber(person.favorites)

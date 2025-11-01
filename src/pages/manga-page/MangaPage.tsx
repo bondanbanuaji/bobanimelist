@@ -2,6 +2,7 @@ import { useParams } from "react-router";
 import { useGetMangaByIdQuery } from "../../services/jikan";
 import { MediaContent } from "../../components/widgets/media-content";
 import { formatThresholdNumber } from "../../shared/util";
+import { getLargeImageUrl } from "../../shared/util/image-utils";
 
 function MangaPage() {
     const { id } = useParams();
@@ -16,7 +17,7 @@ function MangaPage() {
                     return (
                         {
                             imageAlt: data.data.mal_id.toString(),
-                            imageSrc: data.data.images.webp?.large_image_url ?? data.data.images.jpg.large_image_url ?? data.data.images.jpg.image_url,
+                            imageSrc: getLargeImageUrl(data.data.images),
                             title: data.data.titles.find((title) => title.type === 'Default')?.title ?? data.data.title,
                             titleEnglish: data.data.titles.find((title) => title.type === 'English')?.title ?? data.data.title_english,
                             contentType: data.data.type,

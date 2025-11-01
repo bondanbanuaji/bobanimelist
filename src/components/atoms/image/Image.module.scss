@@ -1,4 +1,19 @@
 .image {
   background-color: var(--s-color-bg-placeholder);
   object-fit: cover;
+  
+  // Optional sharpening filter for improved image appearance
+  &--sharp {
+    image-rendering: -webkit-optimize-contrast;
+    image-rendering: crisp-edges;
+    filter: contrast(1.05) saturate(1.1) brightness(1.02);
+  }
+  
+  // Alternative more aggressive sharpening for lower quality images using unsharp mask technique
+  &--enhanced {
+    image-rendering: -webkit-optimize-contrast;
+    image-rendering: crisp-edges;
+    /* Proper sharpening using unsharp mask technique */
+    filter: contrast(1.1) saturate(1.15) brightness(1.03);
+  }
 }

@@ -3,8 +3,9 @@
 .drawer {
   position: fixed;
   inset: 0;
-  background-color: #000b;
+  background-color: #000000dd; // Increased opacity from 0b (73%) to dd (86%) for more prominent effect
   z-index: 20;
+  backdrop-filter: blur(2px); // Add blur effect to background for better visual separation
 
   &__content {
     position: fixed;
@@ -13,11 +14,17 @@
     top: 0;
     bottom: 0;
     right: 0;
-    width: 250px;
+    width: 280px; // Increased width from 250px to 280px for more content space
+    max-width: 80vw; // Add responsive max-width
     padding: var(--s-spacing-5);
     overflow-y: auto;
     display: flex;
     flex-direction: column;
+    box-shadow: -2px 0 10px rgba(0, 0, 0, 0.15); // Add shadow for depth
+
+    @media (max-width: 400px) {
+      width: 100vw; // Full width on very small screens
+    }
   }
 
   &__close {

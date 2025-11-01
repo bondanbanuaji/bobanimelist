@@ -3,6 +3,7 @@ import LazyMount from "../../components/atoms/lazy-mount";
 import { HorizontalCarousel } from "../../components/widgets/horizontal-carousel";
 import { useTranslation } from 'react-i18next';
 import { formatThresholdNumber } from "../../shared/util";
+import { getBestImageUrl } from "../../shared/util/image-utils";
 
 function MangaLandingPage() {
     const { t } = useTranslation();
@@ -18,7 +19,7 @@ function MangaLandingPage() {
                 adapter={(data) => data.data.map((manga) => ({
                     key: manga.mal_id.toString(),
                     title: manga.titles.find((title) => title.type === 'Default')?.title ?? manga.title,
-                    imageUrl: manga.images.jpg.image_url,
+                    imageUrl: getBestImageUrl(manga.images),
                     navigateTo: `/manga/${manga.mal_id}?`,
                     alt: manga.title,
                     ratings: manga.score?.toString(),
@@ -35,7 +36,7 @@ function MangaLandingPage() {
                 adapter={(data) => data.data.map((manga) => ({
                     key: manga.mal_id.toString(),
                     title: manga.titles.find((title) => title.type === 'Default')?.title ?? manga.title,
-                    imageUrl: manga.images.jpg.image_url,
+                    imageUrl: getBestImageUrl(manga.images),
                     navigateTo: `/manga/${manga.mal_id}?`,
                     alt: manga.title,
                     ratings: manga.score?.toString(),
@@ -50,7 +51,7 @@ function MangaLandingPage() {
                     adapter={(data) => data.data.map((manga) => ({
                         key: manga.mal_id.toString(),
                         title: manga.titles.find((title) => title.type === 'Default')?.title ?? manga.title,
-                        imageUrl: manga.images.jpg.image_url,
+                        imageUrl: getBestImageUrl(manga.images),
                         navigateTo: `/manga/${manga.mal_id}?`,
                         alt: manga.title,
                         ratings: manga.score?.toString(),

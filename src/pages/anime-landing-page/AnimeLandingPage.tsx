@@ -3,6 +3,7 @@ import LazyMount from "../../components/atoms/lazy-mount";
 import { HorizontalCarousel } from "../../components/widgets/horizontal-carousel";
 import { useTranslation } from 'react-i18next';
 import { filterDuplicates, formatThresholdNumber } from "../../shared/util";
+import { getBestImageUrl } from "../../shared/util/image-utils";
 
 function AnimeLandingPage() {
     const { t } = useTranslation();
@@ -18,7 +19,7 @@ function AnimeLandingPage() {
                 adapter={(data) => filterDuplicates(data.data.map((anime) => ({
                     key: anime.mal_id.toString(),
                     title: anime.titles.find((title) => title.type === 'Default')?.title ?? anime.title,
-                    imageUrl: anime.images.jpg.image_url,
+                    imageUrl: getBestImageUrl(anime.images),
                     navigateTo: `/anime/${anime.mal_id}?`,
                     alt: anime.title,
                     ratings: anime.score?.toString(),
@@ -35,7 +36,7 @@ function AnimeLandingPage() {
                 adapter={(data) => filterDuplicates(data.data.map((anime) => ({
                     key: anime.mal_id.toString(),
                     title: anime.titles.find((title) => title.type === 'Default')?.title ?? anime.title,
-                    imageUrl: anime.images.jpg.image_url,
+                    imageUrl: getBestImageUrl(anime.images),
                     navigateTo: `/anime/${anime.mal_id}?`,
                     alt: anime.title,
                     ratings: anime.score?.toString(),
@@ -50,7 +51,7 @@ function AnimeLandingPage() {
                     adapter={(data) => filterDuplicates(data.data.map((anime) => ({
                         key: anime.mal_id.toString(),
                         title: anime.titles.find((title) => title.type === 'Default')?.title ?? anime.title,
-                        imageUrl: anime.images.jpg.image_url,
+                        imageUrl: getBestImageUrl(anime.images),
                         navigateTo: `/anime/${anime.mal_id}?`,
                         alt: anime.title,
                         ratings: anime.score?.toString(),

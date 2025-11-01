@@ -4,6 +4,7 @@ import { SearchOptions, type SearchOption } from '../../components/widgets/searc
 import { animeGenres, animeOrder, animeRating, animeStatus, animeType, characterOrder, mangaGenres, mangaOrder, mangaStatus, mangaType, peopleOrder, sortOption, type SearchCategory } from '../../services/jikan/constants';
 import { SearchResult } from '../../components/widgets/search-result';
 import { filterDuplicates, formatThresholdNumber } from '../../shared/util';
+import { getBestImageUrl } from '../../shared/util/image-utils';
 
 function getSearchOptions(category: SearchCategory): SearchOption[] {
     switch (category) {
@@ -78,7 +79,7 @@ function getSearchResults(category: SearchCategory, params: URLSearchParams) {
                             data: filterDuplicates(data.data.map((anime) => ({
                                 key: `anime_${anime.mal_id}`,
                                 title: anime.titles.find((title) => title.type === 'Default')?.title ?? anime.title,
-                                imageUrl: anime.images.jpg.image_url,
+                                imageUrl: getBestImageUrl(anime.images),
                                 navigateTo: `/anime/${anime.mal_id}`,
                                 alt: anime.title,
                                 ratings: anime.score?.toString(),
@@ -99,7 +100,7 @@ function getSearchResults(category: SearchCategory, params: URLSearchParams) {
                             data: filterDuplicates(data.data.map((manga) => ({
                                 key: `manga_${manga.mal_id}`,
                                 title: manga.titles.find((title) => title.type === 'Default')?.title ?? manga.title,
-                                imageUrl: manga.images.jpg.image_url,
+                                imageUrl: getBestImageUrl(manga.images),
                                 navigateTo: `/manga/${manga.mal_id}`,
                                 alt: manga.title,
                                 ratings: manga.score?.toString(),
@@ -120,7 +121,7 @@ function getSearchResults(category: SearchCategory, params: URLSearchParams) {
                             data: filterDuplicates(data.data.map((character) => ({
                                 key: `character_${character.mal_id}`,
                                 title: character.name,
-                                imageUrl: character.images.webp?.image_url ?? character.images.jpg.image_url,
+                                imageUrl: getBestImageUrl(character.images),
                                 navigateTo: `/character/${character.mal_id}`,
                                 alt: character.name,
                                 favorites: formatThresholdNumber(character.favorites)
@@ -140,7 +141,7 @@ function getSearchResults(category: SearchCategory, params: URLSearchParams) {
                             data: filterDuplicates(data.data.map((person) => ({
                                 key: `person_${person.mal_id}`,
                                 title: person.name,
-                                imageUrl: person.images.webp?.image_url ?? person.images.jpg.image_url,
+                                imageUrl: getBestImageUrl(person.images),
                                 navigateTo: `/people/${person.mal_id}`,
                                 alt: person.name,
                                 favorites: formatThresholdNumber(person.favorites)
