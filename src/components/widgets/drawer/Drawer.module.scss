@@ -3,56 +3,163 @@
 .drawer {
   position: fixed;
   inset: 0;
-  background-color: #000000dd; // Increased opacity from 0b (73%) to dd (86%) for more prominent effect
+  background-color: rgba(0, 0, 0, 0.5);
   z-index: 20;
-  backdrop-filter: blur(2px); // Add blur effect to background for better visual separation
+  backdrop-filter: blur(2px);
 
   &__content {
     position: fixed;
     z-index: 30;
-    background-color: var(--s-color-bg-primary);
+    background: var(--s-color-bg-primary);
+    background: linear-gradient(135deg, 
+      var(--s-color-bg-primary) 0%, 
+      var(--s-color-bg-secondary) 100%);
     top: 0;
     bottom: 0;
     right: 0;
-    width: 280px; // Increased width from 250px to 280px for more content space
-    max-width: 80vw; // Add responsive max-width
-    padding: var(--s-spacing-5);
+    width: 320px;
+    max-width: 90vw;
+    min-width: 280px;
+    padding: var(--s-spacing-6) var(--s-spacing-5);
     overflow-y: auto;
     display: flex;
     flex-direction: column;
-    box-shadow: -2px 0 10px rgba(0, 0, 0, 0.15); // Add shadow for depth
+    box-shadow: 
+      -8px 0 30px rgba(0, 0, 0, 0.15),
+      inset 0 1px 0 rgba(255, 255, 255, 0.05);
+    border-left: 1px solid var(--s-color-border-primary);
 
-    @media (max-width: 400px) {
-      width: 100vw; // Full width on very small screens
+    transition: 
+      transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+      box-shadow 0.3s ease;
+
+    @media (max-width: 480px) {
+      width: 100vw;
+      min-width: 100vw;
+    }
+    
+    @media (min-width: 1024px) {
+      width: 360px;
     }
   }
 
-  &__close {
+  &__header {
     display: flex;
-    justify-content: flex-end;
-    margin-bottom: var(--s-spacing-5);
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: var(--s-spacing-6);
+    margin-bottom: var(--s-spacing-4);
+    border-bottom: 1px solid var(--s-color-border-primary);
+  }
+
+  &__logo {
+    display: flex;
+    align-items: center;
+    gap: var(--s-spacing-3);
+    
+    svg {
+      color: var(--s-color-fg-primary);
+      transition: color 0.3s ease;
+    }
+  }
+
+  &__logo-text {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--s-color-fg-primary);
+    letter-spacing: -0.02em;
+    transition: color 0.3s ease;
   }
 
   &__close-button {
-    transition: scale 0.2s ease;
-
-    @include screen-mouse-first {
-      &:hover {
-        scale: 1.05;
-      }
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: var(--s-color-bg-secondary);
+    border: 1px solid var(--s-color-border-primary);
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    
+    &:hover {
+      background: var(--s-color-bg-secondary);
+      transform: scale(1.05);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
     }
-
-    @include screen-touch-first {
-      &:active {
-        scale: 1.05;
-      }
+    
+    &:active {
+      transform: scale(0.95);
+    }
+    
+    svg {
+      color: var(--s-color-fg-primary);
+      transition: color 0.3s ease;
     }
   }
 
   &__nav {
     display: flex;
     flex-direction: column;
-    gap: var(--s-spacing-5);
+    gap: var(--s-spacing-2);
+    margin-bottom: var(--s-spacing-6);
+  }
+
+  &__nav-item {
+    display: flex;
+    align-items: center;
+    gap: var(--s-spacing-4);
+    padding: var(--s-spacing-4) var(--s-spacing-3);
+    border-radius: 12px;
+    text-decoration: none;
+    color: var(--s-color-fg-secondary);
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+    
+    &::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 3px;
+      height: 100%;
+      background: transparent;
+      transition: background 0.3s ease;
+    }
+    
+    &:hover {
+      background: var(--s-color-bg-secondary);
+      color: var(--s-color-fg-primary);
+      transform: translateX(4px);
+      
+      &::before {
+        background: var(--s-color-fg-primary);
+      }
+    }
+    
+    &--active {
+      background: var(--s-color-bg-secondary);
+      color: var(--s-color-fg-primary);
+      font-weight: 500;
+      
+      &::before {
+        background: var(--s-color-fg-primary);
+      }
+    }
+    
+    svg {
+      min-width: 20px;
+      min-height: 20px;
+      transition: color 0.3s ease;
+    }
+  }
+
+  &__nav-text {
+    font-size: 0.95rem;
+    font-weight: 500;
+    transition: color 0.3s ease;
   }
 
   &__menu-group {
@@ -63,6 +170,43 @@
 
   &__menu-heading {
     color: var(--s-color-fg-primary);
-    margin-bottom: var(--s-spacing-5);
+    margin-bottom: var(--s-spacing-4);
+    font-size: 0.875rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    font-weight: 600;
+  }
+
+  &__theme-toggle {
+    padding: var(--s-spacing-3) 0;
+  }
+
+  &__footer {
+    margin-top: auto;
+    padding-top: var(--s-spacing-5);
+    border-top: 1px solid var(--s-color-border-primary);
+  }
+
+  &__copyright {
+    font-size: 0.75rem;
+    color: var(--s-color-fg-secondary);
+    line-height: 1.5;
+  }
+}
+
+// Enhanced dark/light mode transitions
+@media (prefers-color-scheme: dark) {
+  .drawer__content {
+    background: linear-gradient(135deg, 
+      var(--s-color-bg-primary) 0%, 
+      var(--s-color-bg-secondary) 100%);
+  }
+}
+
+@media (prefers-color-scheme: light) {
+  .drawer__content {
+    background: linear-gradient(135deg, 
+      var(--s-color-bg-primary) 0%, 
+      var(--s-color-bg-secondary) 100%);
   }
 }

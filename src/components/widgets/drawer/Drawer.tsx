@@ -10,20 +10,58 @@ import MangaIcon from '../../atoms/icons/MangaIcon';
 import HomeIcon from '../../atoms/icons/HomeIcon';
 import { Link, useLocation } from 'react-router';
 import { useTranslation } from 'react-i18next';
-import Pill from '../../atoms/pill';
 import ThemeToggle from '../../atoms/theme-toggle';
+import LogoIcon from '../../atoms/icons/LogoIcon';
 
 
 const drawerVariants = {
-    hidden: { x: '100%' },
-    visible: { x: '0%', transition: { type: "tween" as const, duration: 0.3 } },
-    exit: { x: '100%', transition: { type: "tween" as const, duration: 0.3 } },
+    hidden: { 
+        x: '100%',
+        opacity: 0.8
+    },
+    visible: { 
+        x: '0%', 
+        opacity: 1,
+        transition: { 
+            type: "spring" as const, 
+            damping: 25,
+            stiffness: 300,
+            duration: 0.4 
+        } 
+    },
+    exit: { 
+        x: '100%', 
+        opacity: 0.8,
+        transition: { 
+            type: "spring" as const, 
+            damping: 25,
+            stiffness: 300,
+            duration: 0.4 
+        } 
+    },
 };
 
 const backdropVariants = {
-    hidden: { opacity: 0 },
-    visible: { opacity: 1, transition: { duration: 0.3 } },
-    exit: { opacity: 0, transition: { duration: 0.3 } },
+    hidden: { 
+        opacity: 0,
+        backdropFilter: 'blur(0px)'
+    },
+    visible: { 
+        opacity: 1, 
+        backdropFilter: 'blur(4px)',
+        transition: { 
+            duration: 0.4,
+            ease: [0.37, 0, 0.63, 1] as const // Using cubic-bezier values instead of string
+        } 
+    },
+    exit: { 
+        opacity: 0, 
+        backdropFilter: 'blur(0px)',
+        transition: { 
+            duration: 0.4,
+            ease: [0.37, 0, 0.63, 1] as const // Using cubic-bezier values instead of string
+        } 
+    },
 };
 
 function Drawer() {
@@ -58,31 +96,92 @@ function Drawer() {
                             exit="exit"
                             variants={drawerVariants}
                         >
-                            <div className={styles.drawer__close}>
-                                <button onClick={handleDrawerClose} className={styles['drawer__close-button']}>
-                                    <CloseIcon size={28} color='s-color-fg-primary' />
+                            <div className={styles['drawer__header']}>
+                                <div className={styles['drawer__logo']}>
+                                    <LogoIcon size={32} color="s-color-fg-primary" />
+                                    <span className={styles['drawer__logo-text']}>Menu</span>
+                                </div>
+                                <button 
+                                    onClick={handleDrawerClose} 
+                                    className={styles['drawer__close-button']}
+                                    aria-label="Close menu"
+                                >
+                                    <CloseIcon size={24} color="s-color-fg-primary" />
                                 </button>
                             </div>
-                            {isHeaderNavHidden && <div className={styles['drawer__menu-group']}>
-                                <Label className={styles['drawer__menu-heading']} font='typo-primary-l-medium'>Explore</Label>
-                                <nav className={styles.drawer__nav}>
-                                    <Link onClick={handleDrawerClose} to={{ pathname: '/', search: '' }} >
-                                        <Pill icon={HomeIcon} text={t('HOME')} active={location.pathname === '/'} />
-                                    </Link>
-                                    <Link onClick={handleDrawerClose} to={{ pathname: '/anime', search: '' }}>
-                                        <Pill icon={AnimeIcon} text={t('ANIME')} active={location.pathname === '/anime'} />
-                                    </Link>
-                                    <Link onClick={handleDrawerClose} to={{ pathname: '/manga', search: '' }}>
-                                        <Pill icon={MangaIcon} text={t('MANGA')} active={location.pathname === '/manga'} />
-                                    </Link>
-                                </nav>
-                            </div>}
-                            <div className={styles['drawer__menu-group']}>
+                            
+                            {isHeaderNavHidden && (
+                                <motion.div 
+                                    className={styles['drawer__menu-group']}
+                                    initial={{ opacity: 0, y: -10 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    transition={{ delay: 0.1 }}
+                                >
+                                    <Label className={styles['drawer__menu-heading']} font='typo-primary-l-medium'>Explore</Label>
+                                    <nav className={styles.drawer__nav}>
+                                        <motion.div 
+                                            whileHover={{ scale: 1.02 }}
+                                            whileTap={{ scale: 0.98 }}
+                                        >
+                                            <Link 
+                                                onClick={handleDrawerClose} 
+                                                to={{ pathname: '/', search: '' }} 
+                                                className={`${styles['drawer__nav-item']} ${location.pathname === '/' ? styles['drawer__nav-item--active'] : ''}`}
+                                            >
+                                                <HomeIcon size={20} color="s-color-fg-primary" />
+                                                <span className={styles['drawer__nav-text']}>{t('HOME')}</span>
+                                            </Link>
+                                        </motion.div>
+                                        <motion.div 
+                                            whileHover={{ scale: 1.02 }}
+                                            whileTap={{ scale: 0.98 }}
+                                        >
+                                            <Link 
+                                                onClick={handleDrawerClose} 
+                                                to={{ pathname: '/anime', search: '' }}
+                                                className={`${styles['drawer__nav-item']} ${location.pathname === '/anime' ? styles['drawer__nav-item--active'] : ''}`}
+                                            >
+                                                <AnimeIcon size={20} color="s-color-fg-primary" />
+                                                <span className={styles['drawer__nav-text']}>{t('ANIME')}</span>
+                                            </Link>
+                                        </motion.div>
+                                        <motion.div 
+                                            whileHover={{ scale: 1.02 }}
+                                            whileTap={{ scale: 0.98 }}
+                                        >
+                                            <Link 
+                                                onClick={handleDrawerClose} 
+                                                to={{ pathname: '/manga', search: '' }}
+                                                className={`${styles['drawer__nav-item']} ${location.pathname === '/manga' ? styles['drawer__nav-item--active'] : ''}`}
+                                            >
+                                                <MangaIcon size={20} color="s-color-fg-primary" />
+                                                <span className={styles['drawer__nav-text']}>{t('MANGA')}</span>
+                                            </Link>
+                                        </motion.div>
+                                    </nav>
+                                </motion.div>
+                            )}
+                            
+                            <motion.div 
+                                className={styles['drawer__menu-group']}
+                                initial={{ opacity: 0, y: -10 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                transition={{ delay: 0.2 }}
+                            >
                                 <Label className={styles['drawer__menu-heading']} font='typo-primary-l-medium'>Settings</Label>
-                                <div>
+                                <div className={styles['drawer__theme-toggle']}>
                                     <ThemeToggle />
                                 </div>
-                            </div>
+                            </motion.div>
+                            
+                            <motion.div 
+                                className={styles['drawer__footer']}
+                                initial={{ opacity: 0 }}
+                                animate={{ opacity: 1 }}
+                                transition={{ delay: 0.3 }}
+                            >
+                                <p className={styles['drawer__copyright']}>© {new Date().getFullYear()} BobAnimeList</p>
+                            </motion.div>
                         </motion.aside>
                     </RemoveScroll>
                 </>
