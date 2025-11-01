@@ -22,38 +22,88 @@
     color: var(--s-color-fg-primary);
     margin-top: var(--s-spacing-1);
     text-wrap-mode: nowrap;
-
+    
+    // Responsive font sizes using CSS custom properties
+    font: var(--s-font-title-sm);
+    
     @include screen-xs {
-      font-size: 18px;
+      font: var(--s-font-title-xs);
     }
-
+    
     @include screen-sm {
-      font-size: 20px;
+      font: var(--s-font-title-sm);
     }
-
+    
     @include screen-md {
-      font-size: 22px;
+      font: var(--s-font-title-md);
     }
-
+    
     @include screen-lg {
-      font-size: 24px;
+      font: var(--s-font-title-lg);
+    }
+    
+    @include screen-xl {
+      font: var(--s-font-title-xl);
+    }
+    
+    @include screen-xxl {
+      font: var(--s-font-title-xxl);
     }
   }
 
-  &__icon {
+  &-icon {
+    // Responsive icon sizes - using !important to override inline styles
+    width: 32px !important;
+    height: 32px !important;
+    
     @include screen-xs {
-      width: 36px;
-      height: 36px;
+      width: 32px !important;
+      height: 32px !important;
     }
-
+    
     @include screen-sm {
-      width: 40px;
-      height: 40px;
+      width: 36px !important;
+      height: 36px !important;
     }
-
+    
     @include screen-md {
-      width: 48px;
-      height: 48px;
+      width: 40px !important;
+      height: 40px !important;
     }
+    
+    @include screen-lg {
+      width: 44px !important;
+      height: 44px !important;
+    }
+    
+    @include screen-xl {
+      width: 48px !important;
+      height: 48px !important;
+    }
+    
+    @include screen-xxl {
+      width: 52px !important;
+      height: 52px !important;
+    }
+  }
+}
+
+.cursor {
+  display: inline-block;
+  width: 0.6ch;
+  margin-left: var(--s-spacing-1);
+  background-color: currentcolor;
+  opacity: 1;
+  animation: blink 1s infinite;
+}
+
+@keyframes blink {
+  0%,
+  100% {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: 0;
   }
 }
