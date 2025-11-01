@@ -18,7 +18,7 @@
 
     @include screen-md {
       display: flex;
-      gap: 12px;
+      gap: var(--s-spacing-3);  // Using spacing token instead of hardcoded 12px
       align-items: center;
     }
   }
@@ -61,5 +61,10 @@
     &-right {
       padding-left: var(--s-spacing-1);
     }
+  }
+
+  .error-container, .empty-container {
+    width: 100%;
+    padding: var(--s-spacing-10) var(--s-spacing-app-horizontal);
   }
 }

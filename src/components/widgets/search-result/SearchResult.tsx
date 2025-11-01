@@ -1,5 +1,6 @@
 import { type TypedUseQuery } from "@reduxjs/toolkit/query/react";
 import { ImageCard } from "../../atoms/image-card";
+import { ErrorState } from "../../atoms/error-state";
 import styles from "./SearchResult.module.scss";
 import React from "react";
 import { ImageCardLoading } from "../../atoms/image-card/ImageCard";
@@ -50,7 +51,7 @@ function SearchResult<TQueryHook extends UseQuery>({
     adapter,
 }: SearchResultProps<TQueryHook>) {
     const [searchParams, setSearchParams] = useSearchParams();
-    const { data, isFetching } = useQueryHook(options);
+    const { data, isFetching, isError } = useQueryHook(options);
 
     const adaptedData = data ? adapter(data) : undefined;
 
@@ -63,13 +64,34 @@ function SearchResult<TQueryHook extends UseQuery>({
     };
 
     const getContent = (): React.ReactNode => {
+        // Check for error state first
+        if (isError) {
+            return (
+                <div className={styles['error-container']}>
+                    <ErrorState 
+                        title="Failed to load search results" 
+                        message="There was an error loading the search results. Please try again later." 
+                        onRetry={() => window.location.reload()}
+                        retryButtonText="Reload"
+                    />
+                </div>
+            );
+        }
+
+        // Show loading state when data is not loaded and still fetching
         if (!adaptedData || !adaptedData.data || isFetching) {
             return Array.from({ length: 25 }, (_, idx) => <ImageCardLoading key={idx} grid />);
         }
 
+        // Show empty state if there's no data after loading
         if (adaptedData.data.length === 0) {
             return (
-                <Label as="p" font="typo-primary-xl-medium" className={styles['no-result']}>No results found</Label>
+                <ErrorState 
+                    title="No search results found" 
+                    message="There are no results matching your search. Try different keywords." 
+                    showRetryButton={false}
+                    className={styles['no-result']}
+                />
             );
         }
 
@@ -95,12 +117,22 @@ function SearchResult<TQueryHook extends UseQuery>({
                 {getContent()}
             </div>
             {adaptedData?.pagination && adaptedData.pagination.last_visible_page > 1 && (
-                <div className={styles['search-result__pagination']}>
-                    <button onClick={() => handlePageChange(page - 1)} disabled={page === 1}>
+                <div className={styles['search-result__pagination']} role="navigation" aria-label="Pagination navigation">
+                    <button 
+                        onClick={() => handlePageChange(page - 1)} 
+                        disabled={page === 1}
+                        aria-label={`Go to previous page, current page ${page}`}
+                        aria-disabled={page === 1}
+                    >
                         <Label as="p" font="typo-primary-m-semibold">Previous</Label>
                     </button>
-                    <Label as="p" font="typo-primary-m-medium">Page {page} of {adaptedData.pagination.last_visible_page}</Label>
-                    <button onClick={() => handlePageChange(page + 1)} disabled={!adaptedData.pagination.has_next_page}>
+                    <Label as="p" font="typo-primary-m-medium" aria-live="polite">Page {page} of {adaptedData.pagination.last_visible_page}</Label>
+                    <button 
+                        onClick={() => handlePageChange(page + 1)} 
+                        disabled={!adaptedData.pagination.has_next_page}
+                        aria-label={`Go to next page, current page ${page}`}
+                        aria-disabled={!adaptedData.pagination.has_next_page}
+                    >
                         <Label as="p" font="typo-primary-m-semibold">Next</Label>
                     </button>
                 </div>

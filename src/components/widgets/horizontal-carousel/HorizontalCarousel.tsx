@@ -2,6 +2,7 @@ import { skipToken, type TypedUseQuery } from "@reduxjs/toolkit/query/react";
 import { SwipeCarousel, type SwipeCarouselType } from "../../atoms/swipe-carousel";
 import { ImageCard, ImageCardLoading } from "../../atoms/image-card";
 import { Label } from "../../atoms/label";
+import { ErrorState } from "../../atoms/error-state";
 import styles from "./HorizontalCarousel.module.scss";
 import React from "react";
 import { type SwiperClass } from "swiper/react";
@@ -70,7 +71,7 @@ function HorizontalCarousel<TQueryHook extends UseQuery, TCardType extends CardT
     const swiperRef = React.useRef<SwiperClass>(null);
     const [isBeginning, setIsBeginning] = React.useState(true);
     const [isEnd, setIsEnd] = React.useState(false);
-    const { data } = useQueryHook(options);
+    const { data, isLoading, isError, isFetching } = useQueryHook(options);
 
     const adaptedData = data ? adapter(data) : undefined;
 
@@ -84,12 +85,45 @@ function HorizontalCarousel<TQueryHook extends UseQuery, TCardType extends CardT
     };
 
     const getContent = React.useCallback((): React.ReactNode[] => {
+        // If there's an error, show the error state
+        if (isError) {
+            return [<div key="error" className={styles['error-container']}>
+                <ErrorState 
+                    key="error-state"
+                    title="Failed to load content" 
+                    message="There was an error loading the content. Please try again later." 
+                    onRetry={() => window.location.reload()}
+                    retryButtonText="Reload"
+                />
+            </div>];
+        }
+
+        // If data is not loaded and we're still fetching, show loading state
+        if (!adaptedData && (isLoading || isFetching)) {
+            switch (cardType) {
+                case 'media-detail':
+                    return Array.from({ length: 15 }, (_, idx) => <MediaDetailCardLoading key={`loading-${idx}`} />);
+                case 'image':
+                default:
+                    return Array.from({ length: 15 }, (_, idx) => <ImageCardLoading key={`loading-${idx}`} />);
+            }
+        }
+
+        // If data is loaded but empty, we should handle empty state
+        if (adaptedData && adaptedData.length === 0) {
+            return [<div key="empty" className={styles['empty-container']}>
+                <ErrorState 
+                    key="empty-state"
+                    title="No content found" 
+                    message="There is no content to display in this section." 
+                    showRetryButton={false}
+                />
+            </div>];
+        }
+
+        // Render the actual content
         switch (cardType) {
             case 'media-detail': {
-                if (!adaptedData) {
-                    return Array.from({ length: 15 }, () => ({})).map((_, idx) => <MediaDetailCardLoading key={idx} />);
-                }
-
                 return (adaptedData as MediaDetailCardCarouselData[]).map((data) => (
                     <MediaDetailCard
                         key={data.key}
@@ -107,10 +141,6 @@ function HorizontalCarousel<TQueryHook extends UseQuery, TCardType extends CardT
             }
             case 'image':
             default: {
-                if (!adaptedData) {
-                    return Array.from({ length: 15 }, () => ({})).map((_, idx) => <ImageCardLoading key={idx} />);
-                }
-
                 return (adaptedData as ImageCardCarouselData[]).map((data) => (
                     <ImageCard
                         key={data.key}
@@ -124,7 +154,7 @@ function HorizontalCarousel<TQueryHook extends UseQuery, TCardType extends CardT
                 ));
             }
         }
-    }, [cardType, adaptedData]);
+    }, [cardType, adaptedData, isError, isLoading, isFetching]);
 
     return (
         <div className={styles['horizontal-carousel']}>
@@ -135,16 +165,20 @@ function HorizontalCarousel<TQueryHook extends UseQuery, TCardType extends CardT
                         className={classNames({ [styles['horizontal-carousel__nav-button']]: true, [styles['horizontal-carousel__nav-button-left']]: true })}
                         disabled={isBeginning}
                         onClick={() => swiperRef.current?.slidePrev()}
+                        aria-label="Previous slide"
+                        aria-disabled={isBeginning}
                     >
-                        <LeftChevron size={12} color="s-color-fg-primary" />
+                        <LeftChevron size={12} color="s-color-fg-primary" aria-hidden="true" />
                     </button>
 
                     <button
                         className={classNames({ [styles['horizontal-carousel__nav-button']]: true, [styles['horizontal-carousel__nav-button-right']]: true })}
                         disabled={isEnd}
                         onClick={() => swiperRef.current?.slideNext()}
+                        aria-label="Next slide"
+                        aria-disabled={isEnd}
                     >
-                        <RightChevron size={12} color="s-color-fg-primary" />
+                        <RightChevron size={12} color="s-color-fg-primary" aria-hidden="true" />
                     </button>
                 </div>
             </div>

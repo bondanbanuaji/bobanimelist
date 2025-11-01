@@ -4,7 +4,7 @@ import styles from './AppLayout.module.scss';
 import { Footer } from "../../components/widgets/footer";
 import { Drawer } from "../../components/widgets/drawer";
 import { AnimatePresence, motion, type Variants } from "motion/react";
-import { Suspense, useState, useEffect } from "react";
+import { Suspense, useState } from "react";
 import { Loader } from "../loader";
 import AnimatedLogo from "../../components/atoms/animated-logo/AnimatedLogo";
 

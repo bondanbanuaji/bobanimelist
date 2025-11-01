@@ -61,3 +61,9 @@
 .no-result {
   color: var(--s-color-fg-primary);
 }
+
+.error-container {
+  width: 100%;
+  grid-column: 1 / -1;
+  padding: var(--s-spacing-10) var(--s-spacing-4);
+}

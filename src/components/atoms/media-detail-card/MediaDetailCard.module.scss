@@ -129,7 +129,7 @@
 
   &__genre {
     flex-wrap: wrap;
-    gap: 8px;
+    gap: var(--s-spacing-2);
     display: none;
 
     @include screen-sm {
