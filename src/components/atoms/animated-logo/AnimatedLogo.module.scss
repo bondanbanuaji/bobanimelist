@@ -13,7 +13,6 @@
   height: 100vh;
   overflow: hidden;
 
-  // Responsiveness fix for mobile browsers
   @media (max-height: 600px) {
     align-items: center;
   }

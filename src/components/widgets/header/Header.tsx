@@ -73,7 +73,7 @@ function Header() {
                 {!isOverflowing && <HeaderNav />}
             </div>
             <div className={styles.header__rhs}>
-                <Link to='https://github.com/suriyakishoreks/anime-list-app' target="_blank" rel="noopener noreferrer" >
+                <Link to='https://github.com/bondanbanuaji/bobanimelist' target="_blank" rel="noopener noreferrer" >
                     <GithubIcon size={22} color='s-color-fg-primary' className={styles.header__actions} />
                 </Link>
                 <Link to={{ pathname: '/search', search: '' }} >

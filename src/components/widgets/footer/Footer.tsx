@@ -15,10 +15,10 @@ function Footer() {
                     </Label>
                 </div>
                 <nav className={styles.footer__socials}>
-                    <Link to='https://github.com/suriyakishoreks' target="_blank" rel="noopener noreferrer" >
+                    <Link to='https://github.com/bondanbanuaji/bobanimelist' target="_blank" rel="noopener noreferrer" >
                         <GithubIcon size={24} color='s-color-fg-primary' className={styles['footer__actions']} />
                     </Link>
-                    <Link to='mailto:kssuriyakishore16@gmail.com' target="_blank" rel="noopener noreferrer" >
+                    <Link to='mailto:bondanbanuaji@gmail.com' target="_blank" rel="noopener noreferrer" >
                         <MailIcon size={24} color='s-color-fg-primary' className={styles['footer__actions']} />
                     </Link>
                 </nav>
