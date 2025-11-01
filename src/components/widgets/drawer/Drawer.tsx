@@ -12,6 +12,13 @@ import { Link, useLocation } from 'react-router';
 import { useTranslation } from 'react-i18next';
 import ThemeToggle from '../../atoms/theme-toggle';
 import LogoIcon from '../../atoms/icons/LogoIcon';
+import FacebookIcon from '../../atoms/icons/FacebookIcon';
+import InstagramIcon from '../../atoms/icons/InstagramIcon';
+import WhatsAppIcon from '../../atoms/icons/WhatsAppIcon';
+import XIcon from '../../atoms/icons/XIcon';
+import TikTokIcon from '../../atoms/icons/TikTokIcon';
+import GithubIcon from '../../atoms/icons/GithubIcon';
+import YouTubeIcon from '../../atoms/icons/YouTubeIcon';
 
 
 const drawerVariants = {
@@ -180,7 +187,86 @@ function Drawer() {
                                 animate={{ opacity: 1 }}
                                 transition={{ delay: 0.3 }}
                             >
-                                <p className={styles['drawer__copyright']}>© {new Date().getFullYear()} BobAnimeList</p>
+                                <div className={styles['drawer__social-icons']}>
+                                    <motion.a 
+                                        href="https://facebook.com/bobanimelist" 
+                                        target="_blank" 
+                                        rel="noopener noreferrer"
+                                        className={styles['drawer__social-icon']}
+                                        whileHover={{ scale: 1.1, y: -3 }}
+                                        whileTap={{ scale: 0.95 }}
+                                        aria-label="Facebook"
+                                    >
+                                        <FacebookIcon size={24} color="s-color-fg-primary" />
+                                    </motion.a>
+                                    <motion.a 
+                                        href="https://instagram.com/bdn_bnj" 
+                                        target="_blank" 
+                                        rel="noopener noreferrer"
+                                        className={styles['drawer__social-icon']}
+                                        whileHover={{ scale: 1.1, y: -3 }}
+                                        whileTap={{ scale: 0.95 }}
+                                        aria-label="Instagram"
+                                    >
+                                        <InstagramIcon size={24} color="s-color-fg-primary" />
+                                    </motion.a>
+                                    <motion.a 
+                                        href="https://wa.me/628978601538" 
+                                        target="_blank" 
+                                        rel="noopener noreferrer"
+                                        className={styles['drawer__social-icon']}
+                                        whileHover={{ scale: 1.1, y: -3 }}
+                                        whileTap={{ scale: 0.95 }}
+                                        aria-label="WhatsApp"
+                                    >
+                                        <WhatsAppIcon size={24} color="s-color-fg-primary" />
+                                    </motion.a>
+                                    <motion.a 
+                                        href="https://x.com/bobanimelist" 
+                                        target="_blank" 
+                                        rel="noopener noreferrer"
+                                        className={styles['drawer__social-icon']}
+                                        whileHover={{ scale: 1.1, y: -3 }}
+                                        whileTap={{ scale: 0.95 }}
+                                        aria-label="X (Twitter)"
+                                    >
+                                        <XIcon size={24} color="s-color-fg-primary" />
+                                    </motion.a>
+                                    <motion.a 
+                                        href="https://tiktok.com/@bobanimelist" 
+                                        target="_blank" 
+                                        rel="noopener noreferrer"
+                                        className={styles['drawer__social-icon']}
+                                        whileHover={{ scale: 1.1, y: -3 }}
+                                        whileTap={{ scale: 0.95 }}
+                                        aria-label="TikTok"
+                                    >
+                                        <TikTokIcon size={24} color="s-color-fg-primary" />
+                                    </motion.a>
+                                    <motion.a 
+                                        href="https://github.com/bondanbanuaji/bobanimelist" 
+                                        target="_blank" 
+                                        rel="noopener noreferrer"
+                                        className={styles['drawer__social-icon']}
+                                        whileHover={{ scale: 1.1, y: -3 }}
+                                        whileTap={{ scale: 0.95 }}
+                                        aria-label="GitHub"
+                                    >
+                                        <GithubIcon size={24} color="s-color-fg-primary" />
+                                    </motion.a>
+                                    <motion.a 
+                                        href="https://youtube.com/@bobanimelist" 
+                                        target="_blank" 
+                                        rel="noopener noreferrer"
+                                        className={styles['drawer__social-icon']}
+                                        whileHover={{ scale: 1.1, y: -3 }}
+                                        whileTap={{ scale: 0.95 }}
+                                        aria-label="YouTube"
+                                    >
+                                        <YouTubeIcon size={24} color="s-color-fg-primary" />
+                                    </motion.a>
+                                </div>
+                                <p className={styles['drawer__copyright']}>© {new Date().getFullYear()} bobanimelist</p>
                             </motion.div>
                         </motion.aside>
                     </RemoveScroll>
