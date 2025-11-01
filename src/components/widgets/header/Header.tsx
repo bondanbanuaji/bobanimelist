@@ -12,7 +12,7 @@ import { Link, useLocation } from "react-router";
 import Vernac from "../../../services/vernac";
 import classNames from "classnames";
 import MenuIcon from "../../atoms/icons/MenuIcon";
-import { useAppDispatch } from "../../../store";
+import { useAppDispatch, useAppSelector } from "../../../store";
 import { updateIsDrawerOpen, updateIsHeaderNavHidden } from "../../../store/slices/appContextSlice";
 
 function HeaderNav() {
@@ -36,6 +36,7 @@ function Header() {
     const maxHeaderWidth = useRef<number>(0);
     const [isOverflowing, setIsOverflowing] = useState(false);
     const dispatch = useAppDispatch();
+    const { isDrawerOpen } = useAppSelector(state => state.appContext);
 
     useEffect(() => {
         const checkOverflow = () => {
@@ -58,10 +59,8 @@ function Header() {
         dispatch(updateIsHeaderNavHidden(isOverflowing));
     }, [dispatch, isOverflowing]);
 
-    const DrawerIcon = isOverflowing ? MenuIcon : SettingIcon;
-
     const onDrawerClick = () => {
-        dispatch(updateIsDrawerOpen(true));
+        dispatch(updateIsDrawerOpen(!isDrawerOpen));
     };
 
     return (
@@ -80,7 +79,11 @@ function Header() {
                     <SearchIcon size={22} color='s-color-fg-primary' className={styles.header__actions} />
                 </Link>
                 <button onClick={onDrawerClick}>
-                    <DrawerIcon size={22} color='s-color-fg-primary' className={styles.header__actions} />
+                    {isOverflowing ? (
+                        <MenuIcon isActive={isDrawerOpen} size={22} className={styles.header__actions} />
+                    ) : (
+                        <SettingIcon size={22} color='s-color-fg-primary' className={styles.header__actions} />
+                    )}
                 </button>
             </div>
         </header>

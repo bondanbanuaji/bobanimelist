@@ -1,9 +1,33 @@
 import type { IconProps } from './icon.model';
 import { cssColorVar } from '../../../shared/design-system/util';
+import styles from './MenuIcon.module.scss';
+import classNames from 'classnames';
 
-function MenuIcon({ size, color }: IconProps) {
+interface MenuIconProps extends Omit<IconProps, 'color'> {
+    color?: IconProps['color'];
+    isActive: boolean;
+}
+
+function MenuIcon({ size, color = 's-color-fg-primary', className, isActive }: MenuIconProps) {
+    const iconStyle = {
+        width: size,
+        height: size,
+    };
+
+    const barStyle = {
+        backgroundColor: cssColorVar(color),
+    };
+
     return (
-        <svg xmlns="http://www.w3.org/2000/svg" height={size} viewBox="0 -960 960 960" width={size} fill={cssColorVar(color)}><path d="M120-240v-80h520v80H120Zm664-40L584-480l200-200 56 56-144 144 144 144-56 56ZM120-440v-80h400v80H120Zm0-200v-80h520v80H120Z" /></svg>);
+        <div
+            className={classNames(styles.container, className, { [styles.active]: isActive })}
+            style={iconStyle}
+        >
+            <span className={styles.bar} style={barStyle}></span>
+            <span className={styles.bar} style={barStyle}></span>
+            <span className={styles.bar} style={barStyle}></span>
+        </div>
+    );
 }
 
 export default MenuIcon;
