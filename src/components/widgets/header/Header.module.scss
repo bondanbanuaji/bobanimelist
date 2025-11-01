@@ -8,6 +8,7 @@
   position: sticky;
   top: 0;
   background-color: var(--s-color-bg-primary);
+  color: var(--s-color-fg-primary);
   z-index: 10;
   height: var(--s-header-height);
 
@@ -41,6 +42,10 @@
 
   &__actions {
     transition: scale 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--s-color-fg-primary);
 
     @include screen-sm {
       height: 24px;
@@ -56,6 +61,56 @@
     @include screen-touch-first {
       &:active {
         scale: 1.0;
+      }
+    }
+  }
+
+  &__language_dropdown {
+    position: relative;
+    display: flex;
+    align-items: center;
+
+    &__container {
+      position: absolute;
+      top: calc(100% + var(--s-spacing-2));
+      right: 0;
+      background-color: var(--s-color-bg-primary);
+      border: 1px solid var(--s-color-border-primary);
+      border-radius: var(--s-radius-3);
+      box-shadow: var(--s-shadow-2);
+      z-index: 100;
+      min-width: 160px;
+      overflow: hidden;
+      opacity: 0;
+      visibility: hidden;
+      transform: translateY(-10px);
+      transition: all 0.25s ease-in-out;
+      color: var(--s-color-fg-primary);
+    }
+
+    &__container--visible {
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(0);
+    }
+
+    &__option {
+      padding: var(--s-spacing-3) var(--s-spacing-4);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      transition: background-color 0.2s ease;
+      color: var(--s-color-fg-primary);
+
+      &:hover {
+        background-color: var(--s-color-bg-secondary);
+      }
+
+      &--active {
+        background-color: var(--s-color-bg-tertiary);
+        font-weight: 500;
+        color: var(--s-color-fg-primary);
       }
     }
   }

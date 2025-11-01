@@ -1,0 +1,30 @@
+import type { VernacConfig } from "./models";
+
+const inVernacConfig: VernacConfig = {
+    APP_NAME: 'bobanimelist',
+    APP_DESC: 'Platform terpadu untuk menjelajahi dunia anime, manga, manhwa, dan manhua. Ditenagai oleh API Jikan.',
+    HOME: 'Beranda',
+    ANIME: 'Anime',
+    MANGA: 'Manga',
+    COPY_RIGHT: 'bobanimelist. Hak Cipta Dilindungi.',
+    HP_TOP_ANIME_TITLE: "Anime Favorit Penggemar",
+    HP_TOP_MANGA_TITLE: "Baca Apa yang Semua Orang Suka.",
+    HP_TOP_CHARACTER_TITLE: "Karakter Teratas: Siapa yang Akan Kamu Dukung?",
+    HP_TOP_PEOPLE_TITLE: "Dibalik Layar: Tokoh-tokoh Industri Teratas",
+    ALP_CURRENT_SEASON_TITLE: 'Ungkap Obsesi Anime Berikutnya',
+    ALP_UPCOMING_SEASON_TITLE: 'Bersiaplah: Musim Anime Mendatang.',
+    ALP_TOP_RATED_TITLE: 'Anime Klasik yang Wajib Ditonton.',
+    ALP_RECOMMENDATION_TITLE: 'Khusus Untukmu: Rekomendasi Anime.',
+    ALP_SCHEDULE_TITLE: 'Jadwal Anime Mingguanmu',
+    MLP_TRENDING_MANGA_TITLE: 'Manga Terkini: Apa yang Lagi Tren Sekarang',
+    MLP_TRENDING_MANHWA_TITLE: 'Serial Manhwa Terhangat.',
+    MLP_TRENDING_MANHUA_TITLE: 'Temukan Manhua Populer',
+    MLP_RECOMMENDATION_TITLE: 'Khusus Untukmu: Rekomendasi Manga.',
+    EP_404_DESC: 'Maaf, halaman yang Anda cari tidak ditemukan.',
+    EP_404_TITLE: '404 - Halaman Tidak Ditemukan',
+    EP_ERROR_DESC: 'Terjadi kesalahan yang tidak terduga.',
+    EP_ERROR_TITLE: 'Ada yang salah',
+    EP_REDIRECT_TEXT: 'Ke Beranda'
+};
+
+export default inVernacConfig;

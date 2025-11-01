@@ -1,4 +1,6 @@
 import enVernacConfig from "./en";
+import jpVernacConfig from "./jp";
+import inVernacConfig from "./in";
 import type { VernacConfig, Locale } from "./models";
 
 export default class Vernac {
@@ -12,6 +14,10 @@ export default class Vernac {
             case 'en':
             default:
                 return enVernacConfig;
+            case 'jp':
+                return jpVernacConfig;
+            case 'in':
+                return inVernacConfig;
         }
     }
 }

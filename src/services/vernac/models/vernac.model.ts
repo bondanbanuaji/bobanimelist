@@ -25,4 +25,4 @@ export interface VernacConfig {
     EP_REDIRECT_TEXT: string;
 }
 
-export type Locale = 'en' | 'jp';
+export type Locale = 'en' | 'jp' | 'in';

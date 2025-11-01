@@ -17,6 +17,7 @@
   --s-color-bg-base: #{$p-color-common-black};
   --s-color-fg-base: #{$p-color-common-white};
   --s-color-fg-logo: #{$p-color-red-900};
+  --s-color-border-primary: #{$p-color-grey-700};
 }
 
 .light-theme {
@@ -35,4 +36,5 @@
   --s-color-bg-placeholder: #{$p-color-grey-400};
   --s-color-bg-base: #{$p-color-common-white};
   --s-color-fg-base: #{$p-color-common-black};
+  --s-color-border-primary: #{$p-color-grey-300};
 }
