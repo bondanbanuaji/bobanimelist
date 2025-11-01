@@ -1,4 +1,4 @@
-# <img src="/public/zero.gif" width="55" height="auto" ></img> bobanimelist
+# <img src="/public/zero.gif" width="60" height="auto" ></img> bobanimelist
 
 **bobanimelist** adalah platform modern untuk menjelajahi anime dan manga, dibangun dari awal dengan fokus pada performa, skalabilitas, dan pengalaman pengembang. Versi 2.0 ini menampilkan keahlian saya dalam React, TypeScript, manajemen state, dan praktik terbaik UI/UX dengan sentuhan animasi yang menarik.
 
