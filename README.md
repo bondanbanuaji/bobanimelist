@@ -1,4 +1,4 @@
-# bobanimelist
+# <img src="/public/favicon-32x32.png"></img> bobanimelist <img src="/public/favicon-32x32.png"></img>
 
 **bobanimelist** is a modern anime and manga discovery platform, rebuilt from the ground up with a focus on performance, scalability, and developer experience. This Version 2.0 release showcases my expertise in React, TypeScript, state management, and UI/UX best practices.
 
