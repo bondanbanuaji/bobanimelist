@@ -1,17 +1,19 @@
 import styles from './Footer.module.scss';
-import { Label } from '../../atoms/label';
-import Vernac from '../../../services/vernac';
+import Label from '../../atoms/label';
+import { useTranslation } from 'react-i18next';
 import GithubIcon from '../../atoms/icons/GithubIcon';
 import { Link } from 'react-router';
 import MailIcon from '../../atoms/icons/MailIcon';
 
 function Footer() {
+    const { t } = useTranslation();
+    
     return (
         <footer className={styles.footer}>
             <div className={styles.footer__content}>
                 <div className={styles.footer__description}>
                     <Label as="p" font="typo-primary-m-regular">
-                        {Vernac.getVernac('APP_DESC')}
+                        {t('APP_DESC')}
                     </Label>
                 </div>
                 <nav className={styles.footer__socials}>
@@ -24,7 +26,7 @@ function Footer() {
                 </nav>
             </div>
             <Label as='p' font='typo-primary-s-medium' className={styles['footer__copy-right']}>
-                &copy; {new Date().getFullYear()} {Vernac.getVernac('COPY_RIGHT')}
+                &copy; {new Date().getFullYear()} {t('COPY_RIGHT')}
             </Label>
         </footer>
     );

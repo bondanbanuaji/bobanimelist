@@ -1,8 +1,8 @@
 import { ScrollRestoration, useLocation, useOutlet } from "react-router";
-import { Header } from "../../components/widgets/header";
+import Header from "../../components/widgets/header";
 import styles from './AppLayout.module.scss';
-import { Footer } from "../../components/widgets/footer";
-import { Drawer } from "../../components/widgets/drawer";
+import Footer from "../../components/widgets/footer";
+import Drawer from "../../components/widgets/drawer";
 import { AnimatePresence, motion, type Variants } from "motion/react";
 import { Suspense, useState } from "react";
 import { Loader } from "../loader";

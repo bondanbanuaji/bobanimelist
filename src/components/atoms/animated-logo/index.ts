@@ -1,3 +1,2 @@
-import AnimatedLogo from "./AnimatedLogo";
-
-export { AnimatedLogo };
+export { default } from "./AnimatedLogo";
+export * from "./AnimatedLogo";

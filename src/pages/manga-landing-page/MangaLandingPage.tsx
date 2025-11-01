@@ -1,15 +1,16 @@
 import { useGetTopMangaQuery } from "../../services/jikan";
-import { LazyMount } from "../../components/atoms/lazy-mount";
+import LazyMount from "../../components/atoms/lazy-mount";
 import { HorizontalCarousel } from "../../components/widgets/horizontal-carousel";
-import Vernac from "../../services/vernac";
+import { useTranslation } from 'react-i18next';
 import { formatThresholdNumber } from "../../shared/util";
 
 function MangaLandingPage() {
+    const { t } = useTranslation();
 
     return (
         <div>
             <HorizontalCarousel
-                heading={Vernac.getVernac('MLP_TRENDING_MANGA_TITLE')}
+                heading={t('MLP_TRENDING_MANGA_TITLE')}
                 type="centered"
                 cardType="media-detail"
                 useQueryHook={useGetTopMangaQuery}
@@ -28,7 +29,7 @@ function MangaLandingPage() {
                 }))}
             />
             <HorizontalCarousel
-                heading={Vernac.getVernac('MLP_TRENDING_MANHWA_TITLE')}
+                heading={t('MLP_TRENDING_MANHWA_TITLE')}
                 useQueryHook={useGetTopMangaQuery}
                 options={{ type: 'Manhwa' }}
                 adapter={(data) => data.data.map((manga) => ({
@@ -43,7 +44,7 @@ function MangaLandingPage() {
             />
             <LazyMount estimatedHeight={359}>
                 <HorizontalCarousel
-                    heading={Vernac.getVernac('MLP_TRENDING_MANHUA_TITLE')}
+                    heading={t('MLP_TRENDING_MANHUA_TITLE')}
                     useQueryHook={useGetTopMangaQuery}
                     options={{ type: 'Manhua' }}
                     adapter={(data) => data.data.map((manga) => ({

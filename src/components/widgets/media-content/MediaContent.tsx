@@ -1,6 +1,6 @@
 import styles from './MediaContent.module.scss';
-import { Image } from '../../atoms/image';
-import { Label } from '../../atoms/label';
+import Image from '../../atoms/image';
+import Label from '../../atoms/label';
 import classNames from 'classnames';
 import { type TypedUseQuery } from "@reduxjs/toolkit/query/react";
 import { Link } from 'react-router';

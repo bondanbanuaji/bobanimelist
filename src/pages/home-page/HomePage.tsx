@@ -1,14 +1,16 @@
 import { useGetTopAnimeQuery, useGetTopMangaQuery, useGetTopCharactersQuery, useGetTopPeopleQuery } from "../../services/jikan";
-import { LazyMount } from "../../components/atoms/lazy-mount";
+import LazyMount from "../../components/atoms/lazy-mount";
 import { HorizontalCarousel } from "../../components/widgets/horizontal-carousel";
-import Vernac from "../../services/vernac";
+import { useTranslation } from 'react-i18next';
 import { formatThresholdNumber } from "../../shared/util";
 
 function HomePage() {
+    const { t } = useTranslation();
+    
     return (
         <div>
             <HorizontalCarousel
-                heading={Vernac.getVernac('HP_TOP_ANIME_TITLE')}
+                heading={t('HP_TOP_ANIME_TITLE')}
                 type="centered"
                 cardType="media-detail"
                 useQueryHook={useGetTopAnimeQuery}
@@ -27,7 +29,7 @@ function HomePage() {
                 }))}
             />
             <HorizontalCarousel
-                heading={Vernac.getVernac('HP_TOP_MANGA_TITLE')}
+                heading={t('HP_TOP_MANGA_TITLE')}
                 useQueryHook={useGetTopMangaQuery}
                 options={{}}
                 adapter={(data) => data.data.map((manga) => ({
@@ -42,7 +44,7 @@ function HomePage() {
             />
             <LazyMount estimatedHeight={359}>
                 <HorizontalCarousel
-                    heading={Vernac.getVernac('HP_TOP_CHARACTER_TITLE')}
+                    heading={t('HP_TOP_CHARACTER_TITLE')}
                     useQueryHook={useGetTopCharactersQuery}
                     options={{}}
                     adapter={(data) => data.data.map((character) => ({
@@ -57,7 +59,7 @@ function HomePage() {
             </LazyMount>
             <LazyMount estimatedHeight={359}>
                 <HorizontalCarousel
-                    heading={Vernac.getVernac('HP_TOP_PEOPLE_TITLE')}
+                    heading={t('HP_TOP_PEOPLE_TITLE')}
                     useQueryHook={useGetTopPeopleQuery}
                     options={{}}
                     adapter={(data) => data.data.map((person) => ({

@@ -1,3 +1,2 @@
-import MediaDetailCard, { MediaDetailCardLoading } from "./MediaDetailCard";
-
-export { MediaDetailCard, MediaDetailCardLoading };
+export { default, MediaDetailCardLoading } from "./MediaDetailCard";
+export * from "./MediaDetailCard";

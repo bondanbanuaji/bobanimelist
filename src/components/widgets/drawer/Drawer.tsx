@@ -4,14 +4,14 @@ import { updateIsDrawerOpen } from '../../../store/slices/appContextSlice';
 import { RemoveScroll } from 'react-remove-scroll';
 import { AnimatePresence, motion } from 'motion/react';
 import CloseIcon from '../../atoms/icons/CloseIcon';
-import { Label } from '../../atoms/label';
+import Label from '../../atoms/label';
 import AnimeIcon from '../../atoms/icons/AnimeIcon';
 import MangaIcon from '../../atoms/icons/MangaIcon';
 import HomeIcon from '../../atoms/icons/HomeIcon';
 import { Link, useLocation } from 'react-router';
-import Vernac from '../../../services/vernac';
-import { Pill } from '../../atoms/pill';
-import { ThemeToggle } from '../../atoms/theme-toggle';
+import { useTranslation } from 'react-i18next';
+import Pill from '../../atoms/pill';
+import ThemeToggle from '../../atoms/theme-toggle';
 
 
 const drawerVariants = {
@@ -28,6 +28,7 @@ const backdropVariants = {
 
 function Drawer() {
     const location = useLocation();
+    const { t } = useTranslation();
     const isDrawerOpen = useAppSelector((state) => state.appContext.isDrawerOpen);
     const isHeaderNavHidden = useAppSelector((state) => state.appContext.isHeaderNavHidden);
     const dispatch = useAppDispatch();
@@ -66,13 +67,13 @@ function Drawer() {
                                 <Label className={styles['drawer__menu-heading']} font='typo-primary-l-medium'>Explore</Label>
                                 <nav className={styles.drawer__nav}>
                                     <Link onClick={handleDrawerClose} to={{ pathname: '/', search: '' }} >
-                                        <Pill icon={HomeIcon} text={Vernac.getVernac('HOME')} active={location.pathname === '/'} />
+                                        <Pill icon={HomeIcon} text={t('HOME')} active={location.pathname === '/'} />
                                     </Link>
                                     <Link onClick={handleDrawerClose} to={{ pathname: '/anime', search: '' }}>
-                                        <Pill icon={AnimeIcon} text={Vernac.getVernac('ANIME')} active={location.pathname === '/anime'} />
+                                        <Pill icon={AnimeIcon} text={t('ANIME')} active={location.pathname === '/anime'} />
                                     </Link>
                                     <Link onClick={handleDrawerClose} to={{ pathname: '/manga', search: '' }}>
-                                        <Pill icon={MangaIcon} text={Vernac.getVernac('MANGA')} active={location.pathname === '/manga'} />
+                                        <Pill icon={MangaIcon} text={t('MANGA')} active={location.pathname === '/manga'} />
                                     </Link>
                                 </nav>
                             </div>}

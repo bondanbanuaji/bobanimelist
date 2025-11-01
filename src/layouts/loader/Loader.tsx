@@ -1,4 +1,4 @@
-import { AnimatedLogo } from '../../components/atoms/animated-logo';
+import AnimatedLogo from '../../components/atoms/animated-logo';
 import { motion, type Variants } from "motion/react";
 import styles from './Loader.module.scss';
 

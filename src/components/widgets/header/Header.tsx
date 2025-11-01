@@ -1,46 +1,48 @@
 import { useEffect, useRef, useState, useCallback } from "react";
 import AnimeIcon from "../../atoms/icons/AnimeIcon";
 import HomeIcon from "../../atoms/icons/HomeIcon";
-import { Logo } from "../../atoms/logo";
+import Logo from "../../atoms/logo";
 import MangaIcon from "../../atoms/icons/MangaIcon";
 import SearchIcon from "../../atoms/icons/SearchIcon";
 import SettingIcon from "../../atoms/icons/SettingIcon";
-import { Pill } from "../../atoms/pill";
+import Pill from "../../atoms/pill";
 import styles from "./Header.module.scss";
 import GithubIcon from "../../atoms/icons/GithubIcon";
 import LanguageIcon from "../../atoms/icons/LanguageIcon";
 import { Link, useLocation } from "react-router";
-import Vernac from "../../../services/vernac";
-import { VernacUtil } from "../../../services/vernac/vernac-util";
+import { useTranslation } from 'react-i18next'; // Impor hook i18n
 import classNames from "classnames";
 import MenuIcon from "../../atoms/icons/MenuIcon";
 import { useAppDispatch, useAppSelector } from "../../../store";
 import { updateIsDrawerOpen, updateIsHeaderNavHidden } from "../../../store/slices/appContextSlice";
+import { useChangeLanguage } from "../../../hooks/useChangeLanguage";
+import { VernacUtil } from "../../../services/vernac/vernac-util";
 
 function HeaderNav() {
   const location = useLocation();
+  const { t } = useTranslation(); // Gunakan hook di sini
 
   return (
     <nav className={styles.header__nav}>
       <Link to={{ pathname: "/", search: "" }}>
-        <Pill icon={HomeIcon} text={Vernac.getVernac("HOME")} active={location.pathname === "/"} />
+        <Pill icon={HomeIcon} text={t("home")} active={location.pathname === "/"} />
       </Link>
       <Link to={{ pathname: "/anime", search: "" }}>
-        <Pill icon={AnimeIcon} text={Vernac.getVernac("ANIME")} active={location.pathname === "/anime"} />
+        <Pill icon={AnimeIcon} text={t("anime_nav")} active={location.pathname === "/anime"} /> {/* Tambahkan kunci ini ke file terjemahan nanti */}
       </Link>
       <Link to={{ pathname: "/manga", search: "" }}>
-        <Pill icon={MangaIcon} text={Vernac.getVernac("MANGA")} active={location.pathname === "/manga"} />
+        <Pill icon={MangaIcon} text={t("manga_nav")} active={location.pathname === "/manga"} /> {/* Tambahkan kunci ini ke file terjemahan nanti */}
       </Link>
     </nav>
   );
 }
 
 interface LanguageDropdownProps {
-  currentLocale: "en" | "jp" | "in";
-  changeLanguage: (locale: "en" | "jp" | "in") => void;
+  currentLocale: "en" | "id" | "jp";
+  changeLanguage: (lng: 'en' | 'id' | 'jp') => void;
   isDropdownOpen: boolean;
   setDropdownOpen: (state: boolean) => void;
-  languages: Array<"en" | "jp" | "in">;
+  languages: Array<"en" | "id" | "jp">;
 }
 
 function LanguageDropdown({
@@ -50,11 +52,11 @@ function LanguageDropdown({
   setDropdownOpen,
   languages,
 }: LanguageDropdownProps) {
-  const getLanguageName = (locale: "en" | "jp" | "in"): string => {
+  const getLanguageName = (locale: "en" | "id" | "jp"): string => {
     switch (locale) {
       case "en": return "English";
       case "jp": return "Japanese";
-      case "in": return "Indonesian";
+      case "id": return "Indonesian";
       default: return "English";
     }
   };
@@ -105,7 +107,7 @@ function Header() {
   const [isLanguageDropdownOpen, setIsLanguageDropdownOpen] = useState(false);
   const dispatch = useAppDispatch();
   const { isDrawerOpen } = useAppSelector(state => state.appContext);
-  const currentLocale = VernacUtil.getCurrentLocale();
+  const { changeLanguage: handleChangeLanguage, currentLanguage } = useChangeLanguage(); // Gunakan hook kita
 
   useEffect(() => {
     const checkOverflow = () => {
@@ -140,19 +142,23 @@ function Header() {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, [isLanguageDropdownOpen]);
 
-  const changeLanguage = useCallback((locale: "en" | "jp" | "in") => {
-    if (currentLocale !== locale) {
-      VernacUtil.setCurrentLocale(locale);
-      window.location.reload();
+  const handleLanguageChange = useCallback((locale: "en" | "id" | "jp") => { // Sesuaikan tipe
+    handleChangeLanguage(locale); // Panggil fungsi dari hook kita
+    // Jika kita ingin tetap menyimpan pilihan ke localStorage via VernacUtil
+    // Kita bisa lakukan ini untuk kompatibilitas dengan bagian lain yang menggunakan VernacUtil
+    if (locale === 'id') { // i18n kita menggunakan 'id', tetapi VernacUtil mungkin pakai 'in'
+        VernacUtil.setCurrentLocale('in'); // Kita mapping 'id' ke 'in' untuk Vernac jika diperlukan
+    } else if (locale === 'jp' || locale === 'en') {
+        VernacUtil.setCurrentLocale(locale); // Langsung pakai kode yang sama
     }
-    setIsLanguageDropdownOpen(false);
-  }, [currentLocale]);
+  }, [handleChangeLanguage]);
 
   const onDrawerClick = () => {
     dispatch(updateIsDrawerOpen(!isDrawerOpen));
   };
 
-  const languages: Array<"en" | "jp" | "in"> = ["en", "jp", "in"];
+  // Gunakan kode bahasa yang sesuai dengan i18n kita
+  const languages: Array<"en" | "id" | "jp"> = ["en", "id", "jp"];
 
   return (
     <header className={styles.header} ref={headerRef}>
@@ -167,8 +173,8 @@ function Header() {
           <GithubIcon size={22} color="s-color-fg-primary" className={styles.header__actions} />
         </a>
         <LanguageDropdown
-          currentLocale={currentLocale}
-          changeLanguage={changeLanguage}
+          currentLocale={currentLanguage as "en" | "id" | "jp"} // Gunakan state dari hook
+          changeLanguage={handleLanguageChange} // Gunakan fungsi handler baru
           isDropdownOpen={isLanguageDropdownOpen}
           setDropdownOpen={setIsLanguageDropdownOpen}
           languages={languages}

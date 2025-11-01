@@ -9,28 +9,59 @@ import React from 'react';
 
 const HomePage = React.lazy(() => import('../../pages/home-page'));
 
-export const routes: RouteObject[] = [
-    {
-        path: '/',
-        element: <AppLayout />,
-        errorElement: <ErrorPage isRoot />,
-        children: [
-            {
-                index: true,
-                element: <HomePage />,
-                errorElement: <ErrorPage />,
-            },
-            animeRoutes,
-            mangaRoutes,
-            entityRoutes,
-            searchRoutes,
-            // 404 route
-            {
-                path: '*',
-                element: <ErrorPage is404 />,
-            }
-        ],
-    }
+// Definisikan child routes utama sekali saja
+const mainChildRoutes: RouteObject[] = [
+  {
+    index: true,
+    element: <HomePage />,
+    errorElement: <ErrorPage />,
+  },
+  animeRoutes,
+  mangaRoutes,
+  entityRoutes,
+  searchRoutes,
+  // Rute 404 untuk child
+  {
+    path: '*',
+    element: <ErrorPage is404 />,
+  }
 ];
 
-// TODO: lazy loading routes
+// Rute untuk bahasa spesifik ID
+const idRoutes: RouteObject = {
+  path: 'id',
+  element: <AppLayout />,
+  errorElement: <ErrorPage isRoot />,
+  children: mainChildRoutes,
+};
+
+// Rute untuk bahasa spesifik JP
+const jpRoutes: RouteObject = {
+  path: 'jp',
+  element: <AppLayout />,
+  errorElement: <ErrorPage isRoot />,
+  children: mainChildRoutes,
+};
+
+// Rute root untuk default (tanpa awalan)
+const defaultRoutes: RouteObject = {
+  path: '', // Path root
+  element: <AppLayout />,
+  errorElement: <ErrorPage isRoot />,
+  children: mainChildRoutes,
+};
+
+// Rute catch-all 404 global
+const notFoundRoute: RouteObject = {
+  path: '*',
+  element: <ErrorPage is404 />,
+};
+
+// Gabungkan rute dalam urutan: spesifik dulu, lalu default, lalu catch-all
+// Urutan penting di react-router!
+export const routes: RouteObject[] = [
+  idRoutes,         // /id/*
+  jpRoutes,         // /jp/*
+  defaultRoutes,    // / (dan semua child tanpa awalan)
+  notFoundRoute     // *
+];

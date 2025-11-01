@@ -1,3 +1,2 @@
-import Dropdown, { type DropdownOption } from './Dropdown';
-
-export { Dropdown, type DropdownOption };
+export { default, type DropdownOption } from './Dropdown';
+export * from './Dropdown';

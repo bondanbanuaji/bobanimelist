@@ -2,7 +2,7 @@ import styles from './ThemeToggle.module.scss';
 import { useAppSelector } from '../../../store';
 import { useDispatch } from 'react-redux';
 import { updateTheme } from '../../../store/slices/persistedAppContext';
-import { Label } from '../label';
+import Label from '../label';
 import MoonIcon from '../icons/MoonIcon';
 import SunIcon from '../icons/SunIcon';
 import classNames from 'classnames';

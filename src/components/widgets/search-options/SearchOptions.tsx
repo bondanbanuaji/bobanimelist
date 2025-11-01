@@ -1,10 +1,10 @@
 import { useLocation, useSearchParams } from 'react-router';
-import { Dropdown, type DropdownOption } from '../../atoms/dropdown';
+import Dropdown, { type DropdownOption } from '../../atoms/dropdown';
 import SearchIcon from '../../atoms/icons/SearchIcon';
 import styles from './SearchOptions.module.scss';
 import { SearchCategoryOptions } from '../../../services/jikan/constants';
 import { useEffect, useState } from 'react';
-import { Label } from '../../atoms/label';
+import Label from '../../atoms/label';
 
 
 export interface SearchOption {

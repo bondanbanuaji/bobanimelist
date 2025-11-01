@@ -1,3 +1,2 @@
-import LazyMount from "./LazyMount";
-
-export { LazyMount };
+export { default } from "./LazyMount";
+export * from "./LazyMount";

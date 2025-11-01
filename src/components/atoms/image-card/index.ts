@@ -1,3 +1,2 @@
-import ImageCard, { ImageCardLoading } from "./ImageCard";
-
-export { ImageCard, ImageCardLoading };
+export { default, ImageCardLoading } from "./ImageCard";
+export * from "./ImageCard";

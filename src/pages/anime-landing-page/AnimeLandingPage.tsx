@@ -1,14 +1,16 @@
 import { useGetAnimeSearchQuery, useGetAnimeSeasonsNowQuery, useGetAnimeSeasonsUpcomingQuery } from "../../services/jikan";
-import { LazyMount } from "../../components/atoms/lazy-mount";
+import LazyMount from "../../components/atoms/lazy-mount";
 import { HorizontalCarousel } from "../../components/widgets/horizontal-carousel";
-import Vernac from "../../services/vernac";
+import { useTranslation } from 'react-i18next';
 import { filterDuplicates, formatThresholdNumber } from "../../shared/util";
 
 function AnimeLandingPage() {
+    const { t } = useTranslation();
+    
     return (
         <div>
             <HorizontalCarousel
-                heading={Vernac.getVernac('ALP_CURRENT_SEASON_TITLE')}
+                heading={t('ALP_CURRENT_SEASON_TITLE')}
                 type="centered"
                 cardType="media-detail"
                 useQueryHook={useGetAnimeSeasonsNowQuery}
@@ -27,7 +29,7 @@ function AnimeLandingPage() {
                 })), 'key')}
             />
             <HorizontalCarousel
-                heading={Vernac.getVernac('ALP_UPCOMING_SEASON_TITLE')}
+                heading={t('ALP_UPCOMING_SEASON_TITLE')}
                 useQueryHook={useGetAnimeSeasonsUpcomingQuery}
                 options={{}}
                 adapter={(data) => filterDuplicates(data.data.map((anime) => ({
@@ -42,7 +44,7 @@ function AnimeLandingPage() {
             />
             <LazyMount estimatedHeight={359}>
                 <HorizontalCarousel
-                    heading={Vernac.getVernac('ALP_TOP_RATED_TITLE')}
+                    heading={t('ALP_TOP_RATED_TITLE')}
                     useQueryHook={useGetAnimeSearchQuery}
                     options={{ limit: 15, order_by: 'score', sort: 'desc' }}
                     adapter={(data) => filterDuplicates(data.data.map((anime) => ({

@@ -1,5 +1,5 @@
 import { Link } from 'react-router';
-import { Label } from '../label';
+import Label from '../label';
 import styles from './ErrorState.module.scss';
 import classNames from 'classnames';
 import WarningIcon from '../icons/WarningIcon';

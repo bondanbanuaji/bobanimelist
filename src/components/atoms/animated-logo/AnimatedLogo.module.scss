@@ -13,10 +13,11 @@
   height: 100vh;
   overflow: hidden;
 
-  @media (max-height: 600px) {
+  @media (max-height <= 600px) {
     align-items: center;
   }
 }
+
 
 @keyframes draw-line {
   from {
@@ -26,6 +27,7 @@
     stroke-dashoffset: 0;
   }
 }
+
 
 @keyframes fill-in {
   from {

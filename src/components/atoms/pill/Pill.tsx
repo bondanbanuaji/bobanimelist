@@ -1,6 +1,6 @@
 import classNames from "classnames";
 import type { IconProps } from "../icons/icon.model";
-import { Label } from "../label";
+import Label from "../label";
 import styles from "./Pill.module.scss";
 
 interface PillProps {

@@ -1,6 +1,6 @@
 import { Link } from 'react-router';
-import { Image } from '../image';
-import { Label } from '../label';
+import Image from '../image';
+import Label from '../label';
 import styles from './MediaDetailCard.module.scss';
 import classNames from 'classnames';
 import StarIcon from '../icons/StarIcon';
