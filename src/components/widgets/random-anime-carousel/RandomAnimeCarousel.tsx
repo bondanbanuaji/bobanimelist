@@ -2,7 +2,7 @@ import { useGetTopAnimeQuery, useGetTopMangaQuery, useGetAnimeSearchQuery, useGe
 import { shuffleArray } from '../../../shared/util/image-utils';
 import { formatThresholdNumber } from '../../../shared/util';
 import { getBestImageUrl } from '../../../shared/util/image-utils';
-import React, { useEffect, useState, useMemo, useRef, useCallback } from 'react';
+import React, { useEffect, useState, useRef, useCallback } from 'react';
 import SwipeCarousel from '../../atoms/swipe-carousel';
 import MediaDetailCard, { MediaDetailCardLoading } from '../../atoms/media-detail-card';
 import Label from '../../atoms/label';
@@ -27,9 +27,8 @@ const getRandomItem = <T,>(arr: T[]): T => arr[Math.floor(Math.random() * arr.le
 const RandomAnimeCarousel = () => {
     const randomHeading = 'Recommended For You';
 
-    // --- Random Parameters for API Queries ---
-    // Memoize to prevent re-fetching on every render
-    const randomParams = useMemo(() => {
+    // Generate random parameters only once on component mount
+    const randomParams = React.useMemo(() => {
         return {
             page: Math.floor(Math.random() * 10) + 1,
             animeType: getRandomItem(ANIME_TYPES),
@@ -38,7 +37,7 @@ const RandomAnimeCarousel = () => {
             genreId: getRandomItem(GENRE_IDS),
             midRangePage: Math.floor(Math.random() * 50) + 1, // Wider page range for more variety
         };
-    }, []);
+    }, []); // Empty dependency array ensures this runs only once
 
     // --- Data Fetching ---
     // 1. Top Anime (random type, filter, and page)
@@ -48,6 +47,9 @@ const RandomAnimeCarousel = () => {
         limit: 15,
         page: randomParams.page,
         sfw: true,
+    }, {
+        // Use RTK Query's built-in caching with 60-second TTL
+        refetchOnMountOrArgChange: false, // Don't refetch on mount since baseApi has caching
     });
 
     // 2. Top Manga (random type, filter, and page)
@@ -56,6 +58,9 @@ const RandomAnimeCarousel = () => {
         filter: randomParams.filter,
         limit: 15,
         page: randomParams.page,
+    }, {
+        // Use RTK Query's built-in caching with 60-second TTL
+        refetchOnMountOrArgChange: false, // Don't refetch on mount since baseApi has caching
     });
 
     // 3. Anime by Random Genre
@@ -66,6 +71,9 @@ const RandomAnimeCarousel = () => {
         sfw: true,
         order_by: 'popularity',
         sort: 'desc',
+    }, {
+        // Use RTK Query's built-in caching with 60-second TTL
+        refetchOnMountOrArgChange: false, // Don't refetch on mount since baseApi has caching
     });
 
     // 4. Manga by Random Genre
@@ -75,6 +83,9 @@ const RandomAnimeCarousel = () => {
         page: 1,
         order_by: 'popularity',
         sort: 'desc',
+    }, {
+        // Use RTK Query's built-in caching with 60-second TTL
+        refetchOnMountOrArgChange: false, // Don't refetch on mount since baseApi has caching
     });
 
     // 5. "Average" or "Mid-Range" Anime (not too popular, but well-liked)
@@ -86,6 +97,9 @@ const RandomAnimeCarousel = () => {
         sort: 'desc',
         limit: 10,
         sfw: true,
+    }, {
+        // Use RTK Query's built-in caching with 60-second TTL
+        refetchOnMountOrArgChange: false, // Don't refetch on mount since baseApi has caching
     });
 
     // --- Combined States ---
@@ -98,6 +112,7 @@ const RandomAnimeCarousel = () => {
     const showLoading = (isLoading || isFetching) && !hasInitialData;
     const [shuffledData, setShuffledData] = useState<(Anime | Manga)[]>([]);
 
+    // Process data only when all queries are complete
     useEffect(() => {
         if (isLoading || isFetching) return;
 
@@ -121,8 +136,10 @@ const RandomAnimeCarousel = () => {
         }
 
         // Sort items to favor "mid-range" scores, creating a more balanced list
-        const sortedItems = [...uniqueItems]
-            .filter((item) => item.score && item.favorites)
+        const sortedItems: (Anime | Manga)[] = [...uniqueItems]
+            .filter((item): item is (Anime | Manga) & { score: number; favorites: number } => 
+                item.score !== null && item.score !== undefined && item.favorites !== null && item.favorites !== undefined
+            )
             .sort((a, b) => {
                 const getWeightedScore = (item: Anime | Manga) => {
                     const score = item.score ?? 0;
@@ -136,7 +153,7 @@ const RandomAnimeCarousel = () => {
             });
 
         // Shuffle the sorted items thoroughly and take a final slice for display
-        const finalSelection = shuffleArray(sortedItems).slice(0, 15);
+        const finalSelection: (Anime | Manga)[] = shuffleArray(sortedItems).slice(0, 15);
         setShuffledData(finalSelection);
 
         setHasInitialData(true);
@@ -156,10 +173,10 @@ const RandomAnimeCarousel = () => {
     const [isBeginning, setIsBeginning] = useState(true);
     const [isEnd, setIsEnd] = useState(false);
 
-    const handleCarouselMove = (swiper: SwiperClass) => {
+    const handleCarouselMove = useCallback((swiper: SwiperClass) => {
         setIsBeginning(swiper.isBeginning);
         setIsEnd(swiper.isEnd);
-    };
+    }, []);
 
     // --- Render Content ---
     const getContent = useCallback((): React.ReactNode[] => {
@@ -167,7 +184,7 @@ const RandomAnimeCarousel = () => {
             // Determine if any of the errors is a 429 (Too Many Requests)
             const errors = [topAnimeError, topMangaError, animeGenreError, mangaGenreError, midRangeAnimeError];
             const has429Error = errors.some(error => 
-                error && typeof error === 'object' && 'status' in error && error.status === 429
+                error && typeof error === 'object' && 'status' in error && (error as { status: unknown }).status === 429
             );
             
             let errorMessage = "We couldn’t load recommendations right now. Try refreshing.";
@@ -229,7 +246,7 @@ const RandomAnimeCarousel = () => {
         <div
             className={classNames(styles['horizontal-carousel'], {
                 [styles['horizontal-carousel--loading']]: !isReady,
-                [styles['horizontal-carousel--ready']]: isReady,
+                    [styles['horizontal-carousel--ready']]: isReady,
             })}
         >
             <div className={styles['horizontal-carousel__header']}>

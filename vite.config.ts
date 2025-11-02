@@ -1,5 +1,6 @@
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
+import path from 'path';
 import stylelint from 'vite-plugin-stylelint';
 // @ts-expect-error: vite-plugin-eslint may not have TypeScript types
 import eslint from 'vite-plugin-eslint';
@@ -89,6 +90,11 @@ export default defineConfig({
       failOnError: false
     }),
   ],
+  resolve: {
+    alias: {
+      '@': path.resolve(__dirname, 'src'),
+    },
+  },
   build: {
     rollupOptions: {
       output: {

@@ -1,84 +1,138 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import type { BaseQueryFn, FetchArgs, FetchBaseQueryError } from '@reduxjs/toolkit/query';
-import i18n from '../../i18n'; // Impor i18n kita
+import i18n from '@/i18n';
+import { apiLimiter } from './apiLimiter';
+
+// Cache configuration - following requirements (5-10 minutes TTL)
+const CACHE_TTL = 600 * 1000; // 10 minutes (maximum as per requirements)
+
+// Global cache storage for all Jikan API data
+const cache = new Map<string, { data: unknown; timestamp: number }>();
+// Track ongoing requests globally to prevent duplicate requests
+const ongoingRequests = new Map<string, Promise<any>>();
+
+// Check if cached data is still valid
+const isCacheValid = (timestamp: number): boolean => {
+    return Date.now() - timestamp < CACHE_TTL;
+};
 
 const JIKAN_API_BASE_URL = 'https://api.jikan.moe/v4';
+const RETRY_DELAY = 3000; // 3 seconds before retry after 429
 
-// Custom base query with 429 error handling and monitoring
+// Custom base query with internationalization headers
 const baseQuery = fetchBaseQuery({
     baseUrl: JIKAN_API_BASE_URL,
     prepareHeaders: (headers) => {
-        // Ambil bahasa dari i18n
         const currentLng = i18n.language;
+        let acceptLanguageValue = 'en-US';
 
-        // Mapping bahasa untuk header Accept-Language
-        // 'id' di i18n kita -> 'id-ID' atau 'in' untuk header (walaupun 'in' tidak resmi, beberapa API memakainya)
-        // 'jp' di i18n kita -> 'ja-JP'
-        // 'en' di i18n kita -> 'en-US' atau 'en-GB', 'en'
-        let acceptLanguageValue = 'en-US'; // Default ke en-US
-
-        if (currentLng === 'jp') {
-            acceptLanguageValue = 'ja-JP';
-        } else if (currentLng === 'id') {
-            // Header Accept-Language sering menggunakan 'in' untuk Indonesia, meskipun kode bahasa ISO adalah 'id'
-            // Kita bisa coba keduanya, atau hanya 'id'. Mari coba 'id' dulu.
-            acceptLanguageValue = 'id-ID';
-            // Jika API tidak merespon dengan konten bahasa Indonesia, kita bisa coba 'in'
-            // acceptLanguageValue = 'in';
-        }
-        // Jika currentLng === 'en', biarkan default 'en-US'
+        if (currentLng === 'jp') acceptLanguageValue = 'ja-JP';
+        else if (currentLng === 'id') acceptLanguageValue = 'id-ID';
 
         headers.set('Accept-Language', acceptLanguageValue);
         return headers;
-    }
+    },
 });
 
-// Custom query function with 429 handling and monitoring
-// The function signature now properly matches RTK Query's expected format: (args, api, extraOptions)
-const baseQueryWith429Handling: BaseQueryFn<
+// Global query function applying rate limiting to all Jikan API requests
+const baseQueryWithRateLimiting: BaseQueryFn<
   string | FetchArgs,
   unknown,
   FetchBaseQueryError,
-  {}
+  Record<string, unknown>
 > = async (args, api, extraOptions) => {
-    const startTime = Date.now();
-    
-    // Extract endpoint for logging - handle both string and object args
-    let endpoint = 'unknown';
+    // Generate consistent cache key for endpoint + parameters
+    let cacheKey = '';
     if (typeof args === 'string') {
-        endpoint = args.split('?')[0];
+        cacheKey = args;
     } else if (args && typeof args === 'object' && 'url' in args) {
-        endpoint = (args as { url: string }).url.split('?')[0];
-    }
-    
-    console.log(`[API] Request started for: ${endpoint} at ${new Date(startTime).toISOString()}`);
-    
-    let retryCount = 0;
-    const maxRetries = 1; // Reduced to avoid excessive retries on 429
-    let result = await baseQuery(args, api, extraOptions);
-
-    // Monitor and handle 429 errors with retry logic
-    while (result.error?.status === 429 && retryCount < maxRetries) {
-        console.warn(`[API] 429 Too Many Requests for endpoint: ${endpoint}, attempt ${retryCount + 1}. Waiting before retry...`);
-        
-        // Wait for a random duration between 1-3 seconds to reduce collision
-        const waitTime = Math.floor(Math.random() * 2000) + 1000; 
-        await new Promise(resolve => setTimeout(resolve, waitTime));
-        
-        result = await baseQuery(args, api, extraOptions);
-        retryCount++;
+        const url = (args as { url: string }).url;
+        const params = (args as FetchArgs).params
+            ? Object.keys((args as FetchArgs).params!)
+                  .sort()
+                  .map(key => `${key}=${(args as FetchArgs).params?.[key]}`)
+                  .join('&')
+            : '';
+        cacheKey = `${url}${params ? `?${params}` : ''}`;
+    } else {
+        cacheKey = JSON.stringify(args);
     }
 
-    const endTime = Date.now();
-    console.log(`[API] Request completed for: ${endpoint} in ${endTime - startTime}ms, success: ${!result.error}`);
+    // Check global cache first (applies to all components using this API)
+    const cachedResult = cache.get(cacheKey);
+    if (cachedResult && isCacheValid(cachedResult.timestamp)) {
+        console.log(`[GLOBAL API] Cache hit for: ${cacheKey}`);
+        return { data: cachedResult.data };
+    }
 
-    return result;
+    // Check for ongoing identical requests (global request deduplication)
+    if (ongoingRequests.has(cacheKey)) {
+        console.log(`[GLOBAL API] Waiting for ongoing request for: ${cacheKey}`);
+        try {
+            return await ongoingRequests.get(cacheKey);
+        } catch {
+            // If ongoing request fails, remove from map and continue with new request
+            ongoingRequests.delete(cacheKey);
+        }
+    }
+
+    // Execute request through the global rate limiter
+    const executeRequest = async () => {
+        let endpoint = 'unknown';
+        if (typeof args === 'string') {
+            endpoint = args.split('?')[0];
+        } else if (args && typeof args === 'object' && 'url' in args) {
+            endpoint = (args as { url: string }).url.split('?')[0];
+        }
+
+        console.log(`[GLOBAL API] Processing request to: ${endpoint} at ${new Date().toISOString()}`);
+
+        // Process request through the global rate limiter queue
+        let result = await apiLimiter.executeRequest(async () => {
+            return baseQuery(args, api, extraOptions);
+        });
+        
+        // Implement retry logic only when 429 occurs
+        if (result.error?.status === 429) {
+            console.warn(`[GLOBAL API] 429 Too Many Requests for endpoint: ${endpoint}, waiting ${RETRY_DELAY}ms before retrying...`);
+            
+            // Wait before retry, but ensure this also goes through the rate limiter
+            await new Promise(resolve => setTimeout(resolve, RETRY_DELAY));
+            
+            result = await apiLimiter.executeRequest(async () => {
+                return baseQuery(args, api, extraOptions);
+            });
+        }
+
+        // Store successful responses in global cache
+        if (!result.error && result.data) {
+            cache.set(cacheKey, {
+                data: result.data,
+                timestamp: Date.now(),
+            });
+            console.log(`[GLOBAL API] Cached result for: ${cacheKey}`);
+        }
+
+        return result;
+    };
+
+    // Create the request promise and track it globally
+    const requestPromise = executeRequest();
+    ongoingRequests.set(cacheKey, requestPromise);
+
+    try {
+        const result = await requestPromise;
+        return result;
+    } finally {
+        // Clean up the ongoing request tracking
+        ongoingRequests.delete(cacheKey);
+    }
 };
 
 export const jikanApi = createApi({
     reducerPath: 'jikanApi',
-    baseQuery: baseQueryWith429Handling,
+    baseQuery: baseQueryWithRateLimiting,
     endpoints: () => ({}),
-    keepUnusedDataFor: 60 * 60,
-    refetchOnMountOrArgChange: 60 * 60
+    keepUnusedDataFor: 3600, // 1 hour
+    refetchOnMountOrArgChange: 3600,
 });

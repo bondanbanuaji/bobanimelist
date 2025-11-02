@@ -76,7 +76,8 @@ function HorizontalCarousel<TQueryHook extends UseQuery, TCardType extends CardT
     const isTopPeople = heading === 'Top People';
 
     const finalOptions = React.useMemo(() => {
-        if (isTopPeople && typeof options === 'object' && options !== null) {
+        if (isTopPeople && typeof options === 'object' && options !== null && !('page' in options)) {
+            // Only set random page if not already specified in options
             return {
                 ...options,
                 page: Math.floor(Math.random() * 5) + 1,
@@ -85,8 +86,11 @@ function HorizontalCarousel<TQueryHook extends UseQuery, TCardType extends CardT
         return options;
     }, [isTopPeople, options]);
 
-    // Optimized query with better error handling
-    const { data, isLoading, isError, isFetching, error } = useQueryHook(finalOptions);
+    // Optimized query with better error handling and caching
+    const { data, isLoading, isError, isFetching, error } = useQueryHook(finalOptions, {
+        // Use RTK Query's built-in caching with 60-second TTL
+        refetchOnMountOrArgChange: false, // Don't refetch on mount since baseApi has caching
+    });
 
     const adaptedData = React.useMemo(() => {
         if (!data) {
@@ -127,10 +131,10 @@ function HorizontalCarousel<TQueryHook extends UseQuery, TCardType extends CardT
         swiperRef.current = swiper;
     };
 
-    const handleCarouselMove = (swiper: SwiperClass) => {
+    const handleCarouselMove = React.useCallback((swiper: SwiperClass) => {
         setIsBeginning(swiper.isBeginning);
         setIsEnd(swiper.isEnd);
-    };
+    }, []);
 
     const getContent = React.useCallback((): React.ReactNode[] => {
         // If data is not loaded and we're still fetching, show loading state
