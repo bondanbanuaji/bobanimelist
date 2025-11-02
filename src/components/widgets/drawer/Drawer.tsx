@@ -106,7 +106,7 @@ function Drawer() {
                             <div className={styles['drawer__header']}>
                                 <div className={styles['drawer__logo']}>
                                     <LogoIcon size={32} color="s-color-fg-primary" />
-                                    <span className={styles['drawer__logo-text']}>Menu</span>
+                                    <span className={styles['drawer__logo-text']}>MENU</span>
                                 </div>
                                 <button 
                                     onClick={handleDrawerClose} 

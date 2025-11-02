@@ -1,7 +1,6 @@
 import styles from './Footer.module.scss';
 import Label from '../../atoms/label';
-import { useTranslation } from 'react-i18next';
-import GithubIcon from '../../atoms/icons/GithubIcon';
+import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router';
 import MailIcon from '../../atoms/icons/MailIcon';
 
@@ -17,9 +16,6 @@ function Footer() {
                     </Label>
                 </div>
                 <nav className={styles.footer__socials}>
-                    <Link to='https://github.com/bondanbanuaji/bobanimelist' target="_blank" rel="noopener noreferrer" >
-                        <GithubIcon size={24} color='s-color-fg-primary' className={styles['footer__actions']} />
-                    </Link>
                     <Link to='mailto:bondanbanuaji@gmail.com' target="_blank" rel="noopener noreferrer" >
                         <MailIcon size={24} color='s-color-fg-primary' className={styles['footer__actions']} />
                     </Link>

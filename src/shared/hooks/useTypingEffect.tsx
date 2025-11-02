@@ -22,7 +22,7 @@ const useTypingEffect = ({
   const [phase, setPhase] = useState<'initialDisplay' | 'initialDelete' | 'typing' | 'pause' | 'deleting'>('initialDisplay');
 
   useEffect(() => {
-    let timeout: NodeJS.Timeout;
+    let timeout: ReturnType<typeof setTimeout>;
 
     const handleTyping = () => {
       switch (phase) {

@@ -1,0 +1,43 @@
+.close-icon {
+  transition: transform 0.2s ease, opacity 0.2s ease;
+
+  // Nilai default jika tidak ada kelas ukuran spesifik
+  width: 1rem !important;
+  height: 1rem !important;
+
+  // Variasi ukuran menggunakan CSS custom properties
+  &--small {
+    width: 0.75rem !important;
+    height: 0.75rem !important;
+  }
+
+  &--medium {
+    width: 1rem !important;
+    height: 1rem !important;
+  }
+
+  &--large {
+    width: 1.5rem !important;
+    height: 1.5rem !important;
+  }
+
+  &--xlarge {
+    width: 20rem !important;
+    height: 20rem !important;
+  }
+
+  &--xxlarge {
+    width: 3rem !important;
+    height: 3rem !important;
+  }
+
+  &--xxxlarge {
+    width: 4rem !important;
+    height: 4rem !important;
+  }
+
+  // Gaya hover jika diperlukan
+  &:hover {
+    opacity: 0.8;
+  }
+}

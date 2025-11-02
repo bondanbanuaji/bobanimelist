@@ -1,4 +1,5 @@
 @use "/src/styles/tokens/semantics" as *;
+@use "/src/styles/tokens/primitives/typography" as *;
 
 .logo {
   display: flex;
@@ -19,37 +20,66 @@
   }
 
   &__title {
+    @include font-family-primary;
+    @include font-size-l;
+    @include font-weight-semibold;
+
     color: var(--s-color-fg-primary);
     margin-top: var(--s-spacing-1);
     white-space: nowrap;
-    
-    font-size: clamp(1.2rem, 2.5vw + 0.6rem, 1.7rem);
-    font-weight: 600; 
-    font-family: outfit, sans-serif;
-    
     line-height: 1.2;
+    // Tetapkan lebar tetap berdasarkan teks terpanjang untuk mencegah pergeseran
+    display: inline-block;
+    width: 100%;
+    overflow: hidden;
+    box-sizing: border-box;
   }
 
   &-icon {
     width: clamp(24px, 3vw + 16px, 48px) !important;
     height: clamp(24px, 3vw + 16px, 48px) !important;
   }
+
+  // Kontainer judul untuk menetapkan lebar tetap
+  .title-container {
+    position: relative;
+    display: inline-block;
+    // Menetapkan lebar berdasarkan teks terpanjang yang mungkin muncul
+  }
+
+  // Kontainer kosong saat title disembunyikan, tetapi tetap menjaga spacing
+  .title-container--hidden {
+    display: inline-block;
+    // Menetapkan lebar berdasarkan teks terpanjang untuk menjaga layout
+    min-width: 10ch; /* Sesuaikan dengan lebar teks terpanjang */
+    visibility: hidden;
+  }
+
+  // Elemen tersembunyi untuk mengukur lebar teks terpanjang
+  .title-measure {
+    @include font-family-primary;
+    @include font-size-xl;
+    @include font-weight-semibold;
+
+    visibility: hidden;
+    position: absolute;
+    white-space: nowrap;
+    line-height: 1.2;
+    margin-top: var(--s-spacing-1);
+  }
 }
 
 .cursor {
   display: inline-block;
-  width: 0.6ch;
+  width: 0.3ch;
   margin-left: var(--s-spacing-1);
   background-color: currentcolor;
   opacity: 1;
-  animation: blink 1s infinite;
-
-  font-size: inherit;
+  animation: blink 1.5s infinite;
   line-height: inherit;
 }
 
 @keyframes blink {
-
   0%,
   100% {
     opacity: 1;

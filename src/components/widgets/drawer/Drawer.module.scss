@@ -1,4 +1,5 @@
 @use "/src/styles/tokens/semantics" as *;
+@use "/src/styles/tokens/primitives/typography" as *;
 
 .drawer {
   position: fixed;
@@ -46,7 +47,7 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding-bottom: var(--s-spacing-6);
+    padding: clamp(0.75rem, 2vw, 1.5rem) clamp(0.5rem, 1.5vw, 1rem) clamp(1rem, 2.5vw, 1.5rem);
     margin-bottom: var(--s-spacing-4);
     border-bottom: 1px solid var(--s-color-border-primary);
   }
@@ -54,17 +55,22 @@
   &__logo {
     display: flex;
     align-items: center;
-    gap: var(--s-spacing-3);
+    gap: clamp(0.5rem, 1.5vw, 1rem);
     
     svg {
       color: var(--s-color-fg-primary);
       transition: color 0.3s ease;
+      width: clamp(1.5rem, 3vw, 2rem);
+      height: clamp(1.5rem, 3vw, 2rem);
     }
   }
 
   &__logo-text {
+    @include font-weight-semibold;
+    @include font-size-l;
+
     color: var(--s-color-fg-primary);
-    letter-spacing: -0.02em;
+    letter-spacing: 0.04em;
     transition: color 0.3s ease;
   }
 
@@ -72,11 +78,10 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 40px;
-    height: 40px;
+    width: 35px;
+    height: 35px;
     border-radius: 50%;
     background: var(--s-color-bg-secondary);
-    border: 1px solid var(--s-color-border-primary);
     cursor: pointer;
     transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
     

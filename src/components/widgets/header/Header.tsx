@@ -7,7 +7,6 @@ import SearchIcon from "../../atoms/icons/SearchIcon";
 import SettingIcon from "../../atoms/icons/SettingIcon";
 import Pill from "../../atoms/pill";
 import styles from "./Header.module.scss";
-import GithubIcon from "../../atoms/icons/GithubIcon";
 import LanguageIcon from "../../atoms/icons/LanguageIcon";
 import { Link, useLocation } from "react-router-dom";
 import { useTranslation } from 'react-i18next'; // Impor hook i18n
@@ -107,7 +106,7 @@ function Header() {
   const [isLanguageDropdownOpen, setIsLanguageDropdownOpen] = useState(false);
   const dispatch = useAppDispatch();
   const { isDrawerOpen } = useAppSelector(state => state.appContext);
-  const { changeLanguage: handleChangeLanguage, currentLanguage } = useChangeLanguage(); // Gunakan hook kita
+  const { changeLanguage: handleChangeLanguage, currentLanguage } = useChangeLanguage();
 
   useEffect(() => {
     const checkOverflow = () => {
@@ -130,7 +129,6 @@ function Header() {
     dispatch(updateIsHeaderNavHidden(isOverflowing));
   }, [dispatch, isOverflowing]);
 
-  // Tutup dropdown jika klik di luar area
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       const target = event.target as HTMLElement;
@@ -142,7 +140,7 @@ function Header() {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, [isLanguageDropdownOpen]);
 
-  const handleLanguageChange = useCallback((locale: "en" | "id" | "jp") => { // Sesuaikan tipe
+  const handleLanguageChange = useCallback((locale: "en" | "id" | "jp") => { 
     handleChangeLanguage(locale); // Panggil fungsi dari hook kita
     // Jika kita ingin tetap menyimpan pilihan ke localStorage via VernacUtil
     // Kita bisa lakukan ini untuk kompatibilitas dengan bagian lain yang menggunakan VernacUtil
@@ -169,12 +167,9 @@ function Header() {
         {!isOverflowing && <HeaderNav />}
       </div>
       <div className={styles.header__rhs}>
-        <a href="https://github.com/bondanbanuaji/bobanimelist" target="_blank" rel="noopener noreferrer">
-          <GithubIcon size={22} color="s-color-fg-primary" className={styles.header__actions} />
-        </a>
         <LanguageDropdown
-          currentLocale={currentLanguage as "en" | "id" | "jp"} // Gunakan state dari hook
-          changeLanguage={handleLanguageChange} // Gunakan fungsi handler baru
+          currentLocale={currentLanguage as "en" | "id" | "jp"} 
+          changeLanguage={handleLanguageChange} 
           isDropdownOpen={isLanguageDropdownOpen}
           setDropdownOpen={setIsLanguageDropdownOpen}
           languages={languages}
