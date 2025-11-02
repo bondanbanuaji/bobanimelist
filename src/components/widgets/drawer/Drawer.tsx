@@ -113,7 +113,10 @@ function Drawer() {
                                     className={styles['drawer__close-button']}
                                     aria-label="Close menu"
                                 >
-                                    <CloseIcon size={24} color="s-color-fg-primary" />
+                                    <div className={styles['drawer__custom-close-icon']}>
+                                        <span className={styles['drawer__close-line']}></span>
+                                        <span className={styles['drawer__close-line']}></span>
+                                    </div>
                                 </button>
                             </div>
                             

@@ -52,31 +52,73 @@
     @include screen-xl {
       gap: var(--s-spacing-13);
     }
+    
+    .pill {
+      svg {
+        width: 20px !important;
+        height: 20px !important;
+
+        @include screen-xxs {
+          width: 20px !important;
+          height: 20px !important;
+        }
+
+        @include screen-xs {
+          width: 22px !important;
+          height: 22px !important;
+        }
+
+        @include screen-sm {
+          width: 24px !important;
+          height: 24px !important;
+        }
+
+        @include screen-md {
+          width: 26px !important;
+          height: 26px !important;
+        }
+
+        @include screen-lg {
+          width: 28px !important;
+          height: 28px !important;
+        }
+
+        @include screen-xl {
+          width: 30px !important;
+          height: 30px !important;
+        }
+
+        @include screen-xxl {
+          width: 32px !important;
+          height: 32px !important;
+        }
+      }
+    }
   }
 
   &__rhs {
     display: flex;
     align-items: center;
-    gap: var(--s-spacing-4);
+    gap: var(--s-spacing-5);
 
     @include screen-xs {
-      gap: var(--s-spacing-4);
-    }
-
-    @include screen-sm {
       gap: var(--s-spacing-5);
     }
 
-    @include screen-md {
+    @include screen-sm {
       gap: var(--s-spacing-6);
     }
 
-    @include screen-lg {
+    @include screen-md {
       gap: var(--s-spacing-7);
     }
 
-    @include screen-xl {
+    @include screen-lg {
       gap: var(--s-spacing-8);
+    }
+
+    @include screen-xl {
+      gap: var(--s-spacing-9);
     }
   }
 
@@ -86,32 +128,42 @@
     align-items: center;
     justify-content: center;
     color: var(--s-color-fg-primary);
-    width: 20px;
-    height: 20px;
+    width: 22px !important;
+    height: 22px !important;
+
+    @include screen-xxs {
+      width: 22px !important;
+      height: 22px !important;
+    }
 
     @include screen-xs {
-      width: 20px;
-      height: 20px;
+      width: 24px !important;
+      height: 24px !important;
     }
 
     @include screen-sm {
-      width: 22px;
-      height: 22px;
+      width: 26px !important;
+      height: 26px !important;
     }
 
     @include screen-md {
-      width: 24px;
-      height: 24px;
+      width: 28px !important;
+      height: 28px !important;
     }
 
     @include screen-lg {
-      width: 24px;
-      height: 24px;
+      width: 30px !important;
+      height: 30px !important;
     }
 
     @include screen-xl {
-      width: 24px;
-      height: 24px;
+      width: 32px !important;
+      height: 32px !important;
+    }
+
+    @include screen-xxl {
+      width: 34px !important;
+      height: 34px !important;
     }
 
     @include screen-mouse-first {

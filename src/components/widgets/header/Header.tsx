@@ -75,7 +75,7 @@ function LanguageDropdown({
         className={styles.header__actions}
         aria-label="Language selection"
       >
-        <LanguageIcon size={22} color="s-color-fg-primary" />
+        <LanguageIcon size={22} color="s-color-fg-primary" className={styles.header__actions} />
       </button>
       <div className={dropdownContainerClass}>
         {languages.map((locale) => {
