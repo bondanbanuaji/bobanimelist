@@ -4,7 +4,6 @@ class ApiLimiter {
   private timestamps: number[] = [];
   private readonly MAX_REQUESTS_PER_SECOND = 3;
   private readonly MAX_REQUESTS_PER_MINUTE = 60;
-  private readonly REQUEST_DELAY = 666; 
 
   async executeRequest<T>(fn: () => Promise<T>): Promise<T> {
     return new Promise((resolve, reject) => {
@@ -60,8 +59,10 @@ class ApiLimiter {
       console.error('API request failed:', error);
     }
     
-    // Wait for the required delay before processing the next request to maintain safe rate
-    await new Promise(resolve => setTimeout(resolve, this.REQUEST_DELAY));
+    // Wait for a randomized delay between 500ms and 1000ms before processing the next request
+    // This provides a safe buffer while reducing overall request batch delays
+    const randomDelay = Math.floor(Math.random() * 501) + 500; // Random value between 500-1000ms
+    await new Promise(resolve => setTimeout(resolve, randomDelay));
     this.processQueue();
   }
 }

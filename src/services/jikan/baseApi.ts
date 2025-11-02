@@ -9,7 +9,7 @@ const CACHE_TTL = 600 * 1000; // 10 minutes (maximum as per requirements)
 // Global cache storage for all Jikan API data
 const cache = new Map<string, { data: unknown; timestamp: number }>();
 // Track ongoing requests globally to prevent duplicate requests
-const ongoingRequests = new Map<string, Promise<any>>();
+const ongoingRequests = new Map<string, Promise<{ data?: unknown; error?: FetchBaseQueryError }>>();
 
 // Check if cached data is still valid
 const isCacheValid = (timestamp: number): boolean => {
@@ -69,7 +69,13 @@ const baseQueryWithRateLimiting: BaseQueryFn<
     if (ongoingRequests.has(cacheKey)) {
         console.log(`[GLOBAL API] Waiting for ongoing request for: ${cacheKey}`);
         try {
-            return await ongoingRequests.get(cacheKey);
+            const ongoingPromise = ongoingRequests.get(cacheKey);
+            if (!ongoingPromise) {
+                // This should not happen due to the .has() check above, but for type safety
+                throw new Error('Unexpected missing ongoing request');
+            }
+            const result = await ongoingPromise;
+            return result;
         } catch {
             // If ongoing request fails, remove from map and continue with new request
             ongoingRequests.delete(cacheKey);

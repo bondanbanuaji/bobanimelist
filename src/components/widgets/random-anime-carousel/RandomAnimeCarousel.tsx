@@ -13,6 +13,7 @@ import LeftChevron from '../../atoms/icons/LeftChevron';
 import RightChevron from '../../atoms/icons/RightChevron';
 import classNames from 'classnames';
 import { type Anime, type Manga, type AnimeType, type MangaType } from '../../../services/jikan/models';
+import { useAnimationTrigger } from '../../../shared/util/animation/useAnimationTrigger';
 
 // --- Constants for Randomization ---
 const ANIME_TYPES: AnimeType[] = ['TV', 'Movie', 'Ova', 'Special', 'Ona', 'Music'];
@@ -178,6 +179,8 @@ const RandomAnimeCarousel = () => {
         setIsEnd(swiper.isEnd);
     }, []);
 
+    const { ref: containerRef, shouldAnimate } = useAnimationTrigger({ threshold: 0.1 });
+
     // --- Render Content ---
     const getContent = useCallback((): React.ReactNode[] => {
         if (hasError && shuffledData.length === 0) {
@@ -223,11 +226,13 @@ const RandomAnimeCarousel = () => {
             ];
         }
 
-        return shuffledData.map((item) => {
+        return shuffledData.map((item, index) => {
             const isAnime = 'episodes' in item;
             return (
                 <MediaDetailCard
                     key={item.mal_id.toString()}
+                    index={index}
+                    isInView={shouldAnimate}
                     navigateTo={isAnime ? `/anime/${item.mal_id}` : `/manga/${item.mal_id}`}
                     src={getBestImageUrl(item.images)}
                     alt={item.title}
@@ -240,10 +245,11 @@ const RandomAnimeCarousel = () => {
                 />
             );
         });
-    }, [shuffledData, hasError, showLoading, isReady, topAnimeError, topMangaError, animeGenreError, mangaGenreError, midRangeAnimeError]);
+    }, [shuffledData, hasError, showLoading, isReady, topAnimeError, topMangaError, animeGenreError, mangaGenreError, midRangeAnimeError, shouldAnimate]);
 
     return (
         <div
+            ref={containerRef}
             className={classNames(styles['horizontal-carousel'], {
                 [styles['horizontal-carousel--loading']]: !isReady,
                     [styles['horizontal-carousel--ready']]: isReady,

@@ -8,6 +8,7 @@ import type { JikanPagination } from "../../../services/jikan/models";
 import { useSearchParams } from "react-router";
 import Label from "../../atoms/label";
 import classNames from "classnames";
+import { useAnimationTrigger } from "../../../shared/util/animation/useAnimationTrigger";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type UseQuery = TypedUseQuery<any, any, any>;
@@ -55,6 +56,8 @@ function SearchResult<TQueryHook extends UseQuery>({
 
     const adaptedData = data ? adapter(data) : undefined;
 
+    const { ref: containerRef, shouldAnimate } = useAnimationTrigger({ threshold: 0.1 });
+
     const handlePageChange = (newPage: number) => {
         setSearchParams(prev => {
             const newParams = new URLSearchParams(prev);
@@ -95,9 +98,11 @@ function SearchResult<TQueryHook extends UseQuery>({
             );
         }
 
-        return (adaptedData.data).map((data) => (
+        return (adaptedData.data).map((data, index) => (
             <ImageCard
                 key={data.key}
+                index={index}
+                isInView={shouldAnimate}
                 navigateTo={data.navigateTo}
                 src={data.imageUrl}
                 alt={data.title}
@@ -112,7 +117,7 @@ function SearchResult<TQueryHook extends UseQuery>({
     const page = Number(searchParams.get('page') ?? '1');
 
     return (
-        <div className={styles['search-result']}>
+        <div ref={containerRef} className={styles['search-result']}>
             <div className={classNames(styles['search-result__grid'])}>
                 {getContent()}
             </div>

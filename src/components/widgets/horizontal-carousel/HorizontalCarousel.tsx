@@ -11,6 +11,7 @@ import RightChevron from "../../atoms/icons/RightChevron";
 import classNames from "classnames";
 import MediaDetailCard, { MediaDetailCardLoading } from "../../atoms/media-detail-card";
 import { shuffleArray } from "../../../shared/util/image-utils";
+import { useAnimationTrigger } from "../../../shared/util/animation/useAnimationTrigger";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type UseQuery = TypedUseQuery<any, any, any>;
@@ -136,6 +137,8 @@ function HorizontalCarousel<TQueryHook extends UseQuery, TCardType extends CardT
         setIsEnd(swiper.isEnd);
     }, []);
 
+    const { ref: containerRef, shouldAnimate } = useAnimationTrigger({ threshold: 0.1 });
+
     const getContent = React.useCallback((): React.ReactNode[] => {
         // If data is not loaded and we're still fetching, show loading state
         if (showLoading) {
@@ -187,9 +190,11 @@ function HorizontalCarousel<TQueryHook extends UseQuery, TCardType extends CardT
         // Render the actual content (this handles both successful data and error with cached data)
         switch (cardType) {
             case 'media-detail': {
-                return (adaptedData as MediaDetailCardCarouselData[]).map((data) => (
+                return (adaptedData as MediaDetailCardCarouselData[]).map((data, index) => (
                     <MediaDetailCard
                         key={data.key}
+                        index={index}
+                        isInView={shouldAnimate}
                         navigateTo={data.navigateTo}
                         src={data.imageUrl}
                         alt={data.title}
@@ -204,9 +209,11 @@ function HorizontalCarousel<TQueryHook extends UseQuery, TCardType extends CardT
             }
             case 'image':
             default: {
-                return (adaptedData as ImageCardCarouselData[]).map((data) => (
+                return (adaptedData as ImageCardCarouselData[]).map((data, index) => (
                     <ImageCard
                         key={data.key}
+                        index={index}
+                        isInView={shouldAnimate}
                         navigateTo={data.navigateTo}
                         src={data.imageUrl}
                         alt={data.title}
@@ -217,10 +224,10 @@ function HorizontalCarousel<TQueryHook extends UseQuery, TCardType extends CardT
                 ));
             }
         }
-    }, [cardType, adaptedData, isError, showLoading, error]);
+    }, [cardType, adaptedData, isError, showLoading, error, shouldAnimate]);
 
     return (
-        <div className={`${styles['horizontal-carousel']} ${!isReady ? styles['horizontal-carousel--loading'] : styles['horizontal-carousel--ready']}`}>
+        <div ref={containerRef} className={`${styles['horizontal-carousel']} ${!isReady ? styles['horizontal-carousel--loading'] : styles['horizontal-carousel--ready']}`}>
             <div className={styles['horizontal-carousel__header']}>
                 {<Label as='h3' font="typo-primary-l-semibold" className={styles['horizontal-carousel__heading']}>{heading ?? ''}</Label>}
                 <div className={styles['horizontal-carousel__nav']}>

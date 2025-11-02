@@ -1,3 +1,4 @@
+import React from 'react';
 import { Link } from 'react-router';
 import Image from '../image';
 import Label from '../label';
@@ -5,6 +6,7 @@ import styles from './MediaDetailCard.module.scss';
 import classNames from 'classnames';
 import StarIcon from '../icons/StarIcon';
 import HeartIcon from '../icons/HeartIcon';
+import { CardAnimation } from '../../../shared/util/animation/CardAnimation';
 
 interface MediaDetailCardProps {
     src: string;
@@ -16,9 +18,11 @@ interface MediaDetailCardProps {
     favorites?: string;
     status?: string;
     genres?: string[];
+    index?: number; // For stagger animations
+    isInView?: boolean; // For scroll-triggered animations
 }
 
-function MediaDetailCard({ src, alt, navigateTo, title, summary, ratings, favorites, status, genres }: MediaDetailCardProps) {
+function MediaDetailCard({ src, alt, navigateTo, title, summary, ratings, favorites, status, genres, index = 0, isInView = true }: MediaDetailCardProps) {
     const content = (
         <div 
             className={classNames(styles['media-detail-card'], 'no-text-select', { [styles['media-detail-card__clickable']]: navigateTo })}
@@ -51,23 +55,33 @@ function MediaDetailCard({ src, alt, navigateTo, title, summary, ratings, favori
         </div>
     );
 
+    const animatedContent = (
+        <CardAnimation index={index} isInView={isInView} className={styles['media-detail-card-wrapper']}>
+            {content}
+        </CardAnimation>
+    );
+
     return navigateTo ? (
-        <Link to={navigateTo} aria-label={`${title ? title : 'Media'} - View details`}>{content}</Link>
+        <Link to={navigateTo} aria-label={`${title ? title : 'Media'} - View details`}>{animatedContent}</Link>
     ) : (
-        content
+        animatedContent
     );
 }
 
-export function MediaDetailCardLoading() {
+const MediaDetailCardLoadingComponent = () => {
     return (
-        <div className={classNames(styles['media-detail-card'])}>
-            <div className={styles['media-detail-card__image-container']}>
-                <div className={classNames(styles['media-detail-card__image'])} />
+        <CardAnimation className={styles['media-detail-card-wrapper']}>
+            <div className={classNames(styles['media-detail-card'])}>
+                <div className={styles['media-detail-card__image-container']}>
+                    <div className={classNames(styles['media-detail-card__image'])} />
+                </div>
+                <div className={styles['media-detail-card__content']}>
+                </div>
             </div>
-            <div className={styles['media-detail-card__content']}>
-            </div>
-        </div>
+        </CardAnimation>
     );
 }
 
-export default MediaDetailCard;
+export const MediaDetailCardLoading = React.memo(MediaDetailCardLoadingComponent);
+
+export default React.memo(MediaDetailCard);
