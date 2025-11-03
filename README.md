@@ -2,7 +2,7 @@
 m
 **bobanimelist** adalah platform modern untuk menjelajahi anime dan manga, dibangun dari awal dengan fokus pada performa, skalabilitas, dan pengalaman pengembang. Versi 2.0 ini menampilkan keahlian saya dalam React, TypeScript, manajemen state, dan praktik terbaik UI/UX dengan sentuhan animasi yang menarik.
 
-**Dipublikasikan di https://suriyakishoreks.github.io/bobanimelist/**
+<!--**Dipublikasikan di https://suriyakishoreks.github.io/bobanimelist/**-->
 
 ---
 

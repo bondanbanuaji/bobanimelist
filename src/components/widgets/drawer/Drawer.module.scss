@@ -101,18 +101,10 @@
     align-items: center;
     justify-content: center;
     transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-    -webkit-transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-    -moz-transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-    -ms-transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-    -o-transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 
     &:hover {
           transform: scaleY(0.5);
-          -webkit-transform: scaleY(0.5);
-          -moz-transform: scaleY(0.5);
-          -ms-transform: scaleY(0.5);
-          -o-transform: scaleY(0.5);
-}
+    }
 }
 
   &__close-line {
