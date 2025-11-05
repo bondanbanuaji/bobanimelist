@@ -5,8 +5,8 @@
   "version": "0.0.0",
   "type": "module",
   "engines": {
-    "node": "23.6.0",
-    "npm": "11.0.0"
+    "node": "22.21.1",
+    "npm": "10.9.4"
   },
   "scripts": {
     "dev": "vite",
