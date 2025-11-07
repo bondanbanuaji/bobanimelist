@@ -1,7 +1,8 @@
-import { type FC } from 'react';
+import { type FC, useRef, useState } from 'react';
 import Label from '@/components/atoms/label';
 import classNames from 'classnames';
 import type { SeasonName } from '@/services/jikan/models/schedule/season-archive.model';
+import styles from './SeasonSelector.module.scss';
 
 interface SeasonSelectorProps {
 	selectedYear: number;
@@ -42,20 +43,51 @@ export const SeasonSelector: FC<SeasonSelectorProps> = ({
 	currentSeason,
 	className,
 }) => {
+	const containerRef = useRef<HTMLDivElement>(null);
+	const [tiltStyle, setTiltStyle] = useState<React.CSSProperties>({});
 	const isCurrentSeason = selectedYear === currentYear && selectedSeason === currentSeason;
 
+	// 3D Tilt effect handler - inspired by HomePage hero
+	const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+		if (!containerRef.current) return;
+
+		const rect = containerRef.current.getBoundingClientRect();
+		const x = e.clientX - rect.left;
+		const y = e.clientY - rect.top;
+		const centerX = rect.width / 2;
+		const centerY = rect.height / 2;
+
+		// Calculate rotation based on cursor position (max tilt: 5 degrees for subtle effect)
+		const rotateY = ((x - centerX) / centerX) * 5;
+		const rotateX = ((centerY - y) / centerY) * 5;
+
+		setTiltStyle({
+			transform: `perspective(1200px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateZ(15px)`,
+			transition: 'transform 0.15s ease-out',
+		});
+	};
+
+	const handleMouseLeave = () => {
+		setTiltStyle({
+			transform: 'perspective(1200px) rotateX(0deg) rotateY(0deg) translateZ(0px)',
+			transition: 'transform 0.6s cubic-bezier(0.4, 0, 0.2, 1)',
+		});
+	};
+
 	return (
-		<div className={className}>
+		<div 
+			ref={containerRef}
+			className={classNames(styles['season-selector'], className)}
+			onMouseMove={handleMouseMove}
+			onMouseLeave={handleMouseLeave}
+			style={tiltStyle}
+		>
 			{/* Year Selector */}
-			<div>
-				<Label 
-					as="label" 
+			<div className={styles['season-selector__year-section']}>
+				<Label
+					as="label"
 					font="typo-primary-m-semibold"
-					style={{ 
-						display: 'block',
-						marginBottom: 'var(--s-spacing-3)',
-						color: 'var(--s-color-fg-primary)',
-					}}
+					className={styles['season-selector__label']}
 				>
 					Year
 				</Label>
@@ -64,13 +96,13 @@ export const SeasonSelector: FC<SeasonSelectorProps> = ({
 					onChange={(e) => onYearChange(Number(e.target.value))}
 					disabled={isLoading}
 					aria-label="Select year"
-					style={{
-						width: '100%',
-						maxWidth: '240px',
-					}}
+					className={styles['season-selector__year-select']}
 				>
 					{years.map(year => (
-						<option key={year} value={year}>
+						<option 
+							key={year} 
+							value={year}
+						>
 							{year} {year === currentYear && '(Current)'}
 						</option>
 					))}
@@ -78,12 +110,8 @@ export const SeasonSelector: FC<SeasonSelectorProps> = ({
 			</div>
 
 			{/* Season Tabs */}
-			<nav aria-label="Season selector">
-				<div style={{ 
-					display: 'grid',
-					gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))',
-					gap: 'var(--s-spacing-3)'
-				}}>
+			<nav aria-label="Season selector" className={styles['season-selector__nav']}>
+				<div className={styles['season-selector__season-grid']}>
 					{(['winter', 'spring', 'summer', 'fall'] as SeasonName[]).map((season) => {
 						const isAvailable = availableSeasons.includes(season);
 						const isActive = selectedSeason === season;
@@ -95,33 +123,21 @@ export const SeasonSelector: FC<SeasonSelectorProps> = ({
 								onClick={() => isAvailable && onSeasonChange(season)}
 								disabled={!isAvailable}
 								className={classNames(
-									isActive && 'active',
-									!isAvailable && 'disabled'
+									styles['season-selector__season-btn'],
+									isActive && styles['season-selector__season-btn--active'],
+									!isAvailable && styles['season-selector__season-btn--disabled']
 								)}
 								aria-pressed={isActive}
 								aria-label={`${SEASON_LABELS[season]}${isCurrent ? ' (Current)' : ''}`}
-								style={{
-									display: 'flex',
-									alignItems: 'center',
-									justifyContent: 'center',
-									gap: 'var(--s-spacing-2)',
-								}}
 							>
-								<span aria-hidden="true">{SEASON_ICONS[season]}</span>
-								<span>{SEASON_LABELS[season]}</span>
+								<span className={styles['season-selector__season-icon']} aria-hidden="true">
+									{SEASON_ICONS[season]}
+								</span>
+								<span className={styles['season-selector__season-label']}>
+									{SEASON_LABELS[season]}
+								</span>
 								{isCurrent && isCurrentSeason && (
-									<span 
-										style={{
-											padding: '2px 8px',
-											background: 'rgba(255, 255, 255, 0.25)',
-											borderRadius: '6px',
-											fontSize: '0.7rem',
-											fontWeight: 700,
-											textTransform: 'uppercase',
-											letterSpacing: '0.05em',
-										}}
-										aria-hidden="true"
-									>
+									<span className={styles['season-selector__current-badge']} aria-hidden="true">
 										Current
 									</span>
 								)}
