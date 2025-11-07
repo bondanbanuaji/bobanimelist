@@ -14,17 +14,15 @@ const pageVariants: Variants = {
         x: -20,
         rotateY: -15,
         scale: 0.95,
-        transformPerspective: 1200,
     },
     in: {
         opacity: 1,
         x: 0,
         rotateY: 0,
         scale: 1,
-        transformPerspective: 1200,
         transition: {
             duration: 0.5,
-            ease: [0.4, 0, 0.2, 1], // Custom bezier curve
+            ease: [0.4, 0, 0.2, 1],
             opacity: { duration: 0.3 },
             rotateY: { duration: 0.5, ease: "easeOut" },
             scale: { duration: 0.4, ease: "easeOut" },
@@ -35,7 +33,6 @@ const pageVariants: Variants = {
         x: 20,
         rotateY: 15,
         scale: 0.95,
-        transformPerspective: 1200,
         transition: {
             duration: 0.3,
             ease: "easeIn",

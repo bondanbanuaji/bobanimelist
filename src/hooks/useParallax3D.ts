@@ -1,5 +1,5 @@
 import { useScroll, useTransform, MotionValue } from 'motion/react';
-import { useRef, RefObject } from 'react';
+import { useRef, type RefObject } from 'react';
 
 interface Parallax3DConfig {
   yRange?: [number, number];
@@ -10,7 +10,7 @@ interface Parallax3DConfig {
 }
 
 interface Parallax3DResult {
-  ref: RefObject<HTMLDivElement>;
+  ref: RefObject<HTMLDivElement | null>;
   y: MotionValue<number>;
   rotateX: MotionValue<number>;
   rotateY: MotionValue<number>;
