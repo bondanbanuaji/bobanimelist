@@ -1,13 +1,26 @@
 @use "/src/styles/tokens/semantics" as *;
 
 .reviews-list {
-	margin: var(--spacing-xl) 0;
+	padding: var(--s-spacing-6) var(--s-spacing-app-horizontal);
+	background-color: var(--s-color-bg-tertiary);
+	border-radius: 16px;
+	margin-top: var(--s-spacing-8);
+
+	@include screen-md {
+		padding: var(--s-spacing-8) var(--s-spacing-app-horizontal);
+	}
 
 	&__header {
 		display: flex;
 		justify-content: space-between;
 		align-items: center;
-		margin-bottom: var(--spacing-m);
+		margin-bottom: var(--s-spacing-6);
+		flex-wrap: wrap;
+		gap: var(--s-spacing-3);
+
+		@include screen-sm {
+			flex-wrap: nowrap;
+		}
 	}
 
 	&__title {
@@ -16,86 +29,106 @@
 
 	&__count {
 		color: var(--s-color-fg-secondary);
+		padding: var(--s-spacing-2) var(--s-spacing-4);
+		background-color: var(--s-color-bg-secondary);
+		border-radius: 16px;
 	}
 
 	&__filters {
 		display: flex;
-		gap: var(--spacing-s);
-		margin-bottom: var(--spacing-l);
+		gap: var(--s-spacing-4);
+		margin-bottom: var(--s-spacing-6);
 		flex-wrap: wrap;
 	}
 
 	&__filter-btn {
-		padding: var(--spacing-s) var(--spacing-m);
-		background: var(--s-color-bg-secondary);
-		border: 1px solid var(--s-color-border-primary);
-		border-radius: var(--radius-m);
-		color: var(--s-color-fg-secondary);
-		font-size: var(--font-size-s);
-		font-weight: var(--font-weight-medium);
+		padding: var(--s-spacing-3) var(--s-spacing-5);
+		background-color: var(--s-color-bg-secondary);
+		border: none;
+		border-radius: 12px;
+		color: var(--s-color-fg-primary);
+		font-weight: 600;
 		cursor: pointer;
-		transition: all 0.2s ease;
+		transition: scale 0.2s ease, box-shadow 0.2s ease;
 
-		&:hover {
-			border-color: var(--s-color-border-hover);
-			background: var(--s-color-bg-hover);
+		@include screen-mouse-first {
+			&:hover {
+				scale: 1.05;
+			}
+		}
+
+		@include screen-touch-first {
+			&:active {
+				scale: 1.05;
+			}
 		}
 
 		&--active {
-			background: var(--s-color-bg-brand);
-			color: var(--s-color-fg-on-brand);
-			border-color: var(--s-color-bg-brand);
+			background-color: var(--s-color-bg-success);
+			color: #000000 !important;
+
+			* {
+				color: #000000 !important;
+			}
 		}
 	}
 
 	&__content {
 		display: flex;
 		flex-direction: column;
-		gap: var(--spacing-m);
+		gap: var(--s-spacing-5);
 	}
 
 	&__loading {
 		display: flex;
 		flex-direction: column;
-		gap: var(--spacing-m);
+		gap: var(--s-spacing-5);
 	}
 
 	&__skeleton {
-		height: 200px;
-		background: linear-gradient(
-			90deg,
-			var(--s-color-bg-secondary) 0%,
-			var(--s-color-bg-tertiary) 50%,
-			var(--s-color-bg-secondary) 100%
-		);
-		background-size: 200% 100%;
-		animation: pulse 1.5s ease-in-out infinite;
-		border-radius: var(--radius-l);
+		@include skeleton-loading(1.5s);
+		height: 300px;
+		border-radius: 16px;
+
+		@include screen-md {
+			height: 350px;
+		}
 	}
 
 	&__pagination {
 		display: flex;
 		justify-content: center;
 		align-items: center;
-		gap: var(--spacing-l);
-		margin-top: var(--spacing-xl);
-		padding-top: var(--spacing-l);
-		border-top: 1px solid var(--s-color-border-primary);
+		gap: var(--s-spacing-6);
+		margin-top: var(--s-spacing-8);
+		padding-top: var(--s-spacing-6);
 	}
 
 	&__pagination-btn {
-		padding: var(--spacing-s) var(--spacing-l);
-		background: var(--s-color-bg-brand);
-		color: var(--s-color-fg-on-brand);
+		padding: var(--s-spacing-3) var(--s-spacing-6);
+		background-color: var(--s-color-bg-info);
+		color: #000000 !important;
 		border: none;
-		border-radius: var(--radius-m);
-		font-size: var(--font-size-m);
-		font-weight: var(--font-weight-semibold);
+		border-radius: 12px;
+		font-weight: 600;
 		cursor: pointer;
-		transition: all 0.2s ease;
+		transition: scale 0.2s ease, box-shadow 0.2s ease;
 
-		&:hover:not(:disabled) {
-			background: var(--s-color-bg-brand-hover);
+		* {
+			color: #000000 !important;
+		}
+
+		@include screen-mouse-first {
+			&:hover:not(:disabled) {
+				scale: 1.05;
+				box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+			}
+		}
+
+		@include screen-touch-first {
+			&:active:not(:disabled) {
+				scale: 1.05;
+			}
 		}
 
 		&:disabled {
@@ -106,14 +139,5 @@
 
 	&__pagination-info {
 		color: var(--s-color-fg-secondary);
-	}
-}
-
-@keyframes pulse {
-	0% {
-		background-position: 200% 0;
-	}
-	100% {
-		background-position: -200% 0;
 	}
 }

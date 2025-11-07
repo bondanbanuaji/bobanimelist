@@ -11,24 +11,24 @@
   padding: 0;
 
   &--scrolled {
-    background-color: var(--s-color-bg-primary);
-    backdrop-filter: blur(12px);
+    background-color: transparent;
+    backdrop-filter: none;
     box-shadow: 
-      0 4px 20px 0 rgba(0, 0, 0, 0.08),
-      0 2px 8px 0 rgba(0, 0, 0, 0.04);
+      0 4px 10px 0 rgba(0, 0, 0, 0.05),
+      0 2px 4px 0 rgba(0, 0, 0, 0.05);
 
     // Dark mode shadow
     @media (prefers-color-scheme: dark) {
       box-shadow: 
-        0 4px 20px 0 rgba(0, 0, 0, 0.4),
-        0 2px 8px 0 rgba(0, 0, 0, 0.2);
+        0 4px 10px 0 rgba(0, 0, 0, 0.5),
+        0 2px 4px 0 rgba(0, 0, 0, 0.5);
     }
 
-    // If project uses theme class on body/html
+    // If project uses theme class on body/html for dark mode
     :global(.dark) & {
       box-shadow: 
-        0 4px 20px 0 rgba(0, 0, 0, 0.4),
-        0 2px 8px 0 rgba(0, 0, 0, 0.2);
+        0 4px 10px 0 rgba(0, 0, 0, 0.5),
+        0 2px 4px 0 rgba(0, 0, 0, 0.5);
     }
   }
 

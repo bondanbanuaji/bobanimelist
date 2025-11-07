@@ -102,8 +102,9 @@ export const animeApi = jikanApi.injectEndpoints({
             keepUnusedDataFor: 60 * 60, // 60 minutes for genres (rarely change)
         }),
         
-        getRandomAnime: builder.query<JikanResponse<Anime[]>, { page?: number; limit?: number; sfw?: boolean; }>({
-            query: ({ page = 1, limit = 25, sfw = true }) => {
+        getRandomAnime: builder.query<JikanResponse<Anime[]>, { page?: number; limit?: number; sfw?: boolean; } | void>({
+            query: (params) => {
+                const { page = 1, limit = 25, sfw = true } = params || {};
                 return {
                     url: AnimeEndpoints.animeSearch,
                     params: {

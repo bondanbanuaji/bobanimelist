@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <!-- Home Pages -->
+  <url>
+    <loc>https://bobanimelist.vercel.app/</loc>
+    <lastmod>2025-11-07</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>1.00</priority>
+  </url>
+  <url>
+    <loc>https://bobanimelist.vercel.app/id</loc>
+    <lastmod>2025-11-07</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.90</priority>
+  </url>
+  <url>
+    <loc>https://bobanimelist.vercel.app/jp</loc>
+    <lastmod>2025-11-07</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.90</priority>
+  </url>
+  
+  <!-- Anime Section -->
+  <url>
+    <loc>https://bobanimelist.vercel.app/anime</loc>
+    <lastmod>2025-11-07</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.95</priority>
+  </url>
+  <url>
+    <loc>https://bobanimelist.vercel.app/id/anime</loc>
+    <lastmod>2025-11-07</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.85</priority>
+  </url>
+  <url>
+    <loc>https://bobanimelist.vercel.app/jp/anime</loc>
+    <lastmod>2025-11-07</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.85</priority>
+  </url>
+  
+  <!-- Manga Section -->
+  <url>
+    <loc>https://bobanimelist.vercel.app/manga</loc>
+    <lastmod>2025-11-07</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.95</priority>
+  </url>
+  <url>
+    <loc>https://bobanimelist.vercel.app/id/manga</loc>
+    <lastmod>2025-11-07</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.85</priority>
+  </url>
+  <url>
+    <loc>https://bobanimelist.vercel.app/jp/manga</loc>
+    <lastmod>2025-11-07</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.85</priority>
+  </url>
+  
+  <!-- Search Pages -->
+  <url>
+    <loc>https://bobanimelist.vercel.app/search</loc>
+    <lastmod>2025-11-07</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.80</priority>
+  </url>
+  <url>
+    <loc>https://bobanimelist.vercel.app/id/search</loc>
+    <lastmod>2025-11-07</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.75</priority>
+  </url>
+  <url>
+    <loc>https://bobanimelist.vercel.app/jp/search</loc>
+    <lastmod>2025-11-07</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.75</priority>
+  </url>
+  
+  <!-- Schedule Pages -->
+  <url>
+    <loc>https://bobanimelist.vercel.app/schedule</loc>
+    <lastmod>2025-11-07</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.85</priority>
+  </url>
+  <url>
+    <loc>https://bobanimelist.vercel.app/id/schedule</loc>
+    <lastmod>2025-11-07</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.80</priority>
+  </url>
+  <url>
+    <loc>https://bobanimelist.vercel.app/jp/schedule</loc>
+    <lastmod>2025-11-07</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.80</priority>
+  </url>
+  
+  <!-- Seasons Pages -->
+  <url>
+    <loc>https://bobanimelist.vercel.app/seasons</loc>
+    <lastmod>2025-11-07</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.80</priority>
+  </url>
+  <url>
+    <loc>https://bobanimelist.vercel.app/id/seasons</loc>
+    <lastmod>2025-11-07</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.75</priority>
+  </url>
+  <url>
+    <loc>https://bobanimelist.vercel.app/jp/seasons</loc>
+    <lastmod>2025-11-07</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.75</priority>
+  </url>
+  
+  <!-- Reviews Pages -->
+  <url>
+    <loc>https://bobanimelist.vercel.app/reviews</loc>
+    <lastmod>2025-11-07</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.80</priority>
+  </url>
+  <url>
+    <loc>https://bobanimelist.vercel.app/id/reviews</loc>
+    <lastmod>2025-11-07</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.75</priority>
+  </url>
+  <url>
+    <loc>https://bobanimelist.vercel.app/jp/reviews</loc>
+    <lastmod>2025-11-07</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.75</priority>
+  </url>
+  
+  <!-- Top Reviews Pages -->
+  <url>
+    <loc>https://bobanimelist.vercel.app/top/reviews</loc>
+    <lastmod>2025-11-07</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.80</priority>
+  </url>
+  <url>
+    <loc>https://bobanimelist.vercel.app/id/top/reviews</loc>
+    <lastmod>2025-11-07</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.75</priority>
+  </url>
+  <url>
+    <loc>https://bobanimelist.vercel.app/jp/top/reviews</loc>
+    <lastmod>2025-11-07</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.75</priority>
+  </url>
+</urlset>

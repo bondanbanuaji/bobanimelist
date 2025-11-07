@@ -1,0 +1,48 @@
+{
+  "cleanUrls": true,
+  "trailingSlash": false,
+  "headers": [
+    {
+      "source": "/(.*)",
+      "headers": [
+        {
+          "key": "X-Content-Type-Options",
+          "value": "nosniff"
+        },
+        {
+          "key": "X-Frame-Options",
+          "value": "DENY"
+        },
+        {
+          "key": "X-XSS-Protection",
+          "value": "1; mode=block"
+        },
+        {
+          "key": "X-Prerender-Token",
+          "value": "YOUR_PRERENDER_TOKEN_HERE"
+        }
+      ]
+    }
+  ],
+  "rewrites": [
+    {
+      "source": "/:path*",
+      "has": [
+        {
+          "type": "header",
+          "key": "user-agent",
+          "value": ".*(bot|crawler|spider|googlebot|google-inspectiontool|bingbot|yandex|baiduspider|facebookexternalhit|twitterbot|rogerbot|linkedinbot|embedly|quora link preview|showyoubot|outbrain|pinterest|slackbot|vkShare|W3C_Validator|whatsapp).*"
+        }
+      ],
+      "destination": "https://service.prerender.io/https://bobanimelist.vercel.app/:path*"
+    },
+    {
+      "source": "/(.*)",
+      "destination": "/index.html"
+    }
+  ],
+  "github": {
+    "enabled": true,
+    "autoJobCancelation": true
+  }
+}
