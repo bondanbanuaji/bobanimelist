@@ -193,6 +193,11 @@ function HorizontalCarousel<TQueryHook extends UseQuery, TCardType extends CardT
             </div>];
         }
 
+        // Guard against undefined adaptedData
+        if (!adaptedData) {
+            return [];
+        }
+
         // Render the actual content (this handles both successful data and error with cached data)
         switch (cardType) {
             case 'media-detail': {
