@@ -14,6 +14,7 @@ import RightChevron from '../../atoms/icons/RightChevron';
 import classNames from 'classnames';
 import { type Anime, type Manga, type AnimeType, type MangaType } from '../../../services/jikan/models';
 import { useAnimationTrigger } from '../../../shared/util/animation/useAnimationTrigger';
+import { useJikanTranslation } from '../../../hooks/useJikanTranslation';
 
 // --- Constants for Randomization ---
 const ANIME_TYPES: AnimeType[] = ['TV', 'Movie', 'Ova', 'Special', 'Ona', 'Music'];
@@ -103,6 +104,13 @@ const RandomAnimeCarousel = () => {
         refetchOnMountOrArgChange: false, // Don't refetch on mount since baseApi has caching
     });
 
+    // Translate all data sources
+    const translatedTopAnime = useJikanTranslation(topAnimeData, { dataType: 'anime' });
+    const translatedTopManga = useJikanTranslation(topMangaData, { dataType: 'manga' });
+    const translatedAnimeGenre = useJikanTranslation(animeGenreData, { dataType: 'anime' });
+    const translatedMangaGenre = useJikanTranslation(mangaGenreData, { dataType: 'manga' });
+    const translatedMidRange = useJikanTranslation(midRangeAnimeData, { dataType: 'anime' });
+
     // --- Combined States ---
     const isLoading = topAnimeLoading || topMangaLoading || animeGenreLoading || mangaGenreLoading || midRangeAnimeLoading;
     const isFetching = topAnimeFetching || topMangaFetching; // Primary sources fetching
@@ -119,12 +127,12 @@ const RandomAnimeCarousel = () => {
 
         const allItems: (Anime | Manga)[] = [];
 
-        // Combine data from all sources
-        if (topAnimeData?.data?.length) allItems.push(...topAnimeData.data);
-        if (topMangaData?.data?.length) allItems.push(...topMangaData.data);
-        if (animeGenreData?.data?.length) allItems.push(...animeGenreData.data);
-        if (mangaGenreData?.data?.length) allItems.push(...mangaGenreData.data);
-        if (midRangeAnimeData?.data?.length) allItems.push(...midRangeAnimeData.data);
+        // Combine translated data from all sources
+        if (translatedTopAnime?.data?.length) allItems.push(...translatedTopAnime.data);
+        if (translatedTopManga?.data?.length) allItems.push(...translatedTopManga.data);
+        if (translatedAnimeGenre?.data?.length) allItems.push(...translatedAnimeGenre.data);
+        if (translatedMangaGenre?.data?.length) allItems.push(...translatedMangaGenre.data);
+        if (translatedMidRange?.data?.length) allItems.push(...translatedMidRange.data);
 
         // Filter out nulls/undefined and remove duplicates by mal_id
         const uniqueItems = [...new Map(allItems.filter(Boolean).map((item) => [item.mal_id, item])).values()];
@@ -160,11 +168,11 @@ const RandomAnimeCarousel = () => {
         setHasInitialData(true);
         setIsReady(true);
     }, [
-        topAnimeData,
-        topMangaData,
-        animeGenreData,
-        mangaGenreData,
-        midRangeAnimeData,
+        translatedTopAnime,
+        translatedTopManga,
+        translatedAnimeGenre,
+        translatedMangaGenre,
+        translatedMidRange,
         isLoading,
         isFetching,
     ]);

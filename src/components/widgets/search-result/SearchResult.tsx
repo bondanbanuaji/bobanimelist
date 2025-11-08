@@ -52,9 +52,16 @@ function SearchResult<TQueryHook extends UseQuery>({
     adapter,
 }: SearchResultProps<TQueryHook>) {
     const [searchParams, setSearchParams] = useSearchParams();
-    const { data, isFetching, isError } = useQueryHook(options);
+    const { data, isFetching, isError, error, refetch } = useQueryHook(options);
 
-    const adaptedData = data ? adapter(data) : undefined;
+    const adaptedData = React.useMemo(() => {
+        try {
+            return data ? adapter(data) : undefined;
+        } catch (err) {
+            console.error('[SearchResult] Error adapting data:', err);
+            return undefined;
+        }
+    }, [data, adapter]);
 
     const { ref: containerRef, shouldAnimate } = useAnimationTrigger({ threshold: 0.1 });
 
@@ -69,25 +76,29 @@ function SearchResult<TQueryHook extends UseQuery>({
     const getContent = (): React.ReactNode => {
         // Check for error state first
         if (isError) {
+            const errorMessage = error && 'status' in error 
+                ? `Error ${error.status}: ${error.data ? JSON.stringify(error.data) : 'Failed to load search results'}`
+                : 'There was an error loading the search results. Please try again later.';
+            
             return (
                 <div className={styles['error-container']}>
                     <ErrorState 
                         title="Failed to load search results" 
-                        message="There was an error loading the search results. Please try again later." 
-                        onRetry={() => window.location.reload()}
-                        retryButtonText="Reload"
+                        message={errorMessage}
+                        onRetry={() => refetch()}
+                        retryButtonText="Retry"
                     />
                 </div>
             );
         }
 
         // Show loading state when data is not loaded and still fetching
-        if (!adaptedData || !adaptedData.data || isFetching) {
+        if (isFetching && !adaptedData) {
             return Array.from({ length: 25 }, (_, idx) => <ImageCardLoading key={idx} grid />);
         }
 
         // Show empty state if there's no data after loading
-        if (adaptedData.data.length === 0) {
+        if (!adaptedData || !adaptedData.data || adaptedData.data.length === 0) {
             return (
                 <ErrorState 
                     title="No search results found" 

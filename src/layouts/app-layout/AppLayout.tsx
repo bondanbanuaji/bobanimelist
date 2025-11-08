@@ -7,6 +7,7 @@ import { AnimatePresence, motion, type Variants } from "motion/react";
 import { Suspense, useState } from "react";
 import { Loader } from "../loader";
 import AnimatedLogo from "../../components/atoms/animated-logo/AnimatedLogo";
+import useScrollLock from "../../hooks/useScrollLock";
 
 const pageVariants: Variants = {
     initial: {
@@ -44,6 +45,9 @@ function AppLayout() {
     const location = useLocation();
     const outlet = useOutlet();
     const [showIntro, setShowIntro] = useState(true);
+    
+    // Lock scroll when intro is showing
+    useScrollLock(showIntro);
 
     return (
         <>

@@ -127,6 +127,7 @@ export const SeasonSelector: FC<SeasonSelectorProps> = ({
 									isActive && styles['season-selector__season-btn--active'],
 									!isAvailable && styles['season-selector__season-btn--disabled']
 								)}
+								data-season={season}
 								aria-pressed={isActive}
 								aria-label={`${SEASON_LABELS[season]}${isCurrent ? ' (Current)' : ''}`}
 							>

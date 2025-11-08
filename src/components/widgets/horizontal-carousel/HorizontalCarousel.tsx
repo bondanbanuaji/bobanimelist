@@ -12,6 +12,7 @@ import classNames from "classnames";
 import MediaDetailCard, { MediaDetailCardLoading } from "../../atoms/media-detail-card";
 import { shuffleArray } from "../../../shared/util/image-utils";
 import { useAnimationTrigger } from "../../../shared/util/animation/useAnimationTrigger";
+import { useJikanTranslation } from "../../../hooks/useJikanTranslation";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type UseQuery = TypedUseQuery<any, any, any>;
@@ -92,20 +93,25 @@ function HorizontalCarousel<TQueryHook extends UseQuery, TCardType extends CardT
         // Use RTK Query's built-in caching with 60-second TTL
         refetchOnMountOrArgChange: false, // Don't refetch on mount since baseApi has caching
     });
+    
+    // Auto-translate Jikan data (will only translate if language is not 'en')
+    const translatedData = useJikanTranslation(data, { 
+        dataType: heading.toLowerCase().includes('manga') ? 'manga' : 'anime'
+    });
 
     const adaptedData = React.useMemo(() => {
-        if (!data) {
+        if (!translatedData) {
             return undefined;
         }
         
-        const adapted = adapter(data);
+        const adapted = adapter(translatedData);
 
         if (isTopPeople) {
             return shuffleArray(adapted).slice(0, 15);
         }
 
         return adapted;
-    }, [data, adapter, isTopPeople]);
+    }, [translatedData, adapter, isTopPeople]);
 
     // Smart loading state: only show loading initially, not during background updates
     const [hasInitialData, setHasInitialData] = React.useState(false);

@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import { motion } from 'motion/react';
 import styles from './AnimatedLogo.module.scss';
 
@@ -7,8 +7,10 @@ interface AnimatedLogoProps {
 }
 
 function AnimatedLogo({ onAnimationComplete }: AnimatedLogoProps) {
+  const containerRef = useRef<HTMLDivElement>(null);
+  
   useEffect(() => {
-    const animationDuration = 10000; // 10 seconds - katana animation + logo animation
+    const animationDuration = 2500; // Reduced from 10s to 2.5s
 
     const timer = setTimeout(() => {
       if (onAnimationComplete) onAnimationComplete();
@@ -20,93 +22,38 @@ function AnimatedLogo({ onAnimationComplete }: AnimatedLogoProps) {
   }, [onAnimationComplete]);
 
   return (
-    <div className={styles['animated-logo-container']}>
-      {/* Slow Slashing Katana (Psycho effect) */}
-      <div className={styles['slashing-katanas']}>
-        {/* Vertical slash 1 - dari atas ke bawah (kiri) */}
-        <motion.div
-          className={styles['katana-vertical']}
-          style={{ left: '25%' }}
-          initial={{ y: -200, opacity: 0 }}
-          animate={{ 
-            y: window.innerHeight + 200,
-            opacity: [0, 0.8, 0.8, 0]
-          }}
-          transition={{
-            duration: 2.5,
-            delay: 0,
-            ease: [0.1, 0.3, 0.3, 1],
-            opacity: {
-              duration: 2.5,
-              times: [0, 0.15, 0.85, 1]
-            }
-          }}
-        />
-
-        {/* Horizontal slash - dari kiri ke kanan */}
-        <motion.div
-          className={styles['katana-horizontal']}
-          style={{ top: '40%' }}
-          initial={{ x: -300, opacity: 0 }}
-          animate={{ 
-            x: window.innerWidth + 300,
-            opacity: [0, 0.8, 0.8, 0]
-          }}
-          transition={{
-            duration: 2.8,
-            delay: 1.2,
-            ease: [0.1, 0.3, 0.3, 1],
-            opacity: {
-              duration: 2.8,
-              times: [0, 0.15, 0.85, 1]
-            }
-          }}
-        />
-
-        {/* Vertical slash 2 - dari atas ke bawah (kanan) */}
-        <motion.div
-          className={styles['katana-vertical']}
-          style={{ left: '75%' }}
-          initial={{ y: -200, opacity: 0 }}
-          animate={{ 
-            y: window.innerHeight + 200,
-            opacity: [0, 0.8, 0.8, 0]
-          }}
-          transition={{
-            duration: 2.5,
-            delay: 2.4,
-            ease: [0.1, 0.3, 0.3, 1],
-            opacity: {
-              duration: 2.5,
-              times: [0, 0.15, 0.85, 1]
-            }
-          }}
-        />
+    <div className={styles['animated-logo-container']} ref={containerRef}>
+      {/* Laser Beams - Quick red laser effects */}
+      <div className={styles['laser-container']}>
+        {/* Rapid laser beams crisscrossing */}
+        {[...Array(6)].map((_, i) => (
+          <motion.div
+            key={i}
+            className={styles['laser-beam']}
+            style={{
+              top: `${20 + i * 12}%`,
+              left: i % 2 === 0 ? '-100%' : 'auto',
+              right: i % 2 === 1 ? '-100%' : 'auto',
+            }}
+            initial={{ x: 0, opacity: 0 }}
+            animate={{ 
+              x: i % 2 === 0 ? '200vw' : '-200vw',
+              opacity: [0, 1, 1, 0]
+            }}
+            transition={{
+              duration: 0.4,
+              delay: i * 0.08,
+              ease: "linear",
+              opacity: {
+                duration: 0.4,
+                times: [0, 0.2, 0.8, 1]
+              }
+            }}
+          />
+        ))}
       </div>
 
-      {/* Slash Lines (Samurai Cut Effect) - appear after katanas finish */}
-      <div className={styles['slash-lines']}>
-        <motion.div 
-          className={styles['slash-line-1']}
-          initial={{ scaleX: 0, opacity: 0 }}
-          animate={{ scaleX: 1, opacity: [0, 1, 0] }}
-          transition={{ duration: 0.6, delay: 5.1, ease: "easeOut" }}
-        />
-        <motion.div 
-          className={styles['slash-line-2']}
-          initial={{ scaleX: 0, opacity: 0 }}
-          animate={{ scaleX: 1, opacity: [0, 1, 0] }}
-          transition={{ duration: 0.7, delay: 5.2, ease: "easeOut" }}
-        />
-        <motion.div 
-          className={styles['slash-line-3']}
-          initial={{ scaleX: 0, opacity: 0 }}
-          animate={{ scaleX: 1, opacity: [0, 1, 0] }}
-          transition={{ duration: 0.5, delay: 5.3, ease: "easeOut" }}
-        />
-      </div>
-
-      {/* 3D Logo Container - wait for katanas to finish (5.0s) */}
+      {/* 3D Logo Container - appears quickly after lasers */}
       <motion.div 
         className={styles['logo-3d-wrapper']}
         initial={{ scale: 1.5, opacity: 0 }}
@@ -115,8 +62,8 @@ function AnimatedLogo({ onAnimationComplete }: AnimatedLogoProps) {
           opacity: 1,
         }}
         transition={{
-          duration: 0.8,
-          delay: 5.5,
+          duration: 0.5,
+          delay: 0.6,
           ease: [0.4, 0, 0.2, 1],
         }}
       >
@@ -162,13 +109,13 @@ function AnimatedLogo({ onAnimationComplete }: AnimatedLogoProps) {
             </clipPath>
           </defs>
 
-          {/* Logo utuh tanpa clip (muncul dulu) */}
+          {/* Logo utuh (muncul dulu, lalu hilang) */}
           <motion.g
             initial={{ opacity: 1 }}
             animate={{ opacity: 0 }}
             transition={{ 
-              duration: 0.2, 
-              delay: 2.0,
+              duration: 0.1, 
+              delay: 1.3,
               ease: "linear"
             }}
           >
@@ -179,13 +126,13 @@ function AnimatedLogo({ onAnimationComplete }: AnimatedLogoProps) {
               animate={{ pathLength: 1, opacity: 1 }}
               transition={{
                 pathLength: {
-                  duration: 1.5,
-                  delay: 0.3,
+                  duration: 0.8,
+                  delay: 0.2,
                   ease: "easeInOut"
                 },
                 opacity: {
                   duration: 0.3,
-                  delay: 0.3
+                  delay: 0.2
                 }
               }}
             />
@@ -197,9 +144,9 @@ function AnimatedLogo({ onAnimationComplete }: AnimatedLogoProps) {
             initial={{ x: 0, y: 0, opacity: 0 }}
             animate={{ x: -8, y: -10, opacity: 1 }}
             transition={{ 
-              x: { duration: 0.7, delay: 2.2, ease: [0.4, 0, 0.2, 1] },
-              y: { duration: 0.7, delay: 2.2, ease: [0.4, 0, 0.2, 1] },
-              opacity: { duration: 0.1, delay: 2.0, ease: "linear" }
+              x: { duration: 0.5, delay: 1.4, ease: [0.4, 0, 0.2, 1] },
+              y: { duration: 0.5, delay: 1.4, ease: [0.4, 0, 0.2, 1] },
+              opacity: { duration: 0.1, delay: 1.3, ease: "linear" }
             }}
           >
             <path
@@ -214,9 +161,9 @@ function AnimatedLogo({ onAnimationComplete }: AnimatedLogoProps) {
             initial={{ x: 0, y: 0, opacity: 0 }}
             animate={{ x: 8, y: 10, opacity: 1 }}
             transition={{ 
-              x: { duration: 0.7, delay: 2.2, ease: [0.4, 0, 0.2, 1] },
-              y: { duration: 0.7, delay: 2.2, ease: [0.4, 0, 0.2, 1] },
-              opacity: { duration: 0.1, delay: 2.0, ease: "linear" }
+              x: { duration: 0.5, delay: 1.4, ease: [0.4, 0, 0.2, 1] },
+              y: { duration: 0.5, delay: 1.4, ease: [0.4, 0, 0.2, 1] },
+              opacity: { duration: 0.1, delay: 1.3, ease: "linear" }
             }}
           >
             <path
@@ -225,7 +172,7 @@ function AnimatedLogo({ onAnimationComplete }: AnimatedLogoProps) {
             />
           </motion.g>
 
-          {/* Slice line (cut line at 30% - appears BEFORE split) */}
+          {/* Slice line (garis potong di 30% dari atas - muncul SEBELUM split) */}
           <motion.line
             x1="40"
             y1="95"
@@ -240,43 +187,22 @@ function AnimatedLogo({ onAnimationComplete }: AnimatedLogoProps) {
               opacity: [0, 1, 0.5]
             }}
             transition={{
-              duration: 0.8,
-              delay: 1.8,
-              times: [0, 0.4, 1],
+              duration: 0.5,
+              delay: 1.1,
+              times: [0, 0.5, 1],
               ease: "easeInOut"
             }}
           />
         </motion.svg>
 
-        {/* Flash Effect on Cut */}
+        {/* Quick Flash Effect */}
         <motion.div
           className={styles['flash-effect']}
           initial={{ opacity: 0 }}
-          animate={{ opacity: [0, 1, 0] }}
-          transition={{ duration: 0.3, delay: 0.6 }}
+          animate={{ opacity: [0, 0.8, 0] }}
+          transition={{ duration: 0.2, delay: 0.3 }}
         />
       </motion.div>
-
-      {/* Speed Lines (Samurai Slash) */}
-      <div className={styles['speed-lines']}>
-        {Array.from({ length: 8 }).map((_, i) => (
-          <motion.div
-            key={i}
-            className={styles['speed-line']}
-            style={{
-              '--line-delay': `${i * 0.05}s`,
-              '--line-offset': `${i * 15}px`,
-            } as React.CSSProperties}
-            initial={{ scaleX: 0, opacity: 0 }}
-            animate={{ scaleX: [0, 1, 0], opacity: [0, 0.8, 0] }}
-            transition={{
-              duration: 0.8,
-              delay: 0.4 + i * 0.05,
-              ease: "easeOut"
-            }}
-          />
-        ))}
-      </div>
     </div>
   );
 }

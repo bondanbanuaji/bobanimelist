@@ -13,14 +13,32 @@
   overflow: hidden;
   perspective: 1500px;
   transform-style: preserve-3d;
+  box-sizing: border-box;
+
+  /* Ensure perfect centering on all devices */
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  margin: 0;
+  padding: 0;
+
+  /* For TV and other screen types */
+  overscroll-behavior: none;
 
   @media (max-height <= 600px) {
     align-items: center;
   }
+  
+  /* Extra targeting for TV screens */
+  @media screen and (min-width: 1920px) and (min-height: 1080px) {
+    align-items: center;
+    justify-content: center;
+  }
 }
 
-// Slow Slashing Katanas (Psycho effect)
-.slashing-katanas {
+// Laser Container
+.laser-container {
   position: absolute;
   inset: 0;
   pointer-events: none;
@@ -28,170 +46,40 @@
   overflow: hidden;
 }
 
-// Vertical katana (top to bottom)
-.katana-vertical {
+// Laser Beam (Red laser effect)
+.laser-beam {
   position: absolute;
-  top: 0;
-  width: 4px;
-  height: 100vh;
-  background: linear-gradient(180deg,
-    transparent 0%,
-    var(--logo-stroke-color) 5%,
-    rgba(255, 255, 255, 0.8) 8%,
-    var(--logo-stroke-color) 12%,
-    var(--logo-stroke-color) 100%
-  );
-  filter: drop-shadow(0 0 12px var(--logo-stroke-color)) 
-          drop-shadow(0 0 24px var(--logo-stroke-color))
-          drop-shadow(0 0 36px rgba(255, 0, 0, 0.5));
-  
-  // Blade shine
-  &::before {
-    content: '';
-    position: absolute;
-    left: 50%;
-    top: 10%;
-    width: 1.5px;
-    height: 80%;
-    background: linear-gradient(180deg,
-      rgba(255, 255, 255, 0.9) 0%,
-      rgba(255, 255, 255, 0.6) 50%,
-      rgba(255, 255, 255, 0.3) 100%
-    );
-    transform: translateX(-50%);
-  }
-
-  // Handle
-  &::after {
-    content: '';
-    position: absolute;
-    left: 50%;
-    top: 0;
-    width: 10px;
-    height: 3%;
-    background: linear-gradient(180deg,
-      #8b0000 0%,
-      #600000 50%,
-      #400000 100%
-    );
-    transform: translateX(-50%);
-    border-radius: 2px;
-    box-shadow: 0 0 8px rgba(139, 0, 0, 0.8);
-  }
-}
-
-// Horizontal katana (left to right)
-.katana-horizontal {
-  position: absolute;
-  left: 0;
-  width: 100vw;
-  height: 4px;
+  width: 100%;
+  height: 2px;
   background: linear-gradient(90deg,
     transparent 0%,
-    var(--logo-stroke-color) 5%,
-    rgba(255, 255, 255, 0.8) 8%,
-    var(--logo-stroke-color) 12%,
-    var(--logo-stroke-color) 100%
+    var(--logo-stroke-color) 20%,
+    rgba(255, 255, 255, 0.9) 50%,
+    var(--logo-stroke-color) 80%,
+    transparent 100%
   );
-  filter: drop-shadow(0 0 12px var(--logo-stroke-color)) 
-          drop-shadow(0 0 24px var(--logo-stroke-color))
-          drop-shadow(0 0 36px rgba(255, 0, 0, 0.5));
+  filter: drop-shadow(0 0 8px var(--logo-stroke-color)) 
+          drop-shadow(0 0 16px var(--logo-stroke-color))
+          drop-shadow(0 0 24px rgba(255, 0, 0, 0.8));
+  box-shadow: 0 0 20px var(--logo-stroke-color),
+              0 0 40px var(--logo-stroke-color),
+              0 0 60px rgba(255, 0, 0, 0.5);
   
-  // Blade shine
+  // Inner bright core
   &::before {
     content: '';
     position: absolute;
-    left: 10%;
+    left: 20%;
     top: 50%;
-    width: 80%;
-    height: 1.5px;
+    width: 60%;
+    height: 1px;
     background: linear-gradient(90deg,
-      rgba(255, 255, 255, 0.9) 0%,
-      rgba(255, 255, 255, 0.6) 50%,
-      rgba(255, 255, 255, 0.3) 100%
+      transparent 0%,
+      rgba(255, 255, 255, 1) 50%,
+      transparent 100%
     );
     transform: translateY(-50%);
   }
-
-  // Handle
-  &::after {
-    content: '';
-    position: absolute;
-    left: 0;
-    top: 50%;
-    width: 3%;
-    height: 10px;
-    background: linear-gradient(90deg,
-      #8b0000 0%,
-      #600000 50%,
-      #400000 100%
-    );
-    transform: translateY(-50%);
-    border-radius: 2px;
-    box-shadow: 0 0 8px rgba(139, 0, 0, 0.8);
-  }
-}
-
-// Slash Lines (Samurai Cut Effect)
-.slash-lines {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  z-index: 5;
-}
-
-.slash-line-1,
-.slash-line-2,
-.slash-line-3 {
-  position: absolute;
-  left: 0;
-  right: 0;
-  height: 2px;
-  background: linear-gradient(90deg, 
-    transparent 0%, 
-    var(--logo-stroke-color) 20%, 
-    var(--logo-stroke-color) 80%, 
-    transparent 100%);
-  transform-origin: left center;
-  box-shadow: 0 0 20px var(--logo-stroke-color);
-}
-
-.slash-line-1 {
-  top: 35%;
-  transform: rotate(-15deg);
-}
-
-.slash-line-2 {
-  top: 50%;
-  transform: rotate(20deg);
-}
-
-.slash-line-3 {
-  top: 65%;
-  transform: rotate(-10deg);
-}
-
-// Speed Lines (Slash Effect)
-.speed-lines {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  z-index: 4;
-}
-
-.speed-line {
-  position: absolute;
-  right: 0;
-  height: 1px;
-  width: 60%;
-  background: linear-gradient(90deg, 
-    transparent 0%, 
-    var(--logo-stroke-color) 50%, 
-    transparent 100%);
-  top: calc(40% + var(--line-offset));
-  transform-origin: right center;
-  opacity: 0.6;
-  animation-delay: var(--line-delay);
 }
 
 // 3D Logo Wrapper
@@ -210,6 +98,12 @@
   @media (max-width: 768px) {
     width: 180px;
     height: 180px;
+  }
+  
+  // Extra targeting for TV screens
+  @media screen and (min-width: 1920px) and (min-height: 1080px) {
+    width: 300px;
+    height: 300px;
   }
 }
 
@@ -267,6 +161,12 @@
     width: 150px;
     height: 150px;
   }
+  
+  // Extra targeting for TV screens
+  @media screen and (min-width: 1920px) and (min-height: 1080px) {
+    width: 250px;
+    height: 250px;
+  }
 }
 
 .logo-path {
@@ -299,13 +199,8 @@
 
 // Reduced Motion Support
 @media (prefers-reduced-motion: reduce) {
-  .katana-vertical,
-  .katana-horizontal,
+  .laser-beam,
   .glow-layer,
-  .slash-line-1,
-  .slash-line-2,
-  .slash-line-3,
-  .speed-line,
   .flash-effect {
     animation: none !important;
     opacity: 0 !important;

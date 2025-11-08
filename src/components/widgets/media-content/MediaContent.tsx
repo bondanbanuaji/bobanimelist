@@ -4,6 +4,7 @@ import Label from '../../atoms/label';
 import classNames from 'classnames';
 import { type TypedUseQuery } from "@reduxjs/toolkit/query/react";
 import { Link } from 'react-router';
+import { useJikanTranslation } from '../../../hooks/useJikanTranslation';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type UseQuery = TypedUseQuery<any, any, any>;
@@ -73,8 +74,13 @@ function MediaContent<TQueryHook extends UseQuery, TContentType extends ContentT
 }: MediaContentProps<TQueryHook, TContentType>) {
 
     const { data: queryData } = useQueryHook(options);
+    
+    // Auto-translate based on content type
+    const translatedData = useJikanTranslation(queryData, {
+        dataType: contentType === 'manga' ? 'manga' : contentType === 'character' ? 'character' : 'anime'
+    });
 
-    const data = queryData ? adapter(queryData) : undefined;
+    const data = translatedData ? adapter(translatedData) : undefined;
 
     if (!data) {
         return <MediaContentLoading contentType={contentType} />;

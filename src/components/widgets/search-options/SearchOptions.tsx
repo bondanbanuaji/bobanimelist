@@ -1,4 +1,4 @@
-import { useLocation, useSearchParams } from 'react-router';
+import { useSearchParams } from 'react-router';
 import Dropdown, { type DropdownOption } from '../../atoms/dropdown';
 import SearchIcon from '../../atoms/icons/SearchIcon';
 import styles from './SearchOptions.module.scss';
@@ -23,7 +23,6 @@ interface SearchOptionsProps {
 
 function SearchOptions({ options, searchQueryKey, searchCategory }: SearchOptionsProps) {
     const [searchParams, setSearchParams] = useSearchParams();
-    const location = useLocation();
     const [internalSearchParams, setInternalSearchParams] = useState(new URLSearchParams(searchParams));
     
     // Initialize with a random placeholder on component mount
@@ -48,9 +47,11 @@ function SearchOptions({ options, searchQueryKey, searchCategory }: SearchOption
     }, [searchParams]);
 
     const handleMultiSelect = (queryKey: string, option: { id: string, title: string; }) => {
+        if (!option?.id || !queryKey) return;
+        
         setInternalSearchParams((prev: URLSearchParams) => {
             const newParams = new URLSearchParams(prev);
-            const existing = newParams.get(queryKey)?.split(',') ?? [];
+            const existing = newParams.get(queryKey)?.split(',').filter(Boolean) ?? [];
             const newValues = existing.includes(option.id)
                 ? existing.filter(item => item !== option.id)
                 : [...existing, option.id];
@@ -66,9 +67,11 @@ function SearchOptions({ options, searchQueryKey, searchCategory }: SearchOption
     };
 
     const handleSingleSelect = (queryKey: string, option: { id: string, title: string; }) => {
+        if (!queryKey) return;
+        
         setInternalSearchParams((prev: URLSearchParams) => {
             const newParams = new URLSearchParams(prev);
-            if (option.id) {
+            if (option?.id) {
                 newParams.set(queryKey, option.id);
             } else {
                 newParams.delete(queryKey);
@@ -99,15 +102,14 @@ function SearchOptions({ options, searchQueryKey, searchCategory }: SearchOption
     };
 
     const handleCategoryChange = (newCategory: DropdownOption) => {
-        if (location.pathname !== '/search') {
-            return;
-        }
+        if (!newCategory) return;
+        
         setSearchParams((prev: URLSearchParams) => {
             const newParams = new URLSearchParams();
             newParams.set('category', newCategory?.id ?? searchCategory);
             const q = prev.get(searchQueryKey) ?? internalSearchParams.get(searchQueryKey);
-            if (q) {
-                newParams.set(searchQueryKey, q);
+            if (q?.trim()) {
+                newParams.set(searchQueryKey, q.trim());
             }
             newParams.set('page', '1');
             return newParams;
@@ -115,6 +117,8 @@ function SearchOptions({ options, searchQueryKey, searchCategory }: SearchOption
     };
 
     const handleOptionClear = (queryKey: string) => {
+        if (!queryKey) return;
+        
         setInternalSearchParams((prev: URLSearchParams) => {
             const newParams = new URLSearchParams(prev);
             newParams.delete(queryKey);
@@ -124,9 +128,6 @@ function SearchOptions({ options, searchQueryKey, searchCategory }: SearchOption
     };
 
     const handleSearch = () => {
-        if (location.pathname !== '/search') {
-            return;
-        }
         setSearchParams(new URLSearchParams(internalSearchParams), { replace: true });
     };
 

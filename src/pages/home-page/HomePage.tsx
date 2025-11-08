@@ -1,8 +1,10 @@
 import { useNavigate } from 'react-router';
 import { useEffect, useRef, useState } from 'react';
 import { motion } from 'motion/react';
+import { useTranslation } from 'react-i18next';
 import { useGetSeasonAnimeQuery } from '@/services/jikan';
 import { useLazyGetRandomAnimeQuery } from '@/services/jikan/randomApi';
+import { useJikanTranslation } from '@/hooks/useJikanTranslation';
 import ImageCard, { ImageCardLoading } from '@/components/atoms/image-card/ImageCard';
 import Label from '@/components/atoms/label';
 import { ErrorState } from '@/components/atoms/error-state';
@@ -20,6 +22,7 @@ const CURRENT_SEASON = (() => {
 
 export const HomePage = () => {
 	const navigate = useNavigate();
+	const { t } = useTranslation();
 	const heroRef = useRef<HTMLDivElement>(null);
 	const [tiltStyle, setTiltStyle] = useState<React.CSSProperties>({});
 	
@@ -38,6 +41,10 @@ export const HomePage = () => {
 
 	// Fetch random featured anime
 	const [getRandomAnime, { data: randomData, isLoading: randomLoading }] = useLazyGetRandomAnimeQuery();
+	
+	// Translate Jikan data
+	const translatedSeasonData = useJikanTranslation(seasonData, { dataType: 'anime' });
+	const translatedRandomData = useJikanTranslation(randomData, { dataType: 'anime' });
 
 	useEffect(() => {
 		getRandomAnime();
@@ -83,36 +90,36 @@ export const HomePage = () => {
 			>
 				<div className={styles['home-page__hero-content']}>
 					<Label as="h1" font="typo-primary-xl-semibold" className={styles['home-page__hero-title']}>
-						Welcome to bobanimelist
+						{t('hero_title')}
 					</Label>
 					<Label as="p" font="typo-primary-l-regular" className={styles['home-page__hero-subtitle']}>
-						Discover your next favorite anime, manga, and more!
+						{t('hero_subtitle')}
 					</Label>
 					<div className={styles['home-page__hero-buttons']}>
 						<button 
 							onClick={() => navigate('/anime')}
 							className={styles['home-page__hero-btn']}
 						>
-							Browse Anime
+							{t('browse_anime')}
 						</button>
 						<button 
 							onClick={() => navigate('/manga')}
 							className={styles['home-page__hero-btn']}
 						>
-							Browse Manga
+							{t('browse_manga')}
 						</button>
 						<button 
 							onClick={() => navigate('/schedule')}
 							className={styles['home-page__hero-btn-secondary']}
 						>
-							View Schedule
+							{t('view_schedule')}
 						</button>
 					</div>
 				</div>
 			</section>
 
 			{/* Random Featured Anime with Parallax */}
-			{!randomLoading && randomData?.data && randomData.data.images?.jpg && (
+			{!randomLoading && translatedRandomData?.data && translatedRandomData.data.images?.jpg && (
 				<motion.section 
 					ref={featuredParallax.ref}
 					className={styles['home-page__featured']}
@@ -125,25 +132,25 @@ export const HomePage = () => {
 					<div className={styles['home-page__featured-card']}>
 						<div className={styles['home-page__featured-image']}>
 							<img 
-								src={randomData.data.images.jpg.large_image_url || randomData.data.images.jpg.image_url} 
-								alt={randomData.data.title}
+								src={translatedRandomData.data.images.jpg.large_image_url || translatedRandomData.data.images.jpg.image_url} 
+								alt={translatedRandomData.data.title}
 							/>
 						</div>
 						<div className={styles['home-page__featured-info']}>
 							<Label as="span" font="typo-primary-s-semibold" className={styles['home-page__featured-badge']}>
-								Featured
+								{t('featured')}
 							</Label>
 							<Label as="h2" font="typo-primary-xl-semibold" className={styles['home-page__featured-title']}>
-								{randomData.data.title}
+								{translatedRandomData.data.title}
 							</Label>
 							<p className={styles['home-page__featured-synopsis']}>
-								{randomData.data.synopsis?.substring(0, 300)}...
+								{translatedRandomData.data.synopsis?.substring(0, 300)}...
 							</p>
 							<button 
-								onClick={() => navigate(`/anime/${randomData.data.mal_id}`)}
+								onClick={() => navigate(`/anime/${translatedRandomData.data.mal_id}`)}
 								className={styles['home-page__featured-btn']}
 							>
-								View Details
+								{t('view_details')}
 							</button>
 						</div>
 					</div>
@@ -161,13 +168,13 @@ export const HomePage = () => {
 			>
 				<div className={styles['home-page__section-header']}>
 					<Label as="h2" font="typo-primary-xl-semibold" className={styles['home-page__section-title']}>
-						{CURRENT_SEASON.charAt(0).toUpperCase() + CURRENT_SEASON.slice(1)} {CURRENT_YEAR} Anime
+						{t(CURRENT_SEASON)} {CURRENT_YEAR} {t('anime_nav')}
 					</Label>
 					<button 
 						onClick={() => navigate('/seasons')}
 						className={styles['home-page__section-link']}
 					>
-						View All
+						{t('see_all')}
 					</button>
 				</div>
 
@@ -183,9 +190,9 @@ export const HomePage = () => {
 					<ErrorState message="Failed to load seasonal anime" />
 				)}
 
-				{!seasonLoading && !seasonError && seasonData?.data && (
+				{!seasonLoading && !seasonError && translatedSeasonData?.data && (
 					<div className={styles['home-page__grid']}>
-						{seasonData.data
+						{translatedSeasonData.data
 							.filter(anime => anime.images?.jpg) // Filter out items without images
 							.map((anime, index) => (
 								<ImageCard
@@ -207,16 +214,16 @@ export const HomePage = () => {
 			{/* Quick Actions */}
 			<section className={styles['home-page__actions']}>
 				<button onClick={() => navigate('/seasons')} className={styles['home-page__action-card']}>
-					<Label as="h3" font="typo-primary-l-semibold">Browse Seasons</Label>
-					<Label as="p" font="typo-primary-m-regular">Explore anime by season</Label>
+					<Label as="h3" font="typo-primary-l-semibold">{t('seasons_nav')}</Label>
+					<Label as="p" font="typo-primary-m-regular">{t('ALP_CURRENT_SEASON_TITLE')}</Label>
 				</button>
 				<button onClick={() => navigate('/schedule')} className={styles['home-page__action-card']}>
-					<Label as="h3" font="typo-primary-l-semibold">Airing Schedule</Label>
-					<Label as="p" font="typo-primary-m-regular">Check what's airing</Label>
+					<Label as="h3" font="typo-primary-l-semibold">{t('schedule_nav')}</Label>
+					<Label as="p" font="typo-primary-m-regular">{t('ALP_SCHEDULE_TITLE')}</Label>
 				</button>
 				<button onClick={() => navigate('/search')} className={styles['home-page__action-card']}>
-					<Label as="h3" font="typo-primary-l-semibold">Search</Label>
-					<Label as="p" font="typo-primary-m-regular">Find your anime</Label>
+					<Label as="h3" font="typo-primary-l-semibold">{t('search_nav')}</Label>
+					<Label as="p" font="typo-primary-m-regular">{t('search_placeholder')}</Label>
 				</button>
 			</section>
 		</div>

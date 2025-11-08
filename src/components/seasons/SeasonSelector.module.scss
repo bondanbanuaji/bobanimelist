@@ -263,55 +263,202 @@
 		@include screen-mouse-first {
 			&:hover:not(:disabled):not(&--active):not(&--disabled) {
 				background: var(--s-color-bg-secondary);
-				border-color: var(--color-accent-primary);
 				transform: translateY(-3px) translateZ(35px);
+
+				&::before {
+					opacity: 1;
+				}
+
+				// Default hover - blue accent
+				border-color: var(--color-accent-primary);
 				box-shadow: 
 					0 8px 24px var(--color-shadow),
 					0 0 0 4px rgba(59, 130, 246, 0.1);
 
-				&::before {
-					opacity: 1;
+				// Spring hover - pink border & glow
+				&[data-season="spring"] {
+					border-color: #FFB7C5;
+					box-shadow: 
+						0 8px 24px var(--color-shadow),
+						0 0 0 4px rgba(255, 183, 197, 0.15);
+				}
+
+				// Summer hover - gold border & glow
+				&[data-season="summer"] {
+					border-color: #FFD700;
+					box-shadow: 
+						0 8px 24px var(--color-shadow),
+						0 0 0 4px rgba(255, 215, 0, 0.15);
+				}
+
+				// Fall hover - chocolate border & glow
+				&[data-season="fall"] {
+					border-color: #D2691E;
+					box-shadow: 
+						0 8px 24px var(--color-shadow),
+						0 0 0 4px rgba(210, 105, 30, 0.15);
+				}
+
+				// Winter hover - steel blue border & glow
+				&[data-season="winter"] {
+					border-color: #4682B4;
+					box-shadow: 
+						0 8px 24px var(--color-shadow),
+						0 0 0 4px rgba(70, 130, 180, 0.15);
 				}
 			}
 		}
 
 		&:focus-visible {
+			// Default focus - blue
 			border-color: var(--color-accent-primary);
 			box-shadow: 
 				0 4px 12px var(--color-shadow),
 				0 0 0 4px rgba(59, 130, 246, 0.15);
+
+			// Spring focus - pink
+			&[data-season="spring"] {
+				border-color: #FFB7C5;
+				box-shadow: 
+					0 4px 12px var(--color-shadow),
+					0 0 0 4px rgba(255, 183, 197, 0.15);
+			}
+
+			// Summer focus - gold
+			&[data-season="summer"] {
+				border-color: #FFD700;
+				box-shadow: 
+					0 4px 12px var(--color-shadow),
+					0 0 0 4px rgba(255, 215, 0, 0.15);
+			}
+
+			// Fall focus - chocolate
+			&[data-season="fall"] {
+				border-color: #D2691E;
+				box-shadow: 
+					0 4px 12px var(--color-shadow),
+					0 0 0 4px rgba(210, 105, 30, 0.15);
+			}
+
+			// Winter focus - steel blue
+			&[data-season="winter"] {
+				border-color: #4682B4;
+				box-shadow: 
+					0 4px 12px var(--color-shadow),
+					0 0 0 4px rgba(70, 130, 180, 0.15);
+			}
 		}
 
 		&:active:not(:disabled):not(&--disabled) {
 			transform: translateY(-1px) translateZ(25px) scale(0.98);
 		}
 
-		// Active state - premium glow
+		// Active state - premium glow with seasonal colors
 		&--active {
-			background: var(--color-accent-primary);
 			color: var(--color-btn-primary-text);
-			border-color: var(--color-accent-primary);
 			font-weight: 700;
 			transform: translateY(-3px) translateZ(35px);
 			
-			box-shadow: 
-				0 8px 24px rgba(59, 130, 246, 0.4),
-				0 4px 12px rgba(59, 130, 246, 0.3),
-				inset 0 1px 0 rgba(255, 255, 255, 0.3);
+			box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.3);
 
 			&::before {
 				opacity: 0.5;
 			}
 
+			// Default accent color (fallback)
+			background: var(--color-accent-primary);
+			border-color: var(--color-accent-primary);
+			box-shadow: 
+				0 8px 24px rgba(59, 130, 246, 0.4),
+				0 4px 12px rgba(59, 130, 246, 0.3),
+				inset 0 1px 0 rgba(255, 255, 255, 0.3);
+
+			// Spring theme - Pink
+			&[data-season="spring"] {
+				background: #FFB7C5;
+				border-color: #FFB7C5;
+				box-shadow: 
+					0 8px 24px rgba(255, 183, 197, 0.4),
+					0 4px 12px rgba(255, 183, 197, 0.3),
+					inset 0 1px 0 rgba(255, 255, 255, 0.3);
+			}
+
+			// Summer theme - Gold
+			&[data-season="summer"] {
+				background: #FFD700;
+				border-color: #FFD700;
+				box-shadow: 
+					0 8px 24px rgba(255, 215, 0, 0.4),
+					0 4px 12px rgba(255, 215, 0, 0.3),
+					inset 0 1px 0 rgba(255, 255, 255, 0.3);
+			}
+
+			// Fall theme - Chocolate
+			&[data-season="fall"] {
+				background: #D2691E;
+				border-color: #D2691E;
+				box-shadow: 
+					0 8px 24px rgba(210, 105, 30, 0.4),
+					0 4px 12px rgba(210, 105, 30, 0.3),
+					inset 0 1px 0 rgba(255, 255, 255, 0.3);
+			}
+
+			// Winter theme - Steel Blue
+			&[data-season="winter"] {
+				background: #4682B4;
+				border-color: #4682B4;
+				box-shadow: 
+					0 8px 24px rgba(70, 130, 180, 0.4),
+					0 4px 12px rgba(70, 130, 180, 0.3),
+					inset 0 1px 0 rgba(255, 255, 255, 0.3);
+			}
+
 			@include screen-mouse-first {
 				&:hover {
-					background: var(--color-accent-primary-hover);
-					border-color: var(--color-accent-primary-hover);
 					transform: translateY(-4px) translateZ(40px);
 					
+					// Default hover
+					background: var(--color-accent-primary-hover);
+					border-color: var(--color-accent-primary-hover);
 					box-shadow: 
 						0 10px 30px rgba(59, 130, 246, 0.5),
 						0 6px 16px rgba(59, 130, 246, 0.4);
+
+					// Spring hover - darker pink
+					&[data-season="spring"] {
+						background: #FF9FB0;
+						border-color: #FF9FB0;
+						box-shadow: 
+							0 10px 30px rgba(255, 183, 197, 0.5),
+							0 6px 16px rgba(255, 183, 197, 0.4);
+					}
+
+					// Summer hover - darker gold
+					&[data-season="summer"] {
+						background: #FFC700;
+						border-color: #FFC700;
+						box-shadow: 
+							0 10px 30px rgba(255, 215, 0, 0.5),
+							0 6px 16px rgba(255, 215, 0, 0.4);
+					}
+
+					// Fall hover - darker chocolate
+					&[data-season="fall"] {
+						background: #BD5B17;
+						border-color: #BD5B17;
+						box-shadow: 
+							0 10px 30px rgba(210, 105, 30, 0.5),
+							0 6px 16px rgba(210, 105, 30, 0.4);
+					}
+
+					// Winter hover - darker steel blue
+					&[data-season="winter"] {
+						background: #3A6E9F;
+						border-color: #3A6E9F;
+						box-shadow: 
+							0 10px 30px rgba(70, 130, 180, 0.5),
+							0 6px 16px rgba(70, 130, 180, 0.4);
+					}
 				}
 			}
 		}

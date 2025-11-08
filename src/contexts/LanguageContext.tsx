@@ -1,6 +1,6 @@
-import React, { createContext, useContext } from 'react';
+import React, { createContext, useContext, useEffect } from 'react';
 import type { ReactNode } from 'react';
-import { VernacUtil } from '../services/vernac/vernac-util';
+import { useTranslation } from 'react-i18next';
 import type { Locale } from '../services/vernac/models';
 
 interface LanguageContextType {
@@ -12,15 +12,46 @@ interface LanguageContextType {
 const LanguageContext = createContext<LanguageContextType | undefined>(undefined);
 
 export const LanguageProvider = ({ children }: { children: ReactNode }) => {
-  const [locale, setLocaleState] = React.useState<Locale>(VernacUtil.getCurrentLocale());
+  const { i18n } = useTranslation();
+  const [locale, setLocaleState] = React.useState<Locale>((i18n.language as Locale) || 'en');
+
+  // Sync i18n language changes dengan local state
+  useEffect(() => {
+    const handleLanguageChange = (lng: string) => {
+      setLocaleState(lng as Locale);
+    };
+    
+    i18n.on('languageChanged', handleLanguageChange);
+    return () => {
+      i18n.off('languageChanged', handleLanguageChange);
+    };
+  }, [i18n]);
 
   const toggleLocale = () => {
-    const newLocale = VernacUtil.toggleLocale();
+    let newLocale: Locale;
+    switch (locale) {
+      case 'en':
+        newLocale = 'jp';
+        break;
+      case 'jp':
+        newLocale = 'in'; // VernacUtil uses 'in' for Indonesian
+        break;
+      case 'in':
+        newLocale = 'en';
+        break;
+      default:
+        newLocale = 'en';
+    }
+    // Map 'in' to 'id' for i18next
+    const i18nLocale = newLocale === 'in' ? 'id' : newLocale;
+    i18n.changeLanguage(i18nLocale);
     setLocaleState(newLocale);
   };
 
   const setLocale = (newLocale: Locale) => {
-    VernacUtil.setCurrentLocale(newLocale);
+    // Map 'in' to 'id' for i18next
+    const i18nLocale = newLocale === 'in' ? 'id' : newLocale;
+    i18n.changeLanguage(i18nLocale);
     setLocaleState(newLocale);
   };
 

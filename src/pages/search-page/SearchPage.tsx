@@ -43,10 +43,15 @@ function getSearchOptions(category: SearchCategory): SearchOption[] {
 }
 
 function getSearchResults(category: SearchCategory, params: URLSearchParams) {
+    // Validate page number to prevent invalid values
+    const pageParam = params.get('page');
+    const pageNumber = pageParam ? Math.max(1, parseInt(pageParam, 10)) : 1;
+    const validPage = isNaN(pageNumber) ? 1 : pageNumber;
+
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const queryOptions: any = {
         q: params.get('q') ?? undefined,
-        page: Number(params.get('page') ?? '1'),
+        page: validPage,
         order_by: params.get('order_by') ?? undefined,
         sort: params.get('sort') ?? undefined,
     };
@@ -158,7 +163,13 @@ function getSearchResults(category: SearchCategory, params: URLSearchParams) {
 
 function SearchPage() {
     const [searchParams] = useSearchParams();
-    const category = (searchParams.get('category') as SearchCategory) ?? 'anime';
+    const categoryParam = searchParams.get('category');
+    
+    // Validate category to prevent errors
+    const validCategories: SearchCategory[] = ['anime', 'manga', 'characters', 'people'];
+    const category: SearchCategory = validCategories.includes(categoryParam as SearchCategory) 
+        ? (categoryParam as SearchCategory) 
+        : 'anime';
 
     return (
         <div>

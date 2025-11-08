@@ -7,9 +7,26 @@
   flex-grow: 1;
   transform-style: preserve-3d;
   perspective: 1500px;
-  
+  position: relative;
+  box-sizing: border-box;
+  overflow: hidden;
+
+  // Ensure perfect centering on all devices
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  margin: 0;
+  padding: 0;
+
   // Reduced motion support
   @media (prefers-reduced-motion: reduce) {
     perspective: none;
+  }
+  
+  // Extra targeting for TV screens
+  @media screen and (min-width: 1920px) and (min-height: 1080px) {
+    align-items: center;
+    justify-content: center;
   }
 }
