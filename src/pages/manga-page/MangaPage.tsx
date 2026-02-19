@@ -46,7 +46,9 @@ function MangaPage() {
                             },
                             secondaryStringGroup: data.data.external ? {
                                 title: 'External',
-                                group: data.data.external.map((data) => { return { text: data.name, link: data.url, external: true }; }),
+                                group: data.data.external
+                                    .filter((link) => !/(facebook|instagram|twitter|x\.com|tiktok|youtube|wa\.me)/i.test(link.url))
+                                    .map((data) => { return { text: data.name, link: data.url, external: true }; }),
                             } : undefined,
                             tertiaryStringGroup: data.data.authors ? {
                                 title: 'Authors',
@@ -60,10 +62,10 @@ function MangaPage() {
                     );
                 }}
             />
-            
+
             {/* Manga Characters Section */}
             {id && <MangaCharacters mangaId={Number(id)} />}
-            
+
             {/* Reviews Section */}
             {id && <ReviewsList contentId={Number(id)} contentType="manga" />}
         </div>
