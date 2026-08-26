@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { useGetAnimeCharactersQuery } from '@/services/jikan';
 import { Link } from 'react-router';
 import Label from '@/components/atoms/label';
@@ -7,10 +8,14 @@ import classNames from 'classnames';
 
 interface AnimeCharactersProps {
 	animeId: number;
+	initialLimit?: number;
 	className?: string;
 }
 
-export const AnimeCharacters = ({ animeId, className }: AnimeCharactersProps) => {
+const DEFAULT_INITIAL_LIMIT = 8;
+
+export const AnimeCharacters = ({ animeId, initialLimit = DEFAULT_INITIAL_LIMIT, className }: AnimeCharactersProps) => {
+	const [showAll, setShowAll] = useState(false);
 	const { data, isLoading, isError } = useGetAnimeCharactersQuery({ id: animeId });
 
 	if (isError) {
@@ -36,7 +41,7 @@ export const AnimeCharacters = ({ animeId, className }: AnimeCharactersProps) =>
 					Characters
 				</Label>
 				<div className={styles['anime-characters__grid']}>
-					{Array.from({ length: 8 }).map((_, i) => (
+					{Array.from({ length: initialLimit }).map((_, i) => (
 						<div key={i} className={styles['anime-characters__skeleton']} />
 					))}
 				</div>
@@ -48,6 +53,10 @@ export const AnimeCharacters = ({ animeId, className }: AnimeCharactersProps) =>
 		return null;
 	}
 
+	const totalCharacters = data.data.length;
+	const hasMore = totalCharacters > initialLimit;
+	const displayedCharacters = showAll ? data.data : data.data.slice(0, initialLimit);
+
 	return (
 		<div className={classNames(styles['anime-characters'], className)}>
 			<div className={styles['anime-characters__header']}>
@@ -55,12 +64,12 @@ export const AnimeCharacters = ({ animeId, className }: AnimeCharactersProps) =>
 					Characters
 				</Label>
 				<Label as="span" font="typo-primary-m-regular" className={styles['anime-characters__count']}>
-					{data.data.length} characters
+					{showAll ? totalCharacters : `${Math.min(initialLimit, totalCharacters)} / ${totalCharacters}`} characters
 				</Label>
 			</div>
 
 			<div className={styles['anime-characters__grid']}>
-				{data.data.map((item) => (
+				{displayedCharacters.map((item) => (
 					<Link
 						key={item.character.mal_id}
 						to={`/character/${item.character.mal_id}`}
@@ -85,6 +94,18 @@ export const AnimeCharacters = ({ animeId, className }: AnimeCharactersProps) =>
 					</Link>
 				))}
 			</div>
+
+			{hasMore && (
+				<div className={styles['anime-characters__footer']}>
+					<button
+						type="button"
+						onClick={() => setShowAll(!showAll)}
+						className={styles['anime-characters__view-all']}
+					>
+						{showAll ? 'Show Less' : `View All Characters (${totalCharacters - initialLimit} more)`}
+					</button>
+				</div>
+			)}
 		</div>
 	);
 };

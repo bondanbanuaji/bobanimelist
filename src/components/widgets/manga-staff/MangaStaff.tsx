@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { Link } from 'react-router';
 import Label from '@/components/atoms/label';
 import styles from './MangaStaff.module.scss';
@@ -11,19 +12,22 @@ interface MangaAuthor {
 
 interface MangaStaffProps {
 	authors: MangaAuthor[];
-	limit?: number;
+	initialLimit?: number;
 	className?: string;
 }
 
-const DEFAULT_LIMIT = 8;
+const DEFAULT_INITIAL_LIMIT = 4;
 
-export const MangaStaff = ({ authors, limit = DEFAULT_LIMIT, className }: MangaStaffProps) => {
+export const MangaStaff = ({ authors, initialLimit = DEFAULT_INITIAL_LIMIT, className }: MangaStaffProps) => {
+	const [showAll, setShowAll] = useState(false);
+
 	if (!authors || authors.length === 0) {
 		return null;
 	}
 
-	const displayedAuthors = authors.slice(0, limit);
-	const hasMore = authors.length > limit;
+	const totalAuthors = authors.length;
+	const hasMore = totalAuthors > initialLimit;
+	const displayedAuthors = showAll ? authors : authors.slice(0, initialLimit);
 
 	return (
 		<div className={classNames(styles['manga-staff'], className)}>
@@ -32,7 +36,7 @@ export const MangaStaff = ({ authors, limit = DEFAULT_LIMIT, className }: MangaS
 					Staff
 				</Label>
 				<Label as="span" font="typo-primary-m-regular" className={styles['manga-staff__count']}>
-					{authors.length} authors
+					{showAll ? totalAuthors : `${Math.min(initialLimit, totalAuthors)} / ${totalAuthors}`} authors
 				</Label>
 			</div>
 
@@ -62,9 +66,13 @@ export const MangaStaff = ({ authors, limit = DEFAULT_LIMIT, className }: MangaS
 
 			{hasMore && (
 				<div className={styles['manga-staff__footer']}>
-					<span className={styles['manga-staff__view-all']}>
-						View All Authors
-					</span>
+					<button
+						type="button"
+						onClick={() => setShowAll(!showAll)}
+						className={styles['manga-staff__view-all']}
+					>
+						{showAll ? 'Show Less' : `View All Authors (${totalAuthors - initialLimit} more)`}
+					</button>
 				</div>
 			)}
 		</div>
