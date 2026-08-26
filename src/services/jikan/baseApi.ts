@@ -17,7 +17,10 @@ const isCacheValid = (timestamp: number): boolean => {
 };
 
 const JIKAN_API_BASE_URL = 'https://api.jikan.moe/v4';
-const RETRY_DELAY = 3000; // 3 seconds before retry after 429
+const RETRY_DELAY_429 = 4000; // 4 seconds before retry after 429
+const RETRY_DELAY_5XX = 3000; // 3 seconds before retry after 5xx
+const MAX_RETRIES = 3; // Maximum number of retries for server errors
+const RETRYABLE_STATUSES = new Set([429, 502, 503, 504]);
 
 // Custom base query with internationalization headers
 const baseQuery = fetchBaseQuery({
@@ -98,16 +101,23 @@ const baseQueryWithRateLimiting: BaseQueryFn<
             return baseQuery(args, api, extraOptions);
         });
         
-        // Implement retry logic only when 429 occurs
-        if (result.error?.status === 429) {
-            console.warn(`[GLOBAL API] 429 Too Many Requests for endpoint: ${endpoint}, waiting ${RETRY_DELAY}ms before retrying...`);
+        // Implement retry logic for 429 and 5xx errors with exponential backoff
+        let retryCount = 0;
+        while (retryCount < MAX_RETRIES && result.error?.status && RETRYABLE_STATUSES.has(result.error.status as number)) {
+            const status = result.error.status as number;
+            const delay = status === 429 
+                ? RETRY_DELAY_429 * (retryCount + 1)  // Exponential backoff: 4s, 8s, 12s
+                : RETRY_DELAY_5XX * (retryCount + 1); // Exponential backoff: 3s, 6s, 9s
             
-            // Wait before retry, but ensure this also goes through the rate limiter
-            await new Promise(resolve => setTimeout(resolve, RETRY_DELAY));
+            console.warn(`[GLOBAL API] ${status} ${status === 429 ? 'Rate Limited' : 'Server Error'} for endpoint: ${endpoint}, retry ${retryCount + 1}/${MAX_RETRIES} in ${delay}ms...`);
+            
+            await new Promise(resolve => setTimeout(resolve, delay));
             
             result = await apiLimiter.executeRequest(async () => {
                 return baseQuery(args, api, extraOptions);
             });
+            
+            retryCount++;
         }
 
         // Store successful responses in global cache

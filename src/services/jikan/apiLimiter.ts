@@ -2,8 +2,8 @@ class ApiLimiter {
   private queue: Array<() => Promise<unknown>> = [];
   private executing = false;
   private timestamps: number[] = [];
-  private readonly MAX_REQUESTS_PER_SECOND = 3;
-  private readonly MAX_REQUESTS_PER_MINUTE = 60;
+  private readonly MAX_REQUESTS_PER_SECOND = 2; // Conservative: 2 req/sec (Jikan allows 3)
+  private readonly MAX_REQUESTS_PER_MINUTE = 50; // Conservative: 50 req/min (Jikan allows 60)
 
   async executeRequest<T>(fn: () => Promise<T>): Promise<T> {
     return new Promise((resolve, reject) => {
@@ -25,43 +25,42 @@ class ApiLimiter {
       return;
     }
 
-    // Check rate limits (max 3 requests per second and 60 per minute)
+    // Check rate limits
     const now = Date.now();
-    this.timestamps = this.timestamps.filter(timestamp => now - timestamp < 60000); // Keep last minute's timestamps
+    this.timestamps = this.timestamps.filter(timestamp => now - timestamp < 60000);
     
     // Check per-minute limit
     if (this.timestamps.length >= this.MAX_REQUESTS_PER_MINUTE) {
-      // Wait 1 minute before processing more requests
-      await new Promise(resolve => setTimeout(resolve, 60000));
-      this.processQueue(); // Retry processing
+      const oldestInWindow = Math.min(...this.timestamps);
+      const waitTime = 60000 - (now - oldestInWindow) + 100;
+      console.warn(`[API Limiter] Minute limit reached, waiting ${waitTime}ms`);
+      await new Promise(resolve => setTimeout(resolve, waitTime));
+      this.processQueue();
       return;
     }
     
     // Check per-second limit
     const recentRequests = this.timestamps.filter(timestamp => now - timestamp < 1000);
     if (recentRequests.length >= this.MAX_REQUESTS_PER_SECOND) {
-      // Rate limit exceeded, wait before processing
-      const waitTime = 1000 - (now - recentRequests[0]); // Time until oldest request is outside the 1-second window
+      const waitTime = 1000 - (now - recentRequests[0]) + 50;
       await new Promise(resolve => setTimeout(resolve, Math.max(waitTime, 100)));
-      this.processQueue(); // Retry processing
+      this.processQueue();
       return;
     }
 
     this.executing = true;
     const request = this.queue.shift()!;
     
-    // Add timestamp for this request
-    this.timestamps.push(now);
+    this.timestamps.push(Date.now());
     
     try {
       await request();
     } catch (error) {
-      console.error('API request failed:', error);
+      console.error('[API Limiter] Request failed:', error);
     }
     
-    // Wait for a randomized delay between 500ms and 1000ms before processing the next request
-    // This provides a safe buffer while reducing overall request batch delays
-    const randomDelay = Math.floor(Math.random() * 501) + 500; // Random value between 500-1000ms
+    // Delay between requests: 600-1200ms random
+    const randomDelay = Math.floor(Math.random() * 601) + 600;
     await new Promise(resolve => setTimeout(resolve, randomDelay));
     this.processQueue();
   }
