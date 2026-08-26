@@ -41,7 +41,7 @@ function MangaPage() {
                                     { title: 'Status', text: data.data.status },
                                     { title: 'Volume', text: data.data.volumes != null ? String(data.data.volumes) : 'Unknown' },
                                     { title: 'Chapters', text: data.data.chapters != null ? String(data.data.chapters) : 'Unknown' },
-                                    { title: 'Published', text: data.data.published.string }
+                                    { title: 'Published', text: data.data.published?.string }
                                 ]
                             },
                             secondaryStringGroup: data.data.external ? {

@@ -1,5 +1,5 @@
 import { lazy } from 'react';
-import type { RouteObject } from 'react-router-dom';
+import type { RouteObject } from 'react-router';
 
 const SeasonsPage = lazy(() => import('../../pages/seasons-page'));
 

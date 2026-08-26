@@ -48,9 +48,9 @@ function AnimePage() {
                                     { title: 'Episodes', text: data.data.episodes },
                                     { title: 'Duration', text: data.data.duration },
                                     { title: 'Rating', text: data.data.rating },
-                                    { title: 'Season', text: `${data.data.season} ${data.data.year}` },
-                                    { title: 'Aired', text: data.data.aired.string },
-                                    { title: 'Broadcast', text: data.data.broadcast.string }
+                                    { title: 'Season', text: data.data.season ? `${data.data.season} ${data.data.year}` : undefined },
+                                    { title: 'Aired', text: data.data.aired?.string },
+                                    { title: 'Broadcast', text: data.data.broadcast?.string }
                                 ]
                             },
                             secondaryStringGroup: data.data.external ? {

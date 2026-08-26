@@ -34,13 +34,13 @@ export const store = configureStore({
         }).concat(jikanApi.middleware),
 });
 
-export const persistor = persistStore(store);
-
 localforage.config({
     name: 'otakuVibeDB',
     storeName: 'reduxPersistStore',
     description: 'Persisted Redux state for OtakuVibe',
 });
+
+export const persistor = persistStore(store);
 
 setupListeners(store.dispatch);
 

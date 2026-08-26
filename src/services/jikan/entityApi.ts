@@ -4,7 +4,7 @@ import type { Character, CharacterFull, CharactersSearchParams, JikanPerson, Jik
 const EntityEndpoints = {
     topPeople: '/top/people',
     topCharacters: '/top/characters',
-    characterFullById: 'characters/{id}/full',
+    characterFullById: '/characters/{id}/full',
     personFullById: '/people/{id}/full',
     characterSearch: '/characters',
     peopleSearch: '/people',

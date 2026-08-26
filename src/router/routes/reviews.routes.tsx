@@ -1,5 +1,5 @@
 import { lazy } from 'react';
-import type { RouteObject } from 'react-router-dom';
+import type { RouteObject } from 'react-router';
 
 const ReviewsPage = lazy(() => import('../../pages/reviews-page'));
 const TopReviewsPage = lazy(() => import('../../pages/top-reviews-page'));

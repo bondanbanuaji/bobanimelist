@@ -1,8 +1,0 @@
-{
-  "agents": {
-    "orchestrator": {
-      "entry": "scripts/orchestrator.py",
-      "language": "python"
-    }
-  }
-}

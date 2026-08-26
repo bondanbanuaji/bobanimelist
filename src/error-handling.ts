@@ -35,9 +35,3 @@ export const setupGlobalErrorHandler = (): void => {
     console.log('Unhandled rejection error type:', errorType);
   });
 };
-
-/**
- * React Error Boundary component specifically for Vercel deployments
- * This can be used in the app to catch errors in specific components
- */
-export { default as VercelErrorBoundary } from './components/VercelErrorBoundary';
