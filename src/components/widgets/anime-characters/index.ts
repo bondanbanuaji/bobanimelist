@@ -1,0 +1,1 @@
+export { AnimeCharacters } from './AnimeCharacters';

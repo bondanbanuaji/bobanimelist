@@ -1,5 +1,5 @@
 import { jikanApi } from './baseApi';
-import type { JikanResponse, Anime, AnimeTopParams, SeasonNowParams, JikanSeasonsParams, AnimeSearchParams, Genre, AnimeStaff, AnimeStreaming, AnimeEpisode, EpisodesParams } from './models';
+import type { JikanResponse, Anime, AnimeTopParams, SeasonNowParams, JikanSeasonsParams, AnimeSearchParams, Genre, AnimeStaff, AnimeStreaming, AnimeEpisode, EpisodesParams, AnimeCharacter } from './models';
 
 const AnimeEndpoints = {
     animeEpisodes: '/anime/{id}/episodes',
@@ -133,6 +133,13 @@ export const animeApi = jikanApi.injectEndpoints({
             keepUnusedDataFor: 60 * 60, // 60 minutes - streaming links rarely change
         }),
 
+        getAnimeCharacters: builder.query<JikanResponse<AnimeCharacter[]>, { id: number }>({
+            query: ({ id }) => ({
+                url: AnimeEndpoints.animeCharacters.replace('{id}', String(id)),
+            }),
+            keepUnusedDataFor: 60 * 30, // 30 minutes - characters rarely change
+        }),
+
         getAnimeEpisodes: builder.query<JikanResponse<AnimeEpisode[]>, { id: number } & EpisodesParams>({
             query: ({ id, page = 1, limit = 100 }) => ({
                 url: AnimeEndpoints.animeEpisodes.replace('{id}', String(id)),
@@ -154,5 +161,6 @@ export const {
     useGetRandomAnimeQuery,
     useGetAnimeStaffQuery,
     useGetAnimeStreamingQuery,
+    useGetAnimeCharactersQuery,
     useGetAnimeEpisodesQuery,
 } = animeApi;

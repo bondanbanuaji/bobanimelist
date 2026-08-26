@@ -2,12 +2,14 @@ import { useParams } from "react-router";
 import { useGetMangaByIdQuery } from "../../services/jikan";
 import { MediaContent } from "../../components/widgets/media-content";
 import { MangaCharacters } from "../../components/widgets/manga-characters";
+import { MangaStaff } from "../../components/widgets/manga-staff";
 import { ReviewsList } from "../../components/widgets/reviews-list";
 import { formatThresholdNumber } from "../../shared/util";
 import { getLargeImageUrl } from "../../shared/util/image-utils";
 
 function MangaPage() {
     const { id } = useParams();
+    const { data: mangaData } = useGetMangaByIdQuery({ id: Number(id) });
 
     return (
         <div>
@@ -62,6 +64,9 @@ function MangaPage() {
                     );
                 }}
             />
+
+            {/* Manga Staff Section (Authors) */}
+            {id && mangaData?.data?.authors && <MangaStaff authors={mangaData.data.authors} />}
 
             {/* Manga Characters Section */}
             {id && <MangaCharacters mangaId={Number(id)} />}

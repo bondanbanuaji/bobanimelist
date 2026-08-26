@@ -1,0 +1,144 @@
+@use "/src/styles/tokens/semantics" as *;
+
+.anime-characters {
+	padding: var(--s-spacing-6) var(--s-spacing-app-horizontal);
+
+	@include screen-md {
+		padding: var(--s-spacing-8) var(--s-spacing-app-horizontal);
+	}
+
+	&__header {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		margin-bottom: var(--s-spacing-6);
+		
+		@include screen-sm {
+			margin-bottom: var(--s-spacing-7);
+		}
+	}
+
+	&__title {
+		color: var(--s-color-fg-primary);
+	}
+
+	&__count {
+		color: var(--s-color-fg-secondary);
+		padding: var(--s-spacing-2) var(--s-spacing-4);
+		background-color: var(--s-color-bg-secondary);
+		border-radius: 16px;
+	}
+
+	&__grid {
+		@include grid-responsive(180px, var(--s-spacing-5));
+
+		@include screen-sm {
+			@include grid-responsive(200px, var(--s-spacing-6));
+		}
+	}
+
+	&__card {
+		@include card(0, 8px);
+		@include interactive-lift(-6px, 0.3s);
+		@include focus-visible;
+		& {
+			display: flex;
+			flex-direction: column;
+			text-decoration: none;
+			overflow: hidden;
+		}
+
+		&:hover {
+			border-color: var(--s-color-border-primary);
+		}
+	}
+
+	&__image-wrapper {
+		@include aspect-ratio(3, 4);
+		& {
+			width: 100%;
+			overflow: hidden;
+			background: var(--s-color-bg-placeholder);
+			position: relative;
+		}
+
+		&::after {
+			content: '';
+			position: absolute;
+			inset: 0;
+			background: linear-gradient(to top, rgba(0, 0, 0, 0.3) 0%, transparent 50%);
+			opacity: 0;
+			transition: opacity 0.3s ease;
+		}
+
+		&:hover::after {
+			opacity: 1;
+		}
+	}
+
+	&__image {
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+		transition: transform 0.3s ease;
+
+		.anime-characters__card:hover & {
+			transform: scale(1.08);
+		}
+	}
+
+	&__info {
+		padding: var(--s-spacing-4);
+		display: flex;
+		flex-direction: column;
+		gap: var(--s-spacing-2);
+
+		@include screen-sm {
+			padding: var(--s-spacing-5);
+		}
+	}
+
+	&__name {
+		@include number-of-lines(2);
+		color: var(--s-color-fg-primary);
+		line-height: 1.3;
+		min-height: calc(1.3em * 2);
+	}
+
+	&__role {
+		color: var(--s-color-fg-secondary);
+		text-transform: capitalize;
+		font-size: 0.875rem;
+	}
+
+	&__skeleton {
+		@include skeleton-loading(1.5s);
+		& {
+			height: 280px;
+			border-radius: 8px;
+		}
+	}
+}
+
+@include screen-sm {
+	.anime-characters {
+		&__header {
+			flex-direction: row;
+		}
+	}
+}
+
+@media (max-width: 576px) {
+	.anime-characters {
+		&__grid {
+			grid-template-columns: repeat(2, 1fr);
+			gap: var(--s-spacing-4);
+		}
+
+		&__header {
+			flex-direction: column;
+			align-items: flex-start;
+			gap: var(--s-spacing-3);
+		}
+	}
+}

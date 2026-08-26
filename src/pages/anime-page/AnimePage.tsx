@@ -3,6 +3,7 @@ import { useGetAnimeByIdQuery } from "../../services/jikan";
 import { MediaContent, type MediaContentData } from "../../components/widgets/media-content";
 import { StreamingLinks } from "../../components/widgets/streaming-links";
 import { StaffGrid } from "../../components/widgets/staff-grid";
+import { AnimeCharacters } from "../../components/widgets/anime-characters";
 import { EpisodesList } from "../../components/widgets/episodes-list";
 import { ReviewsList } from "../../components/widgets/reviews-list";
 import { formatThresholdNumber } from "../../shared/util";
@@ -70,6 +71,9 @@ function AnimePage() {
 
             {/* Streaming Links Section */}
             {id && <StreamingLinks animeId={Number(id)} />}
+
+            {/* Characters Section */}
+            {id && <AnimeCharacters animeId={Number(id)} />}
 
             {/* Staff Section */}
             {id && <StaffGrid animeId={Number(id)} />}
