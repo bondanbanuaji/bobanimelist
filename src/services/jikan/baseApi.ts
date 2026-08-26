@@ -22,15 +22,33 @@ const isCacheStale = (timestamp: number): boolean => {
     return Date.now() - timestamp < STALE_CACHE_TTL;
 };
 
-const JIKAN_API_BASE_URL = 'https://api.jikan.moe/v4';
+const TENRAI_API_BASE_URL = 'https://api.tenrai.org/v1';
+const JIKAN_API_BASE_URL = 'https://api.jikan.moe/v4'; // Fallback
 const RETRY_DELAY_429 = 4000; // 4 seconds before retry after 429
-const RETRY_DELAY_5XX = 3000; // 3 seconds before retry after 5xx
+const RETRY_DELAY_5XX = 2000; // 2 seconds before retry after 5xx (faster for Tenrai)
 const MAX_RETRIES = 3; // Maximum number of retries for server errors
 const RETRYABLE_STATUSES = new Set([429, 502, 503, 504]);
 const REQUEST_TIMEOUT_MS = 15000; // 15 second timeout per request
 
 // Custom base query with internationalization headers and request timeout
+// Primary: Tenrai API, Fallback: Jikan API
 const baseQuery = fetchBaseQuery({
+    baseUrl: TENRAI_API_BASE_URL,
+    prepareHeaders: (headers) => {
+        const currentLng = i18n.language;
+        let acceptLanguageValue = 'en-US';
+
+        if (currentLng === 'jp') acceptLanguageValue = 'ja-JP';
+        else if (currentLng === 'id') acceptLanguageValue = 'id-ID';
+
+        headers.set('Accept-Language', acceptLanguageValue);
+        return headers;
+    },
+    timeout: REQUEST_TIMEOUT_MS,
+});
+
+// Fallback query using Jikan API
+const fallbackQuery = fetchBaseQuery({
     baseUrl: JIKAN_API_BASE_URL,
     prepareHeaders: (headers) => {
         const currentLng = i18n.language;
@@ -115,7 +133,7 @@ const baseQueryWithRateLimiting: BaseQueryFn<
             const status = result.error.status as number;
             const delay = status === 429 
                 ? RETRY_DELAY_429 * (retryCount + 1)  // Exponential backoff: 4s, 8s, 12s
-                : RETRY_DELAY_5XX * (retryCount + 1); // Exponential backoff: 3s, 6s, 9s
+                : RETRY_DELAY_5XX * (retryCount + 1); // Exponential backoff: 2s, 4s, 6s
             
             console.warn(`[GLOBAL API] ${status} ${status === 429 ? 'Rate Limited' : 'Server Error'} for endpoint: ${endpoint}, retry ${retryCount + 1}/${MAX_RETRIES} in ${delay}ms...`);
             
@@ -126,6 +144,20 @@ const baseQueryWithRateLimiting: BaseQueryFn<
             });
             
             retryCount++;
+        }
+
+        // If Tenrai fails with server errors, try Jikan as fallback
+        if (result.error?.status && [502, 503, 504].includes(result.error.status as number)) {
+            console.warn(`[GLOBAL API] Tenrai failed, trying Jikan fallback for: ${endpoint}`);
+            const fallbackResult = await apiLimiter.executeRequest(async () => {
+                return fallbackQuery(args, api, extraOptions);
+            });
+            
+            // If fallback succeeds, use its result
+            if (!fallbackResult.error && fallbackResult.data) {
+                console.log(`[GLOBAL API] Jikan fallback succeeded for: ${endpoint}`);
+                result = fallbackResult;
+            }
         }
 
         // Store successful responses in global cache

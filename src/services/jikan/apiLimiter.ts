@@ -2,8 +2,8 @@ class ApiLimiter {
   private queue: Array<() => Promise<unknown>> = [];
   private executing = false;
   private timestamps: number[] = [];
-  private readonly MAX_REQUESTS_PER_SECOND = 2; // Conservative: 2 req/sec (Jikan allows 3)
-  private readonly MAX_REQUESTS_PER_MINUTE = 50; // Conservative: 50 req/min (Jikan allows 60)
+  private readonly MAX_REQUESTS_PER_SECOND = 3; // Tenrai allows 4 RPS, use 3 for safety
+  private readonly MAX_REQUESTS_PER_MINUTE = 100; // Tenrai allows 120 RPM, use 100 for safety
 
   async executeRequest<T>(fn: () => Promise<T>): Promise<T> {
     return new Promise((resolve, reject) => {
@@ -59,8 +59,8 @@ class ApiLimiter {
       console.error('[API Limiter] Request failed:', error);
     }
     
-    // Delay between requests: 600-1200ms random
-    const randomDelay = Math.floor(Math.random() * 601) + 600;
+    // Delay between requests: 400-800ms random (Tenrai is faster than Jikan)
+    const randomDelay = Math.floor(Math.random() * 401) + 400;
     await new Promise(resolve => setTimeout(resolve, randomDelay));
     this.processQueue();
   }
