@@ -1,79 +1,44 @@
-import { useState, useMemo, useEffect } from 'react';
-import { useGetSeasonsListQuery, useGetSeasonAnimeQuery } from '@/services/jikan';
-import type { SeasonName } from '@/services/jikan/models/schedule/season-archive.model';
-import { SeasonSelector, SeasonAnimeList, SeasonSkeleton } from '@/components/widgets/seasons';
+import { useGetSeasonAnimeQuery } from '@/services/jikan';
+import { SeasonAnimeList, SeasonSkeleton } from '@/components/widgets/seasons';
 import Label from '@/components/atoms/label';
 import { ErrorState } from '@/components/atoms/error-state';
 import styles from './SeasonsPage.module.scss';
 
-const CURRENT_YEAR = new Date().getFullYear();
-const CURRENT_SEASON = (() => {
-	const month = new Date().getMonth();
-	if (month < 3) return 'winter';
-	if (month < 6) return 'spring';
-	if (month < 9) return 'summer';
-	return 'fall';
-})() as SeasonName;
-
-const SEASON_LABELS: Record<SeasonName, string> = {
+const SEASON_LABELS: Record<string, string> = {
 	winter: 'Winter',
 	spring: 'Spring',
 	summer: 'Summer',
 	fall: 'Fall',
 };
 
-export const SeasonsPage = () => {
-	const [selectedYear, setSelectedYear] = useState(CURRENT_YEAR);
-	const [selectedSeason, setSelectedSeason] = useState<SeasonName>(CURRENT_SEASON);
+const getCurrentSeason = (): string => {
+	const month = new Date().getMonth();
+	if (month < 3) return 'winter';
+	if (month < 6) return 'spring';
+	if (month < 9) return 'summer';
+	return 'fall';
+};
 
-	const { data: seasonsData, isLoading: seasonsLoading } = useGetSeasonsListQuery();
+export const SeasonsPage = () => {
+	const currentSeason = getCurrentSeason();
+	const currentYear = new Date().getFullYear();
+
 	const { data, isLoading, isError } = useGetSeasonAnimeQuery({
-		year: selectedYear,
-		season: selectedSeason,
 		page: 1,
 		limit: 25,
 		sfw: true,
 	});
 
-	const years = useMemo(() => {
-		if (!seasonsData?.data) return [CURRENT_YEAR];
-		return seasonsData.data.map(item => item.year).sort((a, b) => b - a);
-	}, [seasonsData]);
-
-	const availableSeasons: SeasonName[] = useMemo(() => {
-		if (!seasonsData?.data) return ['winter', 'spring', 'summer', 'fall'];
-		const yearData = seasonsData.data.find(item => item.year === selectedYear);
-		return yearData?.seasons || ['winter', 'spring', 'summer', 'fall'];
-	}, [seasonsData, selectedYear]);
-
-	// Scroll to top when season or year changes
-	useEffect(() => {
-		window.scrollTo({ top: 0, behavior: 'smooth' });
-	}, [selectedYear, selectedSeason]);
-
 	return (
 		<div className={styles['seasons-page']}>
 			<header className={styles['seasons-page__header']}>
 				<Label as="h1" font="typo-primary-xl-semibold" className={styles['seasons-page__title']}>
-					Anime Seasons Archive
+					Current Season Anime
 				</Label>
 				<Label as="p" font="typo-primary-l-regular" className={styles['seasons-page__subtitle']}>
-					Browse anime by season and year
+					{SEASON_LABELS[currentSeason]} {currentYear} anime
 				</Label>
 			</header>
-
-			<SeasonSelector
-				selectedYear={selectedYear}
-				selectedSeason={selectedSeason}
-				years={years}
-				availableSeasons={availableSeasons}
-				onYearChange={setSelectedYear}
-				onSeasonChange={setSelectedSeason}
-				isLoading={seasonsLoading}
-				currentYear={CURRENT_YEAR}
-				currentSeason={CURRENT_SEASON}
-				className={styles['seasons-page__filters']}
-			/>
 
 			<main className={styles['seasons-page__content']}>
 				{isLoading && (
@@ -90,8 +55,8 @@ export const SeasonsPage = () => {
 				{!isLoading && !isError && data?.data && (
 					<SeasonAnimeList
 						anime={data.data}
-						seasonLabel={SEASON_LABELS[selectedSeason]}
-						year={selectedYear}
+						seasonLabel={SEASON_LABELS[currentSeason]}
+						year={currentYear}
 						className={styles['seasons-page__grid-container']}
 					/>
 				)}

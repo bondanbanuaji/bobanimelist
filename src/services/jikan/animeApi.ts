@@ -3,15 +3,11 @@ import type { JikanResponse, Anime, AnimeTopParams, SeasonNowParams, JikanSeason
 
 const AnimeEndpoints = {
     animeEpisodes: '/anime/{id}/episodes',
-    // animeEpisodeById: '/anime/{id}/episodes/{episode}',
-    // animeVideos: '/anime/{id}/videos',
-    // animeVideosEpisodes: '/anime/{id}/videos/episodes',
     topAnime: '/top/anime',
-    animeFullById: '/anime/{id}/full',
+    animeFullById: '/anime/{id}',
     animeSeasonsNow: '/seasons/now',
     animeSeasonsUpcoming: '/seasons/upcoming',
     animeSearch: '/anime',
-    recentAnimeRecommendations: '/recommendations/anime',
     animeRecommendations: '/anime/{id}/recommendations',
     animeStatistics: '/anime/{id}/statistics',
     animeReviews: '/anime/{id}/reviews',
@@ -80,18 +76,6 @@ export const animeApi = jikanApi.injectEndpoints({
             keepUnusedDataFor: 60 * 5, // 5 minutes for search results
         }),
 
-        getRecentAnimeRecommendations: builder.query<JikanResponse<Anime[]>, { page?: number; }>({
-            query: ({ page = 1 }) => {
-                return {
-                    url: AnimeEndpoints.recentAnimeRecommendations,
-                    params: {
-                        page
-                    },
-                };
-            },
-            keepUnusedDataFor: 60 * 10, // 10 minutes for recommendations
-        }),
-
         // TODO: remove
         getAnimeGenres: builder.query<JikanResponse<Genre[]>, void>({
             query: () => {
@@ -156,7 +140,6 @@ export const {
     useGetAnimeSeasonsNowQuery,
     useGetAnimeSeasonsUpcomingQuery,
     useGetAnimeSearchQuery,
-    useGetRecentAnimeRecommendationsQuery,
     useGetAnimeGenresQuery,
     useGetRandomAnimeQuery,
     useGetAnimeStaffQuery,

@@ -3,7 +3,7 @@ import type { Genre, JikanResponse, Manga, MangaSearchParams, MangaTopParams, Ma
 
 const MangaEndpoints = {
     topManga: '/top/manga',
-    mangaFullById: '/manga/{id}/full',
+    mangaFullById: '/manga/{id}',
     mangaGenres: '/genres/manga',
     mangaSearch: '/manga',
     mangaCharacters: '/manga/{id}/characters',

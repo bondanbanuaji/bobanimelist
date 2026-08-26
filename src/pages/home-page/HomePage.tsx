@@ -18,7 +18,7 @@ const CURRENT_SEASON = (() => {
 	if (month < 6) return 'spring';
 	if (month < 9) return 'summer';
 	return 'fall';
-})() as 'winter' | 'spring' | 'summer' | 'fall';
+})();
 
 export const HomePage = () => {
 	const navigate = useNavigate();
@@ -32,8 +32,6 @@ export const HomePage = () => {
 
 	// Fetch current season anime
 	const { data: seasonData, isLoading: seasonLoading, isError: seasonError } = useGetSeasonAnimeQuery({
-		year: CURRENT_YEAR,
-		season: CURRENT_SEASON,
 		page: 1,
 		limit: 12,
 		sfw: true,

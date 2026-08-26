@@ -1,9 +1,10 @@
 import { jikanApi } from './baseApi';
-import type { JikanResponse, Anime, SeasonArchive, SeasonParams } from './models';
+import type { JikanResponse, Anime, SeasonArchive } from './models';
 
 const SeasonsEndpoints = {
 	seasons: '/seasons',
-	seasonAnime: '/seasons/{year}/{season}',
+	seasonNow: '/seasons/now',
+	seasonUpcoming: '/seasons/upcoming',
 } as const;
 
 export const seasonsApi = jikanApi.injectEndpoints({
@@ -15,16 +16,27 @@ export const seasonsApi = jikanApi.injectEndpoints({
 			keepUnusedDataFor: 60 * 60 * 24, // 24 hours - season list rarely changes
 		}),
 
-		getSeasonAnime: builder.query<JikanResponse<Anime[]>, SeasonParams>({
-			query: ({ year, season, filter, sfw = true, unapproved, continuing, page = 1, limit = 10 }) => ({
-				url: SeasonsEndpoints.seasonAnime.replace('{year}', String(year)).replace('{season}', season),
+		// Tenrai only supports /seasons/now and /seasons/upcoming
+		// For current season, use /seasons/now
+		getSeasonAnime: builder.query<JikanResponse<Anime[]>, { page?: number; limit?: number; sfw?: boolean }>({
+			query: ({ page = 1, limit = 10, sfw = true }) => ({
+				url: SeasonsEndpoints.seasonNow,
 				params: {
-					filter,
-					sfw,
-					unapproved,
-					continuing,
 					page,
 					limit,
+					sfw,
+				},
+			}),
+			keepUnusedDataFor: 60 * 10, // 10 minutes
+		}),
+
+		getSeasonUpcoming: builder.query<JikanResponse<Anime[]>, { page?: number; limit?: number; sfw?: boolean }>({
+			query: ({ page = 1, limit = 10, sfw = true }) => ({
+				url: SeasonsEndpoints.seasonUpcoming,
+				params: {
+					page,
+					limit,
+					sfw,
 				},
 			}),
 			keepUnusedDataFor: 60 * 10, // 10 minutes
@@ -35,4 +47,5 @@ export const seasonsApi = jikanApi.injectEndpoints({
 export const {
 	useGetSeasonsListQuery,
 	useGetSeasonAnimeQuery,
+	useGetSeasonUpcomingQuery,
 } = seasonsApi;
