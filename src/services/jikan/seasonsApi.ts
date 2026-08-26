@@ -16,7 +16,7 @@ export const seasonsApi = jikanApi.injectEndpoints({
 		}),
 
 		getSeasonAnime: builder.query<JikanResponse<Anime[]>, SeasonParams>({
-			query: ({ year, season, filter, sfw = true, unapproved, continuing, page = 1, limit = 25 }) => ({
+			query: ({ year, season, filter, sfw = true, unapproved, continuing, page = 1, limit = 10 }) => ({
 				url: SeasonsEndpoints.seasonAnime.replace('{year}', String(year)).replace('{season}', season),
 				params: {
 					filter,

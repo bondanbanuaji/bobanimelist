@@ -24,7 +24,7 @@ const AnimeEndpoints = {
 export const animeApi = jikanApi.injectEndpoints({
     endpoints: (builder) => ({
         getTopAnime: builder.query<JikanResponse<Anime[]>, AnimeTopParams>({
-            query: ({ sfw = true, limit = 15, filter = 'bypopularity', type }) => {
+            query: ({ sfw = true, limit = 10, filter = 'bypopularity', type }) => {
                 return {
                     url: AnimeEndpoints.topAnime,
                     params: {
@@ -47,7 +47,7 @@ export const animeApi = jikanApi.injectEndpoints({
         }),
 
         getAnimeSeasonsNow: builder.query<JikanResponse<Anime[]>, SeasonNowParams>({
-            query: ({ limit = 15, }) => {
+            query: ({ limit = 10, }) => {
                 return {
                     url: AnimeEndpoints.animeSeasonsNow,
                     params: {
@@ -59,7 +59,7 @@ export const animeApi = jikanApi.injectEndpoints({
         }),
 
         getAnimeSeasonsUpcoming: builder.query<JikanResponse<Anime[]>, JikanSeasonsParams>({
-            query: ({ limit = 15 }) => {
+            query: ({ limit = 10 }) => {
                 return {
                     url: AnimeEndpoints.animeSeasonsUpcoming,
                     params: {
@@ -104,7 +104,7 @@ export const animeApi = jikanApi.injectEndpoints({
         
         getRandomAnime: builder.query<JikanResponse<Anime[]>, { page?: number; limit?: number; sfw?: boolean; } | void>({
             query: (params) => {
-                const { page = 1, limit = 25, sfw = true } = params || {};
+                const { page = 1, limit = 10, sfw = true } = params || {};
                 return {
                     url: AnimeEndpoints.animeSearch,
                     params: {

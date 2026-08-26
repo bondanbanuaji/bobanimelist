@@ -5,6 +5,7 @@ import { apiLimiter } from './apiLimiter';
 
 // Cache configuration - following requirements (5-10 minutes TTL)
 const CACHE_TTL = 600 * 1000; // 10 minutes (maximum as per requirements)
+const STALE_CACHE_TTL = 1800 * 1000; // 30 minutes - return stale data on server errors
 
 // Global cache storage for all Jikan API data
 const cache = new Map<string, { data: unknown; timestamp: number }>();
@@ -16,13 +17,19 @@ const isCacheValid = (timestamp: number): boolean => {
     return Date.now() - timestamp < CACHE_TTL;
 };
 
+// Check if cached data is stale but usable (for fallback on server errors)
+const isCacheStale = (timestamp: number): boolean => {
+    return Date.now() - timestamp < STALE_CACHE_TTL;
+};
+
 const JIKAN_API_BASE_URL = 'https://api.jikan.moe/v4';
 const RETRY_DELAY_429 = 4000; // 4 seconds before retry after 429
 const RETRY_DELAY_5XX = 3000; // 3 seconds before retry after 5xx
 const MAX_RETRIES = 3; // Maximum number of retries for server errors
 const RETRYABLE_STATUSES = new Set([429, 502, 503, 504]);
+const REQUEST_TIMEOUT_MS = 15000; // 15 second timeout per request
 
-// Custom base query with internationalization headers
+// Custom base query with internationalization headers and request timeout
 const baseQuery = fetchBaseQuery({
     baseUrl: JIKAN_API_BASE_URL,
     prepareHeaders: (headers) => {
@@ -35,6 +42,7 @@ const baseQuery = fetchBaseQuery({
         headers.set('Accept-Language', acceptLanguageValue);
         return headers;
     },
+    timeout: REQUEST_TIMEOUT_MS,
 });
 
 // Global query function applying rate limiting to all Jikan API requests
@@ -127,6 +135,18 @@ const baseQueryWithRateLimiting: BaseQueryFn<
                 timestamp: Date.now(),
             });
             console.log(`[GLOBAL API] Cached result for: ${cacheKey}`);
+        }
+
+        // Return stale cache data on server errors (502, 503, 504) as fallback
+        if (result.error?.status && [502, 503, 504].includes(result.error.status as number)) {
+            const staleEntry = cache.get(cacheKey);
+            if (staleEntry && isCacheStale(staleEntry.timestamp)) {
+                console.warn(`[GLOBAL API] Returning stale cache for: ${cacheKey} (server error ${result.error.status})`);
+                return { 
+                    data: staleEntry.data, 
+                    meta: { isStale: true, originalError: result.error } 
+                };
+            }
         }
 
         return result;
