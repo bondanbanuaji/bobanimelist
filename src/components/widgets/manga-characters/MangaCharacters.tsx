@@ -1,4 +1,4 @@
-import { useGetMangaCharactersQuery } from '@/services/jikan';
+import { useGetMangaCharactersQuery } from '@/services/tenrai';
 import Label from '@/components/atoms/label';
 import ErrorState from '@/components/atoms/error-state';
 import styles from './MangaCharacters.module.scss';

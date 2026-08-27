@@ -4,7 +4,7 @@ import ErrorState from "../../atoms/error-state";
 import styles from "./SearchResult.module.scss";
 import React from "react";
 import { ImageCardLoading } from "../../atoms/image-card/ImageCard";
-import type { JikanPagination } from "../../../services/jikan/models";
+import type { TenraiPagination } from "../../../services/tenrai/models";
 import { useSearchParams } from "react-router";
 import Label from "../../atoms/label";
 import classNames from "classnames";
@@ -35,7 +35,7 @@ interface ImageCardData {
 
 interface SearchResultData {
     data: ImageCardData[];
-    pagination?: JikanPagination;
+    pagination?: TenraiPagination;
 }
 
 interface SearchResultProps<TQueryHook extends UseQuery> {

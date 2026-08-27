@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useGetAnimeStaffQuery } from '@/services/jikan';
+import { useGetAnimeStaffQuery } from '@/services/tenrai';
 import { Link } from 'react-router';
 import Image from '@/components/atoms/image';
 import Label from '@/components/atoms/label';

@@ -1,5 +1,5 @@
 import { useParams } from "react-router";
-import { useGetCharacterByIdQuery } from "../../services/jikan";
+import { useGetCharacterByIdQuery } from "../../services/tenrai";
 import { MediaContent } from "../../components/widgets/media-content";
 import { CharacterAnimeAppearances, CharacterMangaAppearances } from "../../components/widgets/character-appearances";
 import { CharacterVoiceActors } from "../../components/widgets/character-voice-actors";

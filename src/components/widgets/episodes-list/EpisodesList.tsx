@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useGetAnimeEpisodesQuery } from '@/services/jikan';
+import { useGetAnimeEpisodesQuery } from '@/services/tenrai';
 import Label from '@/components/atoms/label';
 import ErrorState from '@/components/atoms/error-state';
 import styles from './EpisodesList.module.scss';

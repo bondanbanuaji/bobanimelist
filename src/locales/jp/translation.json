@@ -10,7 +10,7 @@
   "error": "エラーが発生しました",
   "footer_copyright": "© 2024 BobaAnimeList。全著作権所有。",
   "APP_NAME": "ボバニメリスト",
-  "APP_DESC": "アニメ、漫画、マンファ、マンホアの世界を探索する統合プラットフォーム。Jikan APIで動作。",
+  "APP_DESC": "アニメ、漫画、マンファ、マンホアの世界を探索する統合プラットフォーム。Tenrai APIで動作。",
   "COPY_RIGHT": "ボバニメリスト。全著作権所有。",
   "HP_TOP_ANIME_TITLE": "ファンのお気に入りアニメ",
   "HP_TOP_MANGA_TITLE": "みんなが愛読している作品",

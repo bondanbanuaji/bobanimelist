@@ -1,5 +1,5 @@
 import { useParams } from "react-router";
-import { useGetPersonByIdQuery } from "../../services/jikan";
+import { useGetPersonByIdQuery } from "../../services/tenrai";
 import { MediaContent } from "../../components/widgets/media-content";
 import { PersonAnimeWorks, PersonMangaWorks, PersonVoiceRoles } from "../../components/widgets/person-works";
 import { formatThresholdNumber } from "../../shared/util";

@@ -1,7 +1,7 @@
 import { useSearchParams } from 'react-router';
-import { useGetAnimeSearchQuery, useGetCharacterSearchQuery, useGetMangaSearchQuery, useGetPeopleSearchQuery } from '../../services/jikan';
+import { useGetAnimeSearchQuery, useGetCharacterSearchQuery, useGetMangaSearchQuery, useGetPeopleSearchQuery } from '../../services/tenrai';
 import { SearchOptions, type SearchOption } from '../../components/widgets/search-options';
-import { animeGenres, animeOrder, animeRating, animeStatus, animeType, characterOrder, mangaGenres, mangaOrder, mangaStatus, mangaType, peopleOrder, sortOption, type SearchCategory } from '../../services/jikan/constants';
+import { animeGenres, animeOrder, animeRating, animeStatus, animeType, characterOrder, mangaGenres, mangaOrder, mangaStatus, mangaType, peopleOrder, sortOption, type SearchCategory } from '../../services/tenrai/constants';
 import { SearchResult } from '../../components/widgets/search-result';
 import { filterDuplicates, formatThresholdNumber } from '../../shared/util';
 import { getBestImageUrl } from '../../shared/util/image-utils';

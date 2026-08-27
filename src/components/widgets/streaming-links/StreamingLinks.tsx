@@ -1,4 +1,4 @@
-import { useGetAnimeStreamingQuery } from '@/services/jikan';
+import { useGetAnimeStreamingQuery } from '@/services/tenrai';
 import ErrorState from '@/components/atoms/error-state';
 import styles from './StreamingLinks.module.scss';
 import classNames from 'classnames';

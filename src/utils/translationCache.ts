@@ -4,7 +4,7 @@ import localforage from 'localforage';
 const translationCache = localforage.createInstance({
   name: 'bobanimelist',
   storeName: 'translation_cache',
-  description: 'Cache untuk hasil translasi API Jikan'
+  description: 'Cache untuk hasil translasi API Tenrai'
 });
 
 interface CachedTranslation {

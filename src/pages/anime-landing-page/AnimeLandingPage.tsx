@@ -1,4 +1,4 @@
-import { useGetAnimeSearchQuery, useGetAnimeSeasonsNowQuery, useGetAnimeSeasonsUpcomingQuery } from "../../services/jikan";
+import { useGetAnimeSearchQuery, useGetAnimeSeasonsNowQuery, useGetAnimeSeasonsUpcomingQuery } from "../../services/tenrai";
 import LazyMount from "../../components/atoms/lazy-mount";
 import HorizontalCarousel from "../../components/widgets/horizontal-carousel";
 import { useTranslation } from 'react-i18next';

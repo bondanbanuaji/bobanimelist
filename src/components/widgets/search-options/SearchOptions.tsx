@@ -2,7 +2,7 @@ import { useSearchParams } from 'react-router';
 import Dropdown, { type DropdownOption } from '../../atoms/dropdown';
 import SearchIcon from '../../atoms/icons/SearchIcon';
 import styles from './SearchOptions.module.scss';
-import { SearchCategoryOptions } from '../../../services/jikan/constants';
+import { SearchCategoryOptions } from '../../../services/tenrai/constants';
 import { useEffect, useState } from 'react';
 import Label from '../../atoms/label';
 

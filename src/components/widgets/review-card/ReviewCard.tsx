@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import type { AnimeReview, MangaReview } from '@/services/jikan';
+import type { AnimeReview, MangaReview } from '@/services/tenrai';
 import Label from '@/components/atoms/label';
 import { Link } from 'react-router-dom';
 import styles from './ReviewCard.module.scss';

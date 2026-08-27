@@ -5,7 +5,7 @@ import ErrorState from '../../atoms/error-state';
 import classNames from 'classnames';
 import { type TypedUseQuery } from "@reduxjs/toolkit/query/react";
 import { Link } from 'react-router';
-import { useJikanTranslation } from '../../../hooks/useJikanTranslation';
+import { useTenraiTranslation } from '../../../hooks/useTenraiTranslation';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type UseQuery = TypedUseQuery<any, any, any>;
@@ -77,7 +77,7 @@ function MediaContent<TQueryHook extends UseQuery, TContentType extends ContentT
     const { data: queryData, isLoading, isError } = useQueryHook(options);
     
     // Auto-translate based on content type
-    const translatedData = useJikanTranslation(queryData, {
+    const translatedData = useTenraiTranslation(queryData, {
         dataType: contentType === 'manga' ? 'manga' : contentType === 'character' ? 'character' : 'anime'
     });
 

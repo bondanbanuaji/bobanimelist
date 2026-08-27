@@ -1,7 +1,7 @@
 import { type FC, useRef, useState } from 'react';
 import Label from '@/components/atoms/label';
 import classNames from 'classnames';
-import type { SeasonName } from '@/services/jikan/models/schedule/season-archive.model';
+import type { SeasonName } from '@/services/tenrai/models/schedule/season-archive.model';
 import styles from './SeasonSelector.module.scss';
 
 interface SeasonSelectorProps {

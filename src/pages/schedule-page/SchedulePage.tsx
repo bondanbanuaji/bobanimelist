@@ -1,6 +1,6 @@
 import { useState, useMemo, useEffect } from 'react';
-import { useGetSchedulesQuery } from '@/services/jikan';
-import type { SchedulesFilter } from '@/services/jikan/models/params/schedules-params.model';
+import { useGetSchedulesQuery } from '@/services/tenrai';
+import type { SchedulesFilter } from '@/services/tenrai/models/params/schedules-params.model';
 import ImageCard, { ImageCardLoading } from '@/components/atoms/image-card/ImageCard';
 import Label from '@/components/atoms/label';
 import { ErrorState } from '@/components/atoms/error-state';

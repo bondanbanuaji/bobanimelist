@@ -1,4 +1,4 @@
-import { useGetTopAnimeQuery, useGetTopMangaQuery, useGetAnimeSearchQuery, useGetMangaSearchQuery } from '../../../services/jikan';
+import { useGetTopAnimeQuery, useGetTopMangaQuery, useGetAnimeSearchQuery, useGetMangaSearchQuery } from '../../../services/tenrai';
 import { shuffleArray } from '../../../shared/util/image-utils';
 import { formatThresholdNumber } from '../../../shared/util';
 import { getBestImageUrl } from '../../../shared/util/image-utils';
@@ -12,9 +12,9 @@ import { type SwiperClass } from 'swiper/react';
 import LeftChevron from '../../atoms/icons/LeftChevron';
 import RightChevron from '../../atoms/icons/RightChevron';
 import classNames from 'classnames';
-import { type Anime, type Manga, type AnimeType, type MangaType } from '../../../services/jikan/models';
+import { type Anime, type Manga, type AnimeType, type MangaType } from '../../../services/tenrai/models';
 import { useAnimationTrigger } from '../../../shared/util/animation/useAnimationTrigger';
-import { useJikanTranslation } from '../../../hooks/useJikanTranslation';
+import { useTenraiTranslation } from '../../../hooks/useTenraiTranslation';
 
 // --- Constants for Randomization ---
 const ANIME_TYPES: AnimeType[] = ['TV', 'Movie', 'Ova', 'Special', 'Ona', 'Music'];
@@ -105,11 +105,11 @@ const RandomAnimeCarousel = () => {
     });
 
     // Translate all data sources
-    const translatedTopAnime = useJikanTranslation(topAnimeData, { dataType: 'anime' });
-    const translatedTopManga = useJikanTranslation(topMangaData, { dataType: 'manga' });
-    const translatedAnimeGenre = useJikanTranslation(animeGenreData, { dataType: 'anime' });
-    const translatedMangaGenre = useJikanTranslation(mangaGenreData, { dataType: 'manga' });
-    const translatedMidRange = useJikanTranslation(midRangeAnimeData, { dataType: 'anime' });
+    const translatedTopAnime = useTenraiTranslation(topAnimeData, { dataType: 'anime' });
+    const translatedTopManga = useTenraiTranslation(topMangaData, { dataType: 'manga' });
+    const translatedAnimeGenre = useTenraiTranslation(animeGenreData, { dataType: 'anime' });
+    const translatedMangaGenre = useTenraiTranslation(mangaGenreData, { dataType: 'manga' });
+    const translatedMidRange = useTenraiTranslation(midRangeAnimeData, { dataType: 'anime' });
 
     // --- Combined States ---
     const isLoading = topAnimeLoading || topMangaLoading || animeGenreLoading || mangaGenreLoading || midRangeAnimeLoading;

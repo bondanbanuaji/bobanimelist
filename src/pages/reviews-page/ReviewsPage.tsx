@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useGetRecentAnimeReviewsQuery, useGetRecentMangaReviewsQuery } from '@/services/jikan';
+import { useGetRecentAnimeReviewsQuery, useGetRecentMangaReviewsQuery } from '@/services/tenrai';
 import { ReviewCard } from '@/components/widgets/review-card';
 import Label from '@/components/atoms/label';
 import { ErrorState } from '@/components/atoms/error-state';

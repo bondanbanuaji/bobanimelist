@@ -1,5 +1,5 @@
 import { useParams } from "react-router";
-import { useGetAnimeByIdQuery } from "../../services/jikan";
+import { useGetAnimeByIdQuery } from "../../services/tenrai";
 import { MediaContent, type MediaContentData } from "../../components/widgets/media-content";
 import { StreamingLinks } from "../../components/widgets/streaming-links";
 import { StaffGrid } from "../../components/widgets/staff-grid";

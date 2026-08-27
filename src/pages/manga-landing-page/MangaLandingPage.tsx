@@ -1,4 +1,4 @@
-import { useGetTopMangaQuery } from "../../services/jikan";
+import { useGetTopMangaQuery } from "../../services/tenrai";
 import LazyMount from "../../components/atoms/lazy-mount";
 import HorizontalCarousel from "../../components/widgets/horizontal-carousel";
 import { useTranslation } from 'react-i18next';

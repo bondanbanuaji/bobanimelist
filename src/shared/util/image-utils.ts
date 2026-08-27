@@ -1,10 +1,10 @@
-import type { JikanImages } from '../../services/jikan/models';
+import type { TenraiImages } from '../../services/tenrai/models';
 
 /**
- * Gets the highest quality image URL from Jikan images object
+ * Gets the highest quality image URL from Tenrai images object
  * Priority order: webp maximum > jpg maximum > webp large > jpg large > webp image_url > jpg image_url > fallback
  */
-export function getBestImageUrl(images: JikanImages, preferWebP = true): string {
+export function getBestImageUrl(images: TenraiImages, preferWebP = true): string {
   // If preferWebP is true, try webp formats first
   if (preferWebP) {
     // Try webp maximum first
@@ -27,10 +27,10 @@ export function getBestImageUrl(images: JikanImages, preferWebP = true): string 
 }
 
 /**
- * Gets the large quality image URL from Jikan images object
+ * Gets the large quality image URL from Tenrai images object
  * Priority order: webp large > jpg large > webp image_url > jpg image_url > fallback
  */
-export function getLargeImageUrl(images: JikanImages, preferWebP = true): string {
+export function getLargeImageUrl(images: TenraiImages, preferWebP = true): string {
   // If preferWebP is true, try webp formats first
   if (preferWebP) {
     // Try webp large first
@@ -49,10 +49,10 @@ export function getLargeImageUrl(images: JikanImages, preferWebP = true): string
 }
 
 /**
- * Gets the medium quality image URL from Jikan images object
+ * Gets the medium quality image URL from Tenrai images object
  * Priority order: webp medium > jpg medium > webp image_url > jpg image_url > fallback
  */
-export function getMediumImageUrl(images: JikanImages, preferWebP = true): string {
+export function getMediumImageUrl(images: TenraiImages, preferWebP = true): string {
   // If preferWebP is true, try webp formats first
   if (preferWebP) {
     // Try webp medium first
@@ -71,10 +71,10 @@ export function getMediumImageUrl(images: JikanImages, preferWebP = true): strin
 }
 
 /**
- * Gets the small quality image URL from Jikan images object
+ * Gets the small quality image URL from Tenrai images object
  * Priority order: webp small > jpg small > webp image_url > jpg image_url > fallback
  */
-export function getSmallImageUrl(images: JikanImages, preferWebP = true): string {
+export function getSmallImageUrl(images: TenraiImages, preferWebP = true): string {
   // If preferWebP is true, try webp formats first
   if (preferWebP) {
     // Try webp small first

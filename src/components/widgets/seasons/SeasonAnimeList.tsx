@@ -1,7 +1,7 @@
 import { type FC } from 'react';
 import ImageCard from '@/components/atoms/image-card/ImageCard';
 import Label from '@/components/atoms/label';
-import type { Anime } from '@/services/jikan/models';
+import type { Anime } from '@/services/tenrai/models';
 
 interface SeasonAnimeListProps {
 	anime: Anime[];

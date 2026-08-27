@@ -1,6 +1,6 @@
 import { useState } from 'react';
-import { useGetTopReviewsQuery } from '@/services/jikan';
-import type { ReviewType } from '@/services/jikan';
+import { useGetTopReviewsQuery } from '@/services/tenrai';
+import type { ReviewType } from '@/services/tenrai';
 import { ReviewCard } from '@/components/widgets/review-card';
 import Label from '@/components/atoms/label';
 import { ErrorState } from '@/components/atoms/error-state';

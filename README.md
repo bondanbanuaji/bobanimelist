@@ -64,7 +64,7 @@ A modern platform for exploring anime and manga, built from scratch with a focus
 - **Scalable Project Structure**
   - `atoms`, `molecules`, `organisms`: Atomic design for reusable UI
   - `pages`, `layouts`: Clear separation of concerns
-  - `services`: API abstractions (Jikan API)
+  - `services`: API abstractions (Tenrai API)
   - `shared`: Utilities, hooks, models (e.g., `useIntersectionObserver`, `useTypingEffect`)
   - `store`: Centralized Redux state
   - `styles`: Modular SCSS, design tokens
@@ -82,7 +82,7 @@ A modern platform for exploring anime and manga, built from scratch with a focus
 ### ✅ Milestone 1 (Completed)
 
 - Core setup & project structure
-- Jikan API integration
+- Tenrai API integration
 - Home, anime, and manga pages
 - Search & content detail features
 - Theme & localization support

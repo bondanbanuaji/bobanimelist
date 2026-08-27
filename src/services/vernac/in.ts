@@ -2,7 +2,7 @@ import type { VernacConfig } from "./models";
 
 const inVernacConfig: VernacConfig = {
     APP_NAME: 'bobanimelist',
-    APP_DESC: 'Platform terpadu untuk menjelajahi dunia anime, manga, manhwa, dan manhua. Ditenagai oleh API Jikan.',
+    APP_DESC: 'Platform terpadu untuk menjelajahi dunia anime, manga, manhwa, dan manhua. Ditenagai oleh API Tenrai.',
     HOME: 'Beranda',
     ANIME: 'Anime',
     MANGA: 'Manga',

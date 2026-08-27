@@ -1,5 +1,5 @@
 import { useParams } from "react-router";
-import { useGetMangaByIdQuery } from "../../services/jikan";
+import { useGetMangaByIdQuery } from "../../services/tenrai";
 import { MediaContent } from "../../components/widgets/media-content";
 import { MangaCharacters } from "../../components/widgets/manga-characters";
 import { MangaStaff } from "../../components/widgets/manga-staff";

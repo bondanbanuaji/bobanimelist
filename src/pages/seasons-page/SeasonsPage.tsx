@@ -1,4 +1,4 @@
-import { useGetSeasonAnimeQuery } from '@/services/jikan';
+import { useGetSeasonAnimeQuery } from '@/services/tenrai';
 import { SeasonAnimeList, SeasonSkeleton } from '@/components/widgets/seasons';
 import Label from '@/components/atoms/label';
 import { ErrorState } from '@/components/atoms/error-state';

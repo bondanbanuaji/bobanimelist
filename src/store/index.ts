@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { persistStore, persistReducer, FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER } from 'redux-persist';
 import localforage from 'localforage';
 
-import { jikanApi } from '../services/jikan';
+import { tenraiApi } from '../services/tenrai';
 
 import appContextSlice from './slices/appContextSlice';
 import persistedAppContextSlice from './slices/persistedAppContext';
@@ -11,7 +11,7 @@ import persistedAppContextSlice from './slices/persistedAppContext';
 import { setupListeners } from '@reduxjs/toolkit/query';
 
 const rootReducer = combineReducers({
-    [jikanApi.reducerPath]: jikanApi.reducer,
+    [tenraiApi.reducerPath]: tenraiApi.reducer,
     appContext: appContextSlice,
     persistedAppContext: persistedAppContextSlice
 });
@@ -31,7 +31,7 @@ export const store = configureStore({
             serializableCheck: {
                 ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
             },
-        }).concat(jikanApi.middleware),
+        }).concat(tenraiApi.middleware),
 });
 
 localforage.config({

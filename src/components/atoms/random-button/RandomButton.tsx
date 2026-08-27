@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router';
-import { useLazyGetRandomAnimeQuery, useLazyGetRandomMangaQuery } from '@/services/jikan';
+import { useLazyGetRandomAnimeQuery, useLazyGetRandomMangaQuery } from '@/services/tenrai';
 import styles from './RandomButton.module.scss';
 import classNames from 'classnames';
 

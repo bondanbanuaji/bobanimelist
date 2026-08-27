@@ -2,9 +2,9 @@ import { useNavigate } from 'react-router';
 import { useEffect, useRef, useState } from 'react';
 import { motion } from 'motion/react';
 import { useTranslation } from 'react-i18next';
-import { useGetSeasonAnimeQuery } from '@/services/jikan';
-import { useLazyGetRandomAnimeQuery } from '@/services/jikan/randomApi';
-import { useJikanTranslation } from '@/hooks/useJikanTranslation';
+import { useGetSeasonAnimeQuery } from '@/services/tenrai';
+import { useLazyGetRandomAnimeQuery } from '@/services/tenrai/randomApi';
+import { useTenraiTranslation } from '@/hooks/useTenraiTranslation';
 import ImageCard, { ImageCardLoading } from '@/components/atoms/image-card/ImageCard';
 import Label from '@/components/atoms/label';
 import { ErrorState } from '@/components/atoms/error-state';
@@ -40,9 +40,9 @@ export const HomePage = () => {
 	// Fetch random featured anime
 	const [getRandomAnime, { data: randomData, isLoading: randomLoading }] = useLazyGetRandomAnimeQuery();
 	
-	// Translate Jikan data
-	const translatedSeasonData = useJikanTranslation(seasonData, { dataType: 'anime' });
-	const translatedRandomData = useJikanTranslation(randomData, { dataType: 'anime' });
+	// Translate Tenrai data
+	const translatedSeasonData = useTenraiTranslation(seasonData, { dataType: 'anime' });
+	const translatedRandomData = useTenraiTranslation(randomData, { dataType: 'anime' });
 
 	useEffect(() => {
 		getRandomAnime();

@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useGetAnimeCharactersQuery } from '@/services/jikan';
+import { useGetAnimeCharactersQuery } from '@/services/tenrai';
 import { Link } from 'react-router';
 import Label from '@/components/atoms/label';
 import ErrorState from '@/components/atoms/error-state';

@@ -12,7 +12,7 @@ import classNames from "classnames";
 import MediaDetailCard, { MediaDetailCardLoading } from "../../atoms/media-detail-card";
 import { shuffleArray } from "../../../shared/util/image-utils";
 import { useAnimationTrigger } from "../../../shared/util/animation/useAnimationTrigger";
-import { useJikanTranslation } from "../../../hooks/useJikanTranslation";
+import { useTenraiTranslation } from "../../../hooks/useTenraiTranslation";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type UseQuery = TypedUseQuery<any, any, any>;
@@ -94,8 +94,8 @@ function HorizontalCarousel<TQueryHook extends UseQuery, TCardType extends CardT
         refetchOnMountOrArgChange: false, // Don't refetch on mount since baseApi has caching
     });
     
-    // Auto-translate Jikan data (will only translate if language is not 'en')
-    const translatedData = useJikanTranslation(data, { 
+    // Auto-translate Tenrai data (will only translate if language is not 'en')
+    const translatedData = useTenraiTranslation(data, { 
         dataType: heading.toLowerCase().includes('manga') ? 'manga' : 'anime'
     });
 

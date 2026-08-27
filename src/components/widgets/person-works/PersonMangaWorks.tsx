@@ -1,4 +1,4 @@
-import { useGetPersonMangaQuery } from '@/services/jikan';
+import { useGetPersonMangaQuery } from '@/services/tenrai';
 import Label from '@/components/atoms/label';
 import { Link } from 'react-router';
 import ErrorState from '@/components/atoms/error-state';
