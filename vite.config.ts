@@ -97,6 +97,16 @@ export default defineConfig({
       failOnError: false
     }),
   ],
+  server: {
+    proxy: {
+      '/api/proxy': {
+        target: 'https://api.tenrai.org',
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/api\/proxy/, '/v1'),
+        secure: true,
+      },
+    },
+  },
   resolve: {
     alias: {
       '@': resolve(__dirname, 'src'),

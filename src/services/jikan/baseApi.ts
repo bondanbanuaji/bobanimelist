@@ -157,14 +157,18 @@ const baseQueryWithRateLimiting: BaseQueryFn<
         }
 
         // If Tenrai fails with server or network errors, try Jikan as fallback
-        const shouldFallback =
-            result.error?.status === 'FETCH_ERROR' ||
-            result.error?.status === 'TIMEOUT_ERROR' ||
-            result.error?.status === 'PARSING_ERROR' ||
-            (result.error?.status && [502, 503, 504].includes(result.error.status as number));
+        // Covers: network errors (FETCH_ERROR etc), 400 from proxy bug, and 5xx
+        const status = result.error?.status;
+        const isNetworkError =
+            status === 'FETCH_ERROR' ||
+            status === 'TIMEOUT_ERROR' ||
+            status === 'PARSING_ERROR';
+        const isHttpError =
+            typeof status === 'number' && status >= 400 && status !== 429;
+        const shouldFallback = !!result.error && (isNetworkError || isHttpError);
 
         if (shouldFallback) {
-            console.warn(`[GLOBAL API] Tenrai failed (status: ${result.error?.status}), trying Jikan fallback for: ${endpoint}`);
+            console.warn(`[GLOBAL API] Tenrai failed (status: ${status}), trying Jikan fallback for: ${endpoint}`);
             const fallbackResult = await apiLimiter.executeRequest(async () => {
                 return fallbackQuery(args, api, extraOptions);
             });
@@ -173,6 +177,8 @@ const baseQueryWithRateLimiting: BaseQueryFn<
             if (!fallbackResult.error && fallbackResult.data) {
                 console.log(`[GLOBAL API] Jikan fallback succeeded for: ${endpoint}`);
                 result = fallbackResult;
+            } else if (fallbackResult.error) {
+                console.warn(`[GLOBAL API] Jikan fallback also failed for: ${endpoint}`, fallbackResult.error);
             }
         }
 
@@ -186,15 +192,17 @@ const baseQueryWithRateLimiting: BaseQueryFn<
         }
 
         // Return stale cache data on server or network errors as fallback
+        const errStatus = result.error?.status;
         const isNetworkOrServerError =
-            result.error?.status === 'FETCH_ERROR' ||
-            result.error?.status === 'TIMEOUT_ERROR' ||
-            (result.error?.status && [502, 503, 504].includes(result.error.status as number));
+            errStatus === 'FETCH_ERROR' ||
+            errStatus === 'TIMEOUT_ERROR' ||
+            errStatus === 'PARSING_ERROR' ||
+            (typeof errStatus === 'number' && (errStatus as number) >= 500);
 
         if (isNetworkOrServerError) {
             const staleEntry = cache.get(cacheKey);
             if (staleEntry && isCacheStale(staleEntry.timestamp)) {
-                console.warn(`[GLOBAL API] Returning stale cache for: ${cacheKey} (error: ${result.error?.status})`);
+                console.warn(`[GLOBAL API] Returning stale cache for: ${cacheKey} (error: ${errStatus})`);
                 return {
                     data: staleEntry.data,
                     meta: { isStale: true, originalError: result.error }
