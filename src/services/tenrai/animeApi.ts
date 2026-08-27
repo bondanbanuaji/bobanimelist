@@ -1,10 +1,17 @@
 import { tenraiApi } from './baseApi';
-import type { TenraiResponse, Anime, AnimeTopParams, SeasonNowParams, TenraiSeasonsParams, AnimeSearchParams, Genre, AnimeStaff, AnimeStreaming, AnimeEpisode, EpisodesParams, AnimeCharacter } from './models';
+import type {
+    TenraiResponse, Anime, AnimeTopParams, SeasonNowParams, TenraiSeasonsParams,
+    AnimeSearchParams, Genre, AnimeStaff, AnimeStreaming, AnimeEpisode,
+    EpisodesParams, AnimeCharacter, AnimeVideos, AnimePicture,
+    TenraiMoreInfo, TenraiRelation, AnimeTheme, TenraiExternalLink, TenraiNews
+} from './models';
 
 const AnimeEndpoints = {
     animeEpisodes: '/anime/{id}/episodes',
+    animeEpisodeById: '/anime/{id}/episodes/{episode_id}',
     topAnime: '/top/anime',
-    animeFullById: '/anime/{id}',
+    animeById: '/anime/{id}',
+    animeFullById: '/anime/{id}/full',
     animeSeasonsNow: '/seasons/now',
     animeSeasonsUpcoming: '/seasons/upcoming',
     animeSearch: '/anime',
@@ -14,7 +21,19 @@ const AnimeEndpoints = {
     animeCharacters: '/anime/{id}/characters',
     animeStaff: '/anime/{id}/staff',
     animeStreaming: '/anime/{id}/streaming',
-    animeGenres: '/genres/anime'
+    animeVideos: '/anime/{id}/videos',
+    animeEpisodeVideos: '/anime/{id}/videos/episodes',
+    animePictures: '/anime/{id}/pictures',
+    animeMoreInfo: '/anime/{id}/moreinfo',
+    animeRelations: '/anime/{id}/relations',
+    animeThemes: '/anime/{id}/themes',
+    animeExternal: '/anime/{id}/external',
+    animeNews: '/anime/{id}/news',
+    animeArticles: '/anime/{id}/articles',
+    animeForum: '/anime/{id}/forum',
+    animeGenres: '/genres/anime',
+    animeDeleted: '/anime/deleted',
+    animeIds: '/anime/ids'
 } as const;
 
 export const animeApi = tenraiApi.injectEndpoints({
@@ -131,6 +150,110 @@ export const animeApi = tenraiApi.injectEndpoints({
             }),
             keepUnusedDataFor: 60 * 30, // 30 minutes - episodes rarely change
         }),
+
+        getAnimeFullById: builder.query<TenraiResponse<Anime>, { id: number }>({
+            query: ({ id }) => ({
+                url: AnimeEndpoints.animeFullById.replace('{id}', String(id)),
+            }),
+            keepUnusedDataFor: 60 * 30, // 30 minutes for full anime data
+        }),
+
+        getAnimeVideos: builder.query<TenraiResponse<AnimeVideos>, { id: number }>({
+            query: ({ id }) => ({
+                url: AnimeEndpoints.animeVideos.replace('{id}', String(id)),
+            }),
+            keepUnusedDataFor: 60 * 60, // 60 minutes - videos rarely change
+        }),
+
+        getAnimeEpisodeVideos: builder.query<TenraiResponse<AnimeVideos>, { id: number }>({
+            query: ({ id }) => ({
+                url: AnimeEndpoints.animeEpisodeVideos.replace('{id}', String(id)),
+            }),
+            keepUnusedDataFor: 60 * 60, // 60 minutes
+        }),
+
+        getAnimePictures: builder.query<TenraiResponse<AnimePicture[]>, { id: number }>({
+            query: ({ id }) => ({
+                url: AnimeEndpoints.animePictures.replace('{id}', String(id)),
+            }),
+            keepUnusedDataFor: 60 * 60, // 60 minutes - pictures rarely change
+        }),
+
+        getAnimeMoreInfo: builder.query<TenraiResponse<TenraiMoreInfo>, { id: number }>({
+            query: ({ id }) => ({
+                url: AnimeEndpoints.animeMoreInfo.replace('{id}', String(id)),
+            }),
+            keepUnusedDataFor: 60 * 60, // 60 minutes
+        }),
+
+        getAnimeRelations: builder.query<TenraiResponse<TenraiRelation[]>, { id: number; sfw?: boolean }>({
+            query: ({ id, sfw = true }) => ({
+                url: AnimeEndpoints.animeRelations.replace('{id}', String(id)),
+                params: { sfw },
+            }),
+            keepUnusedDataFor: 60 * 60, // 60 minutes
+        }),
+
+        getAnimeThemes: builder.query<TenraiResponse<AnimeTheme>, { id: number }>({
+            query: ({ id }) => ({
+                url: AnimeEndpoints.animeThemes.replace('{id}', String(id)),
+            }),
+            keepUnusedDataFor: 60 * 60, // 60 minutes
+        }),
+
+        getAnimeExternalLinks: builder.query<TenraiResponse<TenraiExternalLink[]>, { id: number }>({
+            query: ({ id }) => ({
+                url: AnimeEndpoints.animeExternal.replace('{id}', String(id)),
+            }),
+            keepUnusedDataFor: 60 * 60 * 24, // 24 hours
+        }),
+
+        getAnimeNews: builder.query<TenraiResponse<TenraiNews[]>, { id: number; page?: number }>({
+            query: ({ id, page = 1 }) => ({
+                url: AnimeEndpoints.animeNews.replace('{id}', String(id)),
+                params: { page },
+            }),
+            keepUnusedDataFor: 60 * 10, // 10 minutes - news updates frequently
+        }),
+
+        getAnimeArticles: builder.query<TenraiResponse<TenraiNews[]>, { id: number; page?: number }>({
+            query: ({ id, page = 1 }) => ({
+                url: AnimeEndpoints.animeArticles.replace('{id}', String(id)),
+                params: { page },
+            }),
+            keepUnusedDataFor: 60 * 10, // 10 minutes
+        }),
+
+        getAnimeForum: builder.query<TenraiResponse<TenraiNews[]>, { id: number; page?: number }>({
+            query: ({ id, page = 1 }) => ({
+                url: AnimeEndpoints.animeForum.replace('{id}', String(id)),
+                params: { page },
+            }),
+            keepUnusedDataFor: 60 * 10, // 10 minutes
+        }),
+
+        getAnimeEpisodeById: builder.query<TenraiResponse<AnimeEpisode>, { id: number; episodeId: number }>({
+            query: ({ id, episodeId }) => ({
+                url: AnimeEndpoints.animeEpisodeById.replace('{id}', String(id)).replace('{episode_id}', String(episodeId)),
+            }),
+            keepUnusedDataFor: 60 * 30, // 30 minutes
+        }),
+
+        getDeletedAnime: builder.query<TenraiResponse<Anime[]>, { page?: number; limit?: number; order_by?: string; sort?: string }>({
+            query: ({ page = 1, limit = 25, order_by = 'mal_id', sort = 'desc' }) => ({
+                url: AnimeEndpoints.animeDeleted,
+                params: { page, limit, order_by, sort },
+            }),
+            keepUnusedDataFor: 60 * 60, // 60 minutes
+        }),
+
+        getAnimeIds: builder.query<{ total: number; data: number[] }, { type?: string[]; status?: string; rating?: string[]; sfw?: boolean }>({
+            query: (params) => ({
+                url: AnimeEndpoints.animeIds,
+                params,
+            }),
+            keepUnusedDataFor: 60 * 60 * 24, // 24 hours - IDs list changes slowly
+        }),
     }),
 });
 
@@ -146,4 +269,18 @@ export const {
     useGetAnimeStreamingQuery,
     useGetAnimeCharactersQuery,
     useGetAnimeEpisodesQuery,
+    useGetAnimeFullByIdQuery,
+    useGetAnimeVideosQuery,
+    useGetAnimeEpisodeVideosQuery,
+    useGetAnimePicturesQuery,
+    useGetAnimeMoreInfoQuery,
+    useGetAnimeRelationsQuery,
+    useGetAnimeThemesQuery,
+    useGetAnimeExternalLinksQuery,
+    useGetAnimeNewsQuery,
+    useGetAnimeArticlesQuery,
+    useGetAnimeForumQuery,
+    useGetAnimeEpisodeByIdQuery,
+    useGetDeletedAnimeQuery,
+    useGetAnimeIdsQuery,
 } = animeApi;
