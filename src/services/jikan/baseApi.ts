@@ -23,6 +23,7 @@ const isCacheStale = (timestamp: number): boolean => {
 };
 
 const TENRAI_API_BASE_URL = 'https://api.tenrai.org/v1';
+const PROXY_BASE_URL = '/api/proxy';
 const JIKAN_API_BASE_URL = 'https://api.jikan.moe/v4'; // Fallback
 const RETRY_DELAY_429 = 4000; // 4 seconds before retry after 429
 const RETRY_DELAY_5XX = 2000; // 2 seconds before retry after 5xx (faster for Tenrai)
@@ -30,10 +31,19 @@ const MAX_RETRIES = 3; // Maximum number of retries for server errors
 const RETRYABLE_STATUSES = new Set([429, 502, 503, 504]);
 const REQUEST_TIMEOUT_MS = 15000; // 15 second timeout per request
 
+// Build the base URL: use proxy in browser, direct in server
+const isBrowser = typeof window !== 'undefined';
+const getTenraiBaseUrl = () => {
+    if (isBrowser) {
+        return PROXY_BASE_URL;
+    }
+    return TENRAI_API_BASE_URL;
+};
+
 // Custom base query with internationalization headers and request timeout
-// Primary: Tenrai API, Fallback: Jikan API
+// Primary: Tenrai API (via proxy), Fallback: Jikan API
 const baseQuery = fetchBaseQuery({
-    baseUrl: TENRAI_API_BASE_URL,
+    baseUrl: getTenraiBaseUrl(),
     prepareHeaders: (headers) => {
         const currentLng = i18n.language;
         let acceptLanguageValue = 'en-US';
@@ -146,13 +156,19 @@ const baseQueryWithRateLimiting: BaseQueryFn<
             retryCount++;
         }
 
-        // If Tenrai fails with server errors, try Jikan as fallback
-        if (result.error?.status && [502, 503, 504].includes(result.error.status as number)) {
-            console.warn(`[GLOBAL API] Tenrai failed, trying Jikan fallback for: ${endpoint}`);
+        // If Tenrai fails with server or network errors, try Jikan as fallback
+        const shouldFallback =
+            result.error?.status === 'FETCH_ERROR' ||
+            result.error?.status === 'TIMEOUT_ERROR' ||
+            result.error?.status === 'PARSING_ERROR' ||
+            (result.error?.status && [502, 503, 504].includes(result.error.status as number));
+
+        if (shouldFallback) {
+            console.warn(`[GLOBAL API] Tenrai failed (status: ${result.error?.status}), trying Jikan fallback for: ${endpoint}`);
             const fallbackResult = await apiLimiter.executeRequest(async () => {
                 return fallbackQuery(args, api, extraOptions);
             });
-            
+
             // If fallback succeeds, use its result
             if (!fallbackResult.error && fallbackResult.data) {
                 console.log(`[GLOBAL API] Jikan fallback succeeded for: ${endpoint}`);
@@ -169,14 +185,19 @@ const baseQueryWithRateLimiting: BaseQueryFn<
             console.log(`[GLOBAL API] Cached result for: ${cacheKey}`);
         }
 
-        // Return stale cache data on server errors (502, 503, 504) as fallback
-        if (result.error?.status && [502, 503, 504].includes(result.error.status as number)) {
+        // Return stale cache data on server or network errors as fallback
+        const isNetworkOrServerError =
+            result.error?.status === 'FETCH_ERROR' ||
+            result.error?.status === 'TIMEOUT_ERROR' ||
+            (result.error?.status && [502, 503, 504].includes(result.error.status as number));
+
+        if (isNetworkOrServerError) {
             const staleEntry = cache.get(cacheKey);
             if (staleEntry && isCacheStale(staleEntry.timestamp)) {
-                console.warn(`[GLOBAL API] Returning stale cache for: ${cacheKey} (server error ${result.error.status})`);
-                return { 
-                    data: staleEntry.data, 
-                    meta: { isStale: true, originalError: result.error } 
+                console.warn(`[GLOBAL API] Returning stale cache for: ${cacheKey} (error: ${result.error?.status})`);
+                return {
+                    data: staleEntry.data,
+                    meta: { isStale: true, originalError: result.error }
                 };
             }
         }
